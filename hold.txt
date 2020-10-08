@@ -1,0 +1,12 @@
+1,Randers FC
+2,AGF
+3,OB
+4,SønderjyskE
+5,FC Midtjylland
+6,FC Nordsjælland
+7,Lyngby
+8,FCK
+9,AC Horsens
+10,Aab
+11,Vejle
+12,Brøndby
