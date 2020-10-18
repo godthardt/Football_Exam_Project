@@ -21,6 +21,11 @@ public class Program {
 		turnament.listTeamsByPoint(true);
 		// serialize turnament into stream
 		SerializeObject.save(turnament, "turnament.ser");
+		
+		// Restore a turnament object 
+		Turnament turnamentRestore = (Turnament) SerializeObject.load("turnament.ser");
+		System.out.println("turnamentRestore goals " + turnamentRestore.getNumberOfGoals());
+		
 
 	}
 	
