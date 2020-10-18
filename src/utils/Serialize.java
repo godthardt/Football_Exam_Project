@@ -1,7 +1,8 @@
+package utils;
 import java.io.*;
 
-public class SerializeObject {
-
+public class Serialize {
+	// Source: http://javabog.dk/OOP/kapitel18.jsp
 	public static void save(Object obj, String filename) throws IOException
 	  {
 	    FileOutputStream datastream = new FileOutputStream(filename);

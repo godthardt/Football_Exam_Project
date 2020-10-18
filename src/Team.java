@@ -1,8 +1,11 @@
+
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Team implements Comparable<Team>, Serializable {
+	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects	
 	private String name;
 	private int id;
 	public int getId() {
@@ -39,6 +42,13 @@ public class Team implements Comparable<Team>, Serializable {
 
 	}
 
+	@Override
+    public String toString()
+    {
+        return (id + " " + name + " " + "Points = " + points);
+    }
+	
+	
 	public void print() {
 		System.out.println(id + "\t" + name + "\t\t\t" + "Points = " + points);
 	}

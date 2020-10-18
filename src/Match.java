@@ -1,3 +1,5 @@
+
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -11,6 +13,7 @@ public class Match implements Serializable {
 		goals = new ArrayList<Goal>();
 	}
 	
+	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
 	private boolean hasFinished = false;
 	public boolean getHasFinished() {
 		return hasFinished;

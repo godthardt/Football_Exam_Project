@@ -1,3 +1,5 @@
+
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +41,11 @@ public class Turnament implements Serializable {
 	public void addMatch(Match match) {
 		matches.add(match);
 	}
+	
+	public ArrayList<Team> getTeams() {
+		return teams;
+	}
+	
 	public String toString() {
 		String returnString = "";
 		for (Team team : teams) {
@@ -74,22 +81,21 @@ public class Turnament implements Serializable {
 	
 	public void SkrivTekstfil() throws IOException 
 	{
-		FileWriter fil = new FileWriter("hold.txt");
-		PrintWriter ud = new PrintWriter(fil);
-		ud.println("1,Randers FC");
-		ud.println("2,AGF");
-		ud.println("3,OB");
-		ud.println("4,SønderjyskE");
-		ud.println("5,FC Midtjylland");
-		ud.println("6,FC Nordsjælland");
-		ud.println("7,Lyngby");
-		ud.println("8,FCK");
-		ud.println("9,AC Horsens");
-		ud.println("10,Aab");
-		ud.println("11,Vejle");
-		ud.println("12,Brøndby");		
-
-	    ud.close(); // luk så alle data skrives til disken
+//		FileWriter fil = new FileWriter("hold.txt");
+//		PrintWriter ud = new PrintWriter(fil);
+//		ud.println("1,Randers FC");
+//		ud.println("2,AGF");
+//		ud.println("3,OB");
+//		ud.println("4,SønderjyskE");
+//		ud.println("5,FC Midtjylland");
+//		ud.println("6,FC Nordsjælland");
+//		ud.println("7,Lyngby");
+//		ud.println("8,FCK");
+//		ud.println("9,AC Horsens");
+//		ud.println("10,Aab");
+//		ud.println("11,Vejle");
+//		ud.println("12,Brøndby");		
+//	    ud.close(); // luk så alle data skrives til disken
 
 	}
 	

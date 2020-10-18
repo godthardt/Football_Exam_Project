@@ -1,12 +1,12 @@
-1,Randers FC
-2,AGF
-3,OB
-4,SønderjyskE
-5,FC Midtjylland
-6,FC Nordsjælland
-7,Lyngby
-8,FCK
-9,AC Horsens
-10,Aab
-11,Vejle
-12,Brøndby
+11906,Randers FC
+8838,AGF
+1399,OB
+14351,SønderjyskE
+6206,FC Midtjylland
+16409,FC Nordsjælland
+18052,Lyngby
+52769,FCK
+10773,AC Horsens
+64,Aab
+13039,Vejle
+16162,Brøndby

@@ -1,4 +1,7 @@
 import java.io.IOException;
+//import GUI.*;
+import utils.Serialize;
+
 import java.time.LocalDate;
 import java.time.Month;
 
@@ -20,11 +23,16 @@ public class Main {
 		//turnament.listTeamsAlfabetecally();
 		turnament.listTeamsByPoint(true);
 		// serialize turnament into stream
-		SerializeObject.save(turnament, "turnament.ser");
+		Serialize.save(turnament, "turnament.ser");
 		
 		// Restore a turnament object 
-		Turnament turnamentRestore = (Turnament) SerializeObject.load("turnament.ser");
+		Turnament turnamentRestore = (Turnament) Serialize.load("turnament.ser");
 		System.out.println("turnamentRestore goals " + turnamentRestore.getNumberOfGoals());
+	
+		MainWindow mainWindow = new MainWindow(turnament);
+		//mainWindow.initMainWindows();
+		//mainWindow.
+		//mainWindow.mainJFrame.repaint();
 		
 
 	}
