@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 enum VictoryType { Home, Away, Draw}
 
-public class Match {
+public class Match implements Serializable {
 	public Match (Team homeTeam, Team awayTeam, int matchNo) {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;

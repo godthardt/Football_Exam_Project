@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.io.*;
 
-public class Turnament {
+public class Turnament implements Serializable {
 	public Turnament(String name, LocalDate startDate, LocalDate endDate) {
 		this.name = name;
 		this.startDate = startDate;
@@ -21,6 +21,7 @@ public class Turnament {
 		return nextMatchId++;
 	}
 
+	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
 	private LocalDate endDate;
 	private ArrayList<Team> teams;
 	private ArrayList<Match> matches;	
@@ -167,30 +168,27 @@ public class Turnament {
 		
 		for (Match match : matches) {
 			int numberOfGoalsToAdd = r.nextInt(10);
-			//System.out.println("numberOfGoalsToAdd= " + numberOfGoalsToAdd + " on matchNo " + match.getMatchNo());			
+			
 			for (int i = 0; i < numberOfGoalsToAdd; i++) {
-				int homeOrAway = homeAway.nextInt(3); // 0=no goal
+				int homeOrAway = homeAway.nextInt(3); 
 				switch (homeOrAway) {
 					case 0: {
-						//System.out.println("No addGoal " + " on matchno "+ match.getMatchNo());
+						// 0=no goal "pseudo random" ;-)
 						break;
 					}
-
 					case 1: {
 						goaltype = GoalType.Home;
 						addGoal(match.getMatchNo(), goaltype);
-						//System.out.println("add home goal number " + i + " on matchno "+ match.getMatchNo());
 						break;						
 					}
 					case 2: {
 						goaltype = GoalType.Away;
 						addGoal(match.getMatchNo(), goaltype);
-						//System.out.println("add away goal number " + i + " on matchno "+ match.getMatchNo());						
 						break;						
 					}
 				}
 			}
-			match.endMatch(90);
+			match.endMatch(90 + r.nextInt(10)); // Add up to 9 extra minutes 
 		}
 	}
 

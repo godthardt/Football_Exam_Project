@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Player extends Person {
+public class Player extends Person implements Serializable {
 	public Player(String givenName, String surName) {
 		this.givenName = givenName;
 		this.surName = surName;

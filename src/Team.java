@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Team implements Comparable<Team> {
+public class Team implements Comparable<Team>, Serializable {
 	private String name;
 	private int id;
 	public int getId() {

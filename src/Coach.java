@@ -1,4 +1,5 @@
+import java.io.Serializable;
 
-public class Coach extends Person {
+public class Coach extends Person implements Serializable {
 	
 }

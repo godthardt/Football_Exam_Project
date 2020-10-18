@@ -1,4 +1,5 @@
+import java.io.Serializable;
 
-public class Adress {
+public class Adress implements Serializable {
 
 }

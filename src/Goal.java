@@ -1,8 +1,8 @@
+import java.io.Serializable;
 
 enum GoalType { Home, Away}
 
-public class Goal {
-	
+public class Goal implements Serializable {
 	
 	private int minute;
 	private int sec;

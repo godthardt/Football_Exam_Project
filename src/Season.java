@@ -1,4 +1,5 @@
+import java.io.Serializable;
 
-public class Season {
+public class Season implements Serializable  {
 
 }

@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.sql.Date;
 
-public class ContractPeriod {
+public class ContractPeriod implements Serializable {
 	private Date startDate;
 	private Date endDate;	
 	private double TransferSum;

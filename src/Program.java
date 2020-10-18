@@ -6,8 +6,6 @@ import java.time.Month;
 public class Program {
 
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
-
 		Turnament turnament = new Turnament("Superliga", LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
 
 		turnament.indLaesHold("hold.txt");
@@ -21,6 +19,8 @@ public class Program {
 		
 		//turnament.listTeamsAlfabetecally();
 		turnament.listTeamsByPoint(true);
+		// serialize turnament into stream
+		SerializeObject.save(turnament, "turnament.ser");
 
 	}
 	
