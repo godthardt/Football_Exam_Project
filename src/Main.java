@@ -3,7 +3,7 @@ import java.time.LocalDate;
 import java.time.Month;
 
 
-public class Program {
+public class Main {
 
 	public static void main(String[] args) throws Exception {
 		Turnament turnament = new Turnament("Superliga", LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));

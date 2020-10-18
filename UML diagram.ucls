@@ -10,7 +10,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="Program" project="Football" file="/Football/src/Program.java" binary="false" 
+  <class id="2" language="java" name="Main" project="Football" file="/Football/src/Main.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="305" y="60"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -92,13 +92,13 @@
     </display>  
   </class>  
   <generalization id="11">    
-    <end type="SOURCE" refId="8"/>    
+    <end type="SOURCE" refId="10"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <association id="12">    
-    <bendpoint x="512" y="613"/>    
+    <bendpoint x="459" y="556"/>    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="13" name="awayTeam">        
+      <attribute id="13" name="homeTeam">        
         <position height="0" width="0" x="-549" y="-90"/>      
       </attribute>      
       <multiplicity id="14" minimum="0" maximum="1">        
@@ -109,7 +109,7 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <generalization id="15">    
-    <end type="SOURCE" refId="10"/>    
+    <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <association id="16">    
@@ -125,25 +125,25 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="19">    
-    <bendpoint x="459" y="556"/>    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="20" name="homeTeam">        
-        <position height="0" width="0" x="-549" y="-90"/>      
+    <bendpoint x="377" y="331"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="20" name="matches">        
+        <position height="0" width="0" x="-223" y="-7"/>      
       </attribute>      
-      <multiplicity id="21" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-549" y="-90"/>      
+      <multiplicity id="21" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-223" y="-7"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="22">    
-    <bendpoint x="297" y="488"/>    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="23" name="teams">        
+    <bendpoint x="512" y="613"/>    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="23" name="awayTeam">        
         <position height="0" width="0" x="-549" y="-90"/>      
       </attribute>      
-      <multiplicity id="24" minimum="0" maximum="2147483647">        
+      <multiplicity id="24" minimum="0" maximum="1">        
         <position height="0" width="0" x="-549" y="-90"/>      
       </multiplicity>    
     </end>    
@@ -151,16 +151,16 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="25">    
-    <bendpoint x="377" y="331"/>    
+    <bendpoint x="297" y="488"/>    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="26" name="matches">        
-        <position height="0" width="0" x="-223" y="-7"/>      
+      <attribute id="26" name="teams">        
+        <position height="0" width="0" x="-549" y="-90"/>      
       </attribute>      
       <multiplicity id="27" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-223" y="-7"/>      
+        <position height="0" width="0" x="-549" y="-90"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
