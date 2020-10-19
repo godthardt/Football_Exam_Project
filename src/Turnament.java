@@ -53,6 +53,12 @@ public class Turnament implements Serializable {
 		}
 		return returnString;
 	}
+	
+//	public ArrayList<Match> getMatchesForTeam(int teamId) {
+//	    
+//		return (select(matches, having(on(Match.class)..getAge(), greaterThan(16))));
+//		
+//	}
 
 	public boolean indLaesHold(String filename) throws IOException {
 
@@ -126,16 +132,16 @@ public class Turnament implements Serializable {
 			if (match.getHasFinished()) {
 				switch (match.getVictoryType()) {
 					case Home: {
-						match.homeTeam.addPoints(3);
+						match.getHomeTeam().addPoints(3);
 					}
 					case Away:
 					{
-						match.awayTeam.addPoints(3);						
+						match.getAwayTeam().addPoints(3);						
 					}
 					case Draw:
 					{
-						match.homeTeam.addPoints(1);
-						match.awayTeam.addPoints(1);						
+						match.getHomeTeam().addPoints(1);
+						match.getAwayTeam().addPoints(1);						
 					}
 				}
 			}
@@ -206,7 +212,7 @@ public class Turnament implements Serializable {
 			System.out.println("No.  Hometeam         Awayteam score homepoints awaypoints\n");		
 		for (Match m : matches) {
 			//System.out.println( "%d   %2$20s %20s        %d-%d %d %d\n", m.getMatchNo(), m.homeTeam.getName(), m.awayTeam.getName(), m.getHomeGoals(), m.getAwayGoals(), m.getHomePoints(), m.getAwayPoints());
-			System.out.println( m.getMatchNo() + " " + m.homeTeam.getName() + " " + m.awayTeam.getName() +" " + m.getHomeGoals() + " " + m.getAwayGoals() + " " + m.getHomePoints() + " " + m.getAwayPoints());
+			System.out.println( m.getMatchNo() + " " + m.getHomeTeam().getName() + " " + m.getAwayTeam().getName() +" " + m.getHomeGoals() + " " + m.getAwayGoals() + " " + m.getHomePoints() + " " + m.getAwayPoints());
 		}
 		
 	}

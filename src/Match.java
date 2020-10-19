@@ -18,9 +18,11 @@ public class Match implements Serializable {
 	public boolean getHasFinished() {
 		return hasFinished;
 	}
+
 	public void endMatch (int minutesPlayed) {
 		this.minutesPlayed = minutesPlayed;
 		hasFinished = true;
+		
 		if (homeGoals > awayGoals) {
 			victoryType = VictoryType.Home;
 			homePoints = 3;
@@ -43,8 +45,10 @@ public class Match implements Serializable {
 		awayTeam.addPoints(awayPoints);
 	}
 	
-	public Team homeTeam;
-	public Team awayTeam;
+	private Team homeTeam;
+	public Team getHomeTeam() {return homeTeam;}
+	private Team awayTeam;
+	public Team getAwayTeam() {return awayTeam;}	
 	private int matchNo;
 	private int homeGoals = 0;
 	private int awayGoals = 0;
