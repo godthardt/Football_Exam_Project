@@ -1,6 +1,5 @@
-
-
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,7 +25,11 @@ public class Turnament implements Serializable {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
 	private LocalDate endDate;
 	private ArrayList<Team> teams;
-	private ArrayList<Match> matches;	
+	private ArrayList<Match> matches;
+	public  ArrayList<Match> getMatches() {
+		return matches;
+	}
+	
 	public Team GetTeam(int teamNumber) {
 		return teams.get(teamNumber);
 	}
@@ -150,18 +153,21 @@ public class Turnament implements Serializable {
 	}
 
 	public void generateMatches() {
+		
+		Long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+		Random randomAddDays = new Random(DaysBetweenStartAndEnd);
 		for (Team team : teams) 
 		{
 			for (int i = 0; i < teams.size(); i++) 
 			{
 				if (i+1 != team.getId()) {
-					Match m = new Match(team, teams.get(i), getNextMatchId());
+					LocalDate matchDate = startDate.plusDays(randomAddDays.nextInt()); //NB Does not check that a team does not play more than one match a day :-(
+					Match m = new Match(team, teams.get(i), getNextMatchId(), matchDate);
 					m.endMatch(90);
 					addMatch(m);
 				}
 			}
 		}
-		//System.out.println("Number of matches " + matches.size());
 	}
 	
 	public int getNumberOfGoals() {

@@ -1,12 +1,11 @@
-
-
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.time.LocalDate;
 
 enum VictoryType { Home, Away, Draw}
 
 public class Match implements Serializable {
-	public Match (Team homeTeam, Team awayTeam, int matchNo) {
+	public Match (Team homeTeam, Team awayTeam, int matchNo, LocalDate matchDate) {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.matchNo = matchNo;
@@ -15,8 +14,41 @@ public class Match implements Serializable {
 	
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
 	private boolean hasFinished = false;
-	public boolean getHasFinished() {
-		return hasFinished;
+	public boolean getHasFinished() { return hasFinished; }
+	private Team homeTeam;
+	public Team getHomeTeam() {return homeTeam;}
+	private Team awayTeam;
+	public Team getAwayTeam() {return awayTeam;}	
+	private int matchNo;
+	public int getMatchNo() { return this.matchNo; }
+	private int homeGoals = 0;
+	public int getHomeGoals() { return homeGoals; }
+	private int awayGoals = 0;
+	public int getAwayGoals() { return awayGoals; }	
+	private int homePoints = 0;
+	public int getHomePoints() { return homePoints; }
+	private int awayPoints = 0;
+	public int getAwayPoints() { return awayPoints; }
+	private ArrayList<Goal> goals;
+	private int minutesPlayed = 0;
+	private VictoryType victoryType;
+	public VictoryType getVictoryType() { return victoryType; }
+	
+	public int getNumberOfGoals() {
+		return awayGoals + homeGoals;
+	}
+
+	public void addGoal(GoalType goaltype) {
+		// TODO Auto-generated method stub
+		if (goaltype==GoalType.Home)
+		{
+			homeGoals++;
+		}
+		else 
+		{
+			awayGoals++;
+		}
+			
 	}
 
 	public void endMatch (int minutesPlayed) {
@@ -45,55 +77,6 @@ public class Match implements Serializable {
 		awayTeam.addPoints(awayPoints);
 	}
 	
-	private Team homeTeam;
-	public Team getHomeTeam() {return homeTeam;}
-	private Team awayTeam;
-	public Team getAwayTeam() {return awayTeam;}	
-	private int matchNo;
-	private int homeGoals = 0;
-	private int awayGoals = 0;
-	private int homePoints = 0;
-	private int awayPoints = 0;
-	
-	public int getHomePoints() {
-		return homePoints;
-	}
-	public int getAwayPoints() {
-		return awayPoints;
-	}
-	
-	private ArrayList<Goal> goals;
-	private int minutesPlayed = 0;
-	private VictoryType victoryType;
-	public VictoryType getVictoryType() {
-		return victoryType;
-	}
-	
-	public int getMatchNo() {
-		return this.matchNo;
-	}
-	public int getHomeGoals() {
-		return homeGoals;
-	}
-	public int getAwayGoals() {
-		return awayGoals;
-	}
-	
-	public int getNumberOfGoals() {
-		return awayGoals + homeGoals;
-	}
-	public void addGoal(GoalType goaltype) {
-		// TODO Auto-generated method stub
-		if (goaltype==GoalType.Home)
-		{
-			homeGoals++;
-		}
-		else 
-		{
-			awayGoals++;
-		}
-			
-	}
 	
 	
 }
