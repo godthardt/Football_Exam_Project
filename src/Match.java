@@ -9,6 +9,7 @@ public class Match implements Serializable {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.matchNo = matchNo;
+		this.date = matchDate;
 		goals = new ArrayList<Goal>();
 	}
 	
@@ -21,6 +22,8 @@ public class Match implements Serializable {
 	public Team getAwayTeam() {return awayTeam;}	
 	private int matchNo;
 	public int getMatchNo() { return this.matchNo; }
+	private LocalDate date;
+	public LocalDate getDate() { return this.date; }
 	private int homeGoals = 0;
 	public int getHomeGoals() { return homeGoals; }
 	private int awayGoals = 0;
@@ -33,20 +36,30 @@ public class Match implements Serializable {
 	private int minutesPlayed = 0;
 	private VictoryType victoryType;
 	public VictoryType getVictoryType() { return victoryType; }
+	public ArrayList<Goal> getGoals() { return goals; }
+
+	public boolean teamInvolvedInMatch(Team t) {
+		if (t==this.homeTeam || t==this.awayTeam) {
+			return true;
+		}
+		return false;
+	}
 	
 	public int getNumberOfGoals() {
 		return awayGoals + homeGoals;
 	}
 
-	public void addGoal(GoalType goaltype) {
+	public void addGoal(GoalType goaltype, int scoreMinute, int scoreSecond) {
 		// TODO Auto-generated method stub
 		if (goaltype==GoalType.Home)
 		{
 			homeGoals++;
+			goals.add(new Goal(GoalType.Home, scoreMinute, scoreSecond));
 		}
 		else 
 		{
 			awayGoals++;
+			goals.add(new Goal(GoalType.Away, scoreMinute, scoreSecond));			
 		}
 			
 	}
@@ -76,7 +89,5 @@ public class Match implements Serializable {
 		homeTeam.addPoints(homePoints);
 		awayTeam.addPoints(awayPoints);
 	}
-	
-	
-	
+
 }
