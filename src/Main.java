@@ -4,39 +4,20 @@ import utils.Serialize;
 
 import java.time.LocalDate;
 import java.time.Month;
-
-
+import java.time.format.DateTimeFormatter;
 
 public class Main {
 
 	public static void main(String[] args) throws Exception {
 		Turnament turnament = new Turnament("Superliga", LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
 
-		turnament.loadTeams("teams.txt");
-		turnament.loadPlayers("players.txt");
-		//System.out.println("Number of teams in turnament " + turnament.getNumberOfTeams());
-		turnament.generateMatches();
-		//System.out.println("Number of matches in turnament " + turnament.getNumberOfMatches());
-		turnament.generateRandomGoals();
-		//System.out.println("Number of goals in turnament " + turnament.getNumberOfGoals());
-		
-		//turnament.listMatches();
-		
-		//turnament.listTeamsAlfabetecally();
-		//turnament.listTeamsByPoint(true);
-		// serialize turnament into stream
-		Serialize.save(turnament, "turnament.ser");
-		
+		Serialize.save(turnament, "turnament_" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + ".ser");
 		// Restore a turnament object 
 		//Turnament turnamentRestore = (Turnament) Serialize.load("turnament.ser");
 		//System.out.println("turnamentRestore goals " + turnamentRestore.getNumberOfGoals());
 	
-		MainWindow mainWindow = new MainWindow(turnament);
-		//mainWindow.initMainWindows();
-		//mainWindow.
-		//mainWindow.mainJFrame.repaint();
-		
-
+		// Start the Circus
+		new MainWindow(turnament);
 	}
 	
 }

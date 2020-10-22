@@ -72,13 +72,13 @@ public class Match implements Serializable {
 			victoryType = VictoryType.Home;
 			homePoints = 3;
 			awayPoints = 0;			
-		}
+		} else
 		
 		if (homeGoals < awayGoals) {
 			victoryType = VictoryType.Away;
 			awayPoints = 3;
 			homePoints = 0;			
-		} 
+		} else
 
 		if (homeGoals == awayGoals) {
 			victoryType = VictoryType.Draw;

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.io.*;
 
 public class Turnament implements Serializable {
-	public Turnament(String name, LocalDate startDate, LocalDate endDate) {
+	public Turnament(String name, LocalDate startDate, LocalDate endDate) throws IOException {
 		this.name = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -18,6 +18,26 @@ public class Turnament implements Serializable {
 		matches = new ArrayList<Match>();
 		players = new ArrayList<Player>();
 		contractPeriods = new ArrayList<ContractPeriod>();
+
+		loadTeams("teams.txt");
+		loadPlayers("players.txt");
+		//System.out.println("Number of teams in turnament " + turnament.getNumberOfTeams());
+		generateMatches();
+		//System.out.println("Number of matches in turnament " + turnament.getNumberOfMatches());
+		try {
+			generateRandomGoals();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//System.out.println("Number of goals in turnament " + turnament.getNumberOfGoals());
+		
+		//turnament.listMatches();
+		
+		//turnament.listTeamsAlfabetecally();
+		//turnament.listTeamsByPoint(true);
+		// serialize turnament into stream
+		
 	}
 	
 	private String name;

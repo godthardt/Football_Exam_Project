@@ -1,9 +1,9 @@
-
+import java.awt.event.*;
+import javax.swing.*;
 
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 
-import javax.swing.*;
 
 public class MainWindow {
 	
@@ -18,9 +18,26 @@ public class MainWindow {
 
 	private boolean initMainWindows() {
 	try {
-	    mainJFrame = new JFrame("Turnering: " + turnament.getName() + " - afvikles fra " + turnament.GetStartDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + " til " + turnament.GetEndDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString());
+		mainJFrame = new JFrame("Turnering: " + turnament.getName() + " - afvikles fra " + turnament.GetStartDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + " til " + turnament.GetEndDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString());
 	    mainJFrame.setSize(1100, 1000);
-	    
+
+	    JMenuBar  menubar = new JMenuBar();
+
+	    JMenu     fileMenu   = new JMenu();
+	    JMenuItem refreshMenu   = new JMenuItem();
+	    JMenuItem closeMenu  = new JMenuItem();
+
+	    fileMenu.setText("Fil");
+	    fileMenu.setMnemonic(KeyEvent.VK_F);
+	    refreshMenu.setText("Opdater");
+	    closeMenu.setText("Afslut");
+	    closeMenu.setMnemonic(KeyEvent.VK_A);
+
+	    fileMenu.add(refreshMenu);
+	    fileMenu.add(closeMenu);
+	    menubar.add(fileMenu);
+
+	    mainJFrame.setJMenuBar(menubar);
 
 	    dim = Toolkit.getDefaultToolkit().getScreenSize();
 	    // Center JFrame
@@ -28,6 +45,14 @@ public class MainWindow {
 	    mainJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    mainJFrame.add(new MainPanel(this, turnament));
 	    mainJFrame.setVisible(true);
+	    
+	    closeMenu.addActionListener(new java.awt.event.ActionListener() {
+	        public void actionPerformed(java.awt.event.ActionEvent e) {
+	          System.out.println("Farvel!");
+	          System.exit(0);
+	        }
+	      });
+
 	    
 	    return true;
 		} catch (Exception e) {

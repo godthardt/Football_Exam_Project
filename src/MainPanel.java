@@ -178,6 +178,11 @@ public class MainPanel extends JPanel{
 		
 	}
 	
+	
+//	public void addSchrollbar (DefaultTableModel table) {
+//		JScrollPane scrollPane = new JScrollPane(table, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
+//	}
+	
 	private void listMatches(int teamID) {
 		clearTable(goalTable);
 		
