@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="Match" project="Football" file="/Football/src/Match.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="644" y="465"/>    
+    <position height="-1" width="-1" x="887" y="362"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -96,34 +96,35 @@
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <association id="12">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="13" name="player">        
-        <position height="0" width="0" x="19" y="6"/>      
+    <bendpoint x="297" y="488"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="13" name="teams">        
+        <position height="0" width="0" x="-536" y="-48"/>      
       </attribute>      
-      <multiplicity id="14" minimum="0" maximum="1">        
-        <position height="0" width="0" x="19" y="6"/>      
+      <multiplicity id="14" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-536" y="-48"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="15">    
-    <bendpoint x="377" y="331"/>    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="16" name="matches">        
-        <position height="0" width="0" x="-223" y="-7"/>      
+    <bendpoint x="459" y="556"/>    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="16" name="homeTeam">        
+        <position height="0" width="0" x="-536" y="-48"/>      
       </attribute>      
-      <multiplicity id="17" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-223" y="-7"/>      
+      <multiplicity id="17" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-536" y="-48"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="18">    
-    <bendpoint x="459" y="556"/>    
+    <bendpoint x="512" y="613"/>    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="19" name="homeTeam">        
+      <attribute id="19" name="awayTeam">        
         <position height="0" width="0" x="-536" y="-48"/>      
       </attribute>      
       <multiplicity id="20" minimum="0" maximum="1">        
@@ -133,34 +134,21 @@
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="21">    
-    <bendpoint x="512" y="613"/>    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="22" name="awayTeam">        
-        <position height="0" width="0" x="-536" y="-48"/>      
-      </attribute>      
-      <multiplicity id="23" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-536" y="-48"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="24">    
+  <generalization id="21">    
     <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
-  <association id="25">    
-    <bendpoint x="297" y="488"/>    
+  <association id="22">    
+    <bendpoint x="377" y="331"/>    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="26" name="teams">        
-        <position height="0" width="0" x="-536" y="-48"/>      
+      <attribute id="23" name="matches">        
+        <position height="0" width="0" x="20" y="-110"/>      
       </attribute>      
-      <multiplicity id="27" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-536" y="-48"/>      
+      <multiplicity id="24" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="20" y="-110"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

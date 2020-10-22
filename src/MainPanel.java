@@ -39,7 +39,7 @@ public class MainPanel extends JPanel{
 
 	final String tidGoalColumn = "Tid";	
 	String[] goalTableColumnNames =  { "Nr.", "Stilling", tidGoalColumn, "Målscorer"};
-	String[] playerTableColumnNames =  { "Navn", "Kontraktudløb"};	
+	String[] playerTableColumnNames =  { "Nr.", "Navn", "Kontraktudløb"};	
 
 
 	private int currentTeamId;
@@ -87,7 +87,7 @@ public class MainPanel extends JPanel{
 		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams() + 1, teamTableColumnNames.length); //+ 1 = line for column names
 		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam + 1, matchTableColumnNames.length);
 		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch + 1, goalTableColumnNames.length);
-		DefaultTableModel playerTableModel = new DefaultTableModel(40, playerTableColumnNames.length);//!!!40		
+		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.highestNumberOfPlayersInOneTeam() + 1, playerTableColumnNames.length);		
 
 		// Set column Names
 		setColumnNamesOnTable(teamTableModel, teamTableColumnNames);		
@@ -118,7 +118,7 @@ public class MainPanel extends JPanel{
 		goalTable.setBounds(new Rectangle(modus, 740, 600, 180));
 		
 		playerTable = new JTable(playerTableModel);
-		playerTable.setBounds(new Rectangle(700, 4*modus, 600, 600));
+		playerTable.setBounds(new Rectangle(700, 4*modus, 300, 660));
 		
 
 		this.setLayout(null);
@@ -179,7 +179,8 @@ public class MainPanel extends JPanel{
 	}
 	
 	private void listMatches(int teamID) {
-		//textArea.setText("");
+		clearTable(goalTable);
+		
 		int rowNumber = 1;
 		for (Match m : turnament.getMatches()) {
 			int colNum = 0;
@@ -196,14 +197,19 @@ public class MainPanel extends JPanel{
 		}
 	}
 
-	private void listGoals(int matchId) {
-
+	private void clearTable(JTable table) {
 		// clearJTable
-		for (int i = 1; i < goalTable.getRowCount(); i++) {
-			for (int j = 0; j < goalTable.getColumnCount(); j++) {
-				goalTable.setValueAt("", i, j);
+		for (int i = 1; i < table.getRowCount(); i++) {
+			for (int j = 0; j < table.getColumnCount(); j++) {
+				table.setValueAt("", i, j);
 			}
 		}
+		
+	}
+	
+	private void listGoals(int matchId) {
+
+		clearTable(goalTable);
 		
 		turnament.sortGoalsByTime();
 		
@@ -235,10 +241,15 @@ public class MainPanel extends JPanel{
 	
 	private void listPlayers(int teamId)
 	{
+		clearTable(playerTable);
+		
 		int rowNumber = 1;		
 		for (ContractPeriod period : turnament.getContractPeriods()) {
 			if (period.getTeamId() == teamId) {
-				playerTable.setValueAt(turnament.getPlayers().get(period.getPlayerId()).getName(), rowNumber, 0);
+				int colNum = 0;
+				playerTable.setValueAt(rowNumber, rowNumber, colNum++);
+				playerTable.setValueAt(turnament.getPlayers().get(period.getPlayerId()).getName(), rowNumber, colNum++);
+				playerTable.setValueAt(period.getEndDatee().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString(), rowNumber, colNum++);				
 				rowNumber++;
 			}
 		}

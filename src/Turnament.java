@@ -1,9 +1,12 @@
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.io.*;
 
 public class Turnament implements Serializable {
@@ -89,6 +92,46 @@ public class Turnament implements Serializable {
 		}
 
 	}
+
+	
+	public int highestNumberOfPlayersInOneTeam() {
+		//sort contracts by teamId 
+		contractPeriods.sort(null);
+		
+		
+        //java.util.List<String> strings = Arrays.asList("Zohne", "Redy", "Zohne", "Redy", "Stome");
+//        java.util.Map<ContractPeriod, Long> teamCount = contractPeriods.stream().collect(Collectors.groupingBy(Integer -> Integer, Collectors.counting()));
+//        int lineNo = 1;
+//        teamCount.forEach((name, count) -> {
+//            System.out.println(name.getTeamId() + ":" + count);
+//
+//        });		
+		int currentTeamId;
+		int prevTeamId = -1;
+		int counter = 0;
+		int highestNumber = 0;
+		// loop over contractPeriods, to find the highest number of players in one team
+		for (ContractPeriod contractPeriod : contractPeriods) {
+			counter++;
+			currentTeamId = contractPeriod.getTeamId();
+
+			// is it a new team ?
+			if (currentTeamId != prevTeamId) {
+				// new highest ?
+				if (counter > highestNumber) {
+					highestNumber = counter;
+					System.out.println("New highest team: " + contractPeriod.getTeamId() + " - highestNumber " + highestNumber); 
+				}
+				// start over on new teamId
+				counter = 0;
+			}
+			prevTeamId = currentTeamId;
+			
+		}
+		System.out.println("Highest number: " + highestNumber);
+		return highestNumber;
+
+	}
 	
 	public boolean loadPlayers(String filename) throws IOException {
 
@@ -96,24 +139,27 @@ public class Turnament implements Serializable {
 		BufferedReader ind = new BufferedReader(fil);
 		int lineNo = 0;
 		try {
-			
-		String linje = ind.readLine();
-		while (linje != null)
-		{
-			String[] arrOfStr = linje.split(",");
-			Player player = new Player(arrOfStr[0]);
-			players.add(player);
-			String s = arrOfStr[1];
-			int teamId = Integer.parseInt(s);
-			ContractPeriod contractPeriod = new ContractPeriod(player.getId(), teamId);
-			contractPeriods.add(contractPeriod );
-			//System.out.println(player.getName() + " " + player.getId());
-			linje = ind.readLine();
-			lineNo++;			
-		}
-		ind.close();
-		return true;
-		} catch (Exception e) {
+
+			String linje = ind.readLine();
+			while (linje != null)
+			{
+				String[] firstArrOfStr = linje.split(",");
+				// Input file line has format "Nicolaj Thomsen,52769,2021-06-30" the part after the last comma is the date for contract end)
+
+				LocalDate contractExpire = LocalDate.parse(firstArrOfStr[2]);
+				Player player = new Player(firstArrOfStr[0]);
+				players.add(player);
+				int teamId = Integer.parseInt(firstArrOfStr[1]);
+				ContractPeriod contractPeriod = new ContractPeriod(player.getId(), teamId, contractExpire);
+				contractPeriods.add(contractPeriod );
+				linje = ind.readLine();
+				lineNo++;			
+			}
+			ind.close();
+			highestNumberOfPlayersInOneTeam();
+			return true;
+		} 
+		catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Error while reading line number " + lineNo);
 			e.printStackTrace();
@@ -328,6 +374,5 @@ public class Turnament implements Serializable {
 		return numberOfMatches;
 		
 	}
-	
 	
 }

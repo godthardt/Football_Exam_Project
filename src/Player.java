@@ -10,5 +10,9 @@ public class Player extends Person implements Serializable {
 		this.name = name;
 		id = nextId++;
 	}
-	
+
+@Override
+public String toString() {
+	return name;
+}
 }
