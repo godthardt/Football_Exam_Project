@@ -114,7 +114,7 @@ public class Turnament implements Serializable {
 	}
 
 	
-	public int highestNumberOfPlayersInOneTeam() {
+	public int getHighestNumberOfPlayersInOneTeam() {
 		//sort contracts by teamId 
 		contractPeriods.sort(null);
 		
@@ -129,18 +129,18 @@ public class Turnament implements Serializable {
 		int currentTeamId;
 		int prevTeamId = -1;
 		int counter = 0;
-		int highestNumber = 0;
-		// loop over contractPeriods, to find the highest number of players in one team
+		int Number = 0;
+		// loop over contractPeriods, to find the  number of players in one team
 		for (ContractPeriod contractPeriod : contractPeriods) {
 			counter++;
 			currentTeamId = contractPeriod.getTeamId();
 
 			// is it a new team ?
 			if (currentTeamId != prevTeamId) {
-				// new highest ?
-				if (counter > highestNumber) {
-					highestNumber = counter;
-					System.out.println("New highest team: " + contractPeriod.getTeamId() + " - highestNumber " + highestNumber); 
+				// new  ?
+				if (counter > Number) {
+					Number = counter;
+					System.out.println("New  team: " + contractPeriod.getTeamId() + " - Number " + Number); 
 				}
 				// start over on new teamId
 				counter = 0;
@@ -148,8 +148,8 @@ public class Turnament implements Serializable {
 			prevTeamId = currentTeamId;
 			
 		}
-		System.out.println("Highest number: " + highestNumber);
-		return highestNumber;
+		System.out.println(" number: " + Number);
+		return Number;
 
 	}
 	
@@ -164,7 +164,7 @@ public class Turnament implements Serializable {
 			while (linje != null)
 			{
 				String[] firstArrOfStr = linje.split(",");
-				// Input file line has format "Nicolaj Thomsen,52769,2021-06-30" the part after the last comma is the date for contract end)
+				// Input file line has format "Nicolaj Thomsen,52769,2021-06-30" the part after the last comma is the end date for the contract)
 
 				LocalDate contractExpire = LocalDate.parse(firstArrOfStr[2]);
 				Player player = new Player(firstArrOfStr[0]);
@@ -176,7 +176,7 @@ public class Turnament implements Serializable {
 				lineNo++;			
 			}
 			ind.close();
-			highestNumberOfPlayersInOneTeam();
+			getHighestNumberOfPlayersInOneTeam();
 			return true;
 		} 
 		catch (Exception e) {
@@ -298,7 +298,6 @@ public class Turnament implements Serializable {
 		Random r = new Random();
 		GoalType goaltype;
 		int minuteScored = 0;
-		int secondScored = 0;
 		int exstraTime = r.nextInt(Constants.maxExtraTimePrMatch);
 		
 		for (Match match : matches) {
@@ -394,5 +393,18 @@ public class Turnament implements Serializable {
 		return numberOfMatches;
 		
 	}
+
+	public void reGenerateGoals() throws Exception {
+		players.clear();
+		contractPeriods.clear();
+		matches.clear();
+		teams.clear();
+		loadTeams("teams.txt");
+		loadPlayers("players.txt");
+		nextMatchId = 1;
+		generateMatches();
+		generateRandomGoals();
+	}
+
 	
 }
