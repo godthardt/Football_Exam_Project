@@ -16,6 +16,7 @@ public class Goal implements Comparable<Goal>, Serializable {
 	private GoalType goalType;
 	public GoalType getGoalType() { return goalType; }
 	private Player goalScorer;
+	public Player getGoalScorer() { return goalScorer; }
 	
 	public int compareTo(Goal b) {
 		int result = 0;
@@ -37,10 +38,11 @@ public class Goal implements Comparable<Goal>, Serializable {
 		return result;
 	}
 
-	public Goal(GoalType goalType, int minute, int sec) { //ToDo, Player goalScorer) {
+	public Goal(GoalType goalType, int minute, int sec, Player goalScorer) { //ToDo, Player goalScorer) {
 		this.minute = minute;
 		this.sec = sec;
 		this.goalType = goalType;
+		this.goalScorer = goalScorer;
 
 		//ToDo this.goalScorer = goalScorer;
 	}

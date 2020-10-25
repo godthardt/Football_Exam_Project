@@ -25,23 +25,17 @@ public class Turnament implements Serializable {
 
 		matches = new ArrayList<Match>();
 		
-		//System.out.println("Number of teams in turnament " + turnament.getNumberOfTeams());
 		generateMatches();
-		//System.out.println("Number of matches in turnament " + turnament.getNumberOfMatches());
+
 		try {
 			generateRandomGoals();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		//System.out.println("Number of goals in turnament " + turnament.getNumberOfGoals());
 		
-		//turnament.listMatches();
-		
+		listTeamsByPoint(false);		
 		//turnament.listTeamsAlfabetecally();
-		//turnament.listTeamsByPoint(true);
-		// serialize turnament into stream
-		
+	
 	}
 
 	public TurnamentManager getTurnamentManager() { return turnamentManager; }
@@ -89,26 +83,6 @@ public class Turnament implements Serializable {
 		return returnString;
 	}
 	
-	public void SkrivTekstfil() throws IOException 
-	{
-//		FileWriter fil = new FileWriter("hold.txt");
-//		PrintWriter ud = new PrintWriter(fil);
-//		ud.println("1,Randers FC");
-//		ud.println("2,AGF");
-//		ud.println("3,OB");
-//		ud.println("4,SønderjyskE");
-//		ud.println("5,FC Midtjylland");
-//		ud.println("6,FC Nordsjælland");
-//		ud.println("7,Lyngby");
-//		ud.println("8,FCK");
-//		ud.println("9,AC Horsens");
-//		ud.println("10,Aab");
-//		ud.println("11,Vejle");
-//		ud.println("12,Brøndby");		
-//	    ud.close(); // luk så alle data skrives til disken
-
-	}
-	
 	public void listTeamsAlfabetecally() {
 		teams.sort(null);
 		for (Team team : teams) {
@@ -117,8 +91,16 @@ public class Turnament implements Serializable {
 	}
 
 	public void addGoal(int matchnumber, Goal.GoalType goaltype, int goalMinute, int goalSecond ) throws Exception {
-		Match m = matches.get(matchnumber -1);//-1 because first matchnumber is 1 and first element in ArrryList is 0 
-		m.addGoal(goaltype, goalMinute, goalSecond);
+		Match m = matches.get(matchnumber -1);//-1 because first matchnumber is 1 and first element in ArrryList is 0
+		// Pick a random goalscorer
+		Player goalScorer;
+		if (goaltype == Goal.GoalType.Home) {
+			goalScorer = m.getHomeTeam().getRandomgoalScorer();
+		} else {
+			goalScorer = m.getAwayTeam().getRandomgoalScorer();			
+		}
+		
+		m.addGoal(goaltype, goalMinute, goalSecond, goalScorer);
 	}
 
 	public void listTeamsByPoint(Boolean doPrint) {
@@ -135,7 +117,6 @@ public class Turnament implements Serializable {
 		for (Match match : matches) {
 			Collections.sort(match.getGoals());			
 		}
-
 	}
 	
 	public void setPointsForTeams() {
@@ -156,7 +137,6 @@ public class Turnament implements Serializable {
 					}
 				}
 			}
-			
 		}
 	}
 
@@ -164,12 +144,9 @@ public class Turnament implements Serializable {
 		
 		long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 		Random r = new Random();
-		for (Team team : teams) 
-		{
+		for (Team team : teams) {
 			int roundNo = 1;
-			for (int i = 0; i < teams.size(); i++) 
-			{
-				
+			for (int i = 0; i < teams.size(); i++) {
 				// If team not equals itself
 				if (teams.get(i).getId() != team.getId()) {
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
@@ -177,7 +154,6 @@ public class Turnament implements Serializable {
 					Match m = new Match(team, teams.get(i), getNextMatchId(), matchDate, roundNo++);
 					m.endMatch(90);
 					addMatch(m);
-					//roundNo++;					
 				}
 			}
 		}
@@ -189,7 +165,6 @@ public class Turnament implements Serializable {
 			numberOfGoals += match.getNumberOfGoals();
 		}
 		return numberOfGoals;
-		
 	}
 	
 	public void generateRandomGoals() throws Exception {
@@ -268,7 +243,6 @@ public class Turnament implements Serializable {
 		return gr;		
 	}
 	
-	
 	public int getAwayGoals(Team t) {
 		int awayGoals = 0;
 		for (Match m : matches) {
@@ -295,16 +269,11 @@ public class Turnament implements Serializable {
 	}
 
 	public void reGenerateGoals() throws Exception {
-//		players.clear();
-//		contractPeriods.clear();
-//		matches.clear();
-//		teams.clear();
-//		loadTeams("teams.txt");
-//		loadPlayers("players.txt");
-//		nextMatchId = 1;
-//		generateMatches();
-//		generateRandomGoals();
+		matches.clear();
+		nextMatchId = 1;
+		generateMatches();
+		listTeamsByPoint(false);
+		generateRandomGoals();
 	}
-
 	
 }

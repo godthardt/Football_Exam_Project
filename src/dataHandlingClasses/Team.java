@@ -4,6 +4,7 @@ package dataHandlingClasses;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 
 public class Team implements Comparable<Team>, Serializable {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects	
@@ -16,12 +17,26 @@ public class Team implements Comparable<Team>, Serializable {
 	private int points = 0;
 	private ArrayList<Player> players;
 
+	public Team (int id, String name) {
+		this.name = name;
+		this.id = id;
+		players = new ArrayList<Player>();
+	}
+
+	public int getNumberOfPayersInTeam () {
+		return players.size();
+	}
+	
 	public void resetPoints() {
 		points=0;
 	}
 
 	public void addPoints(int newPoints) {
 		points = points + newPoints;
+	}
+
+	public void addPlayer(Player player) {
+		players.add(player);
 	}
 
 	public int getPoints() {
@@ -32,12 +47,6 @@ public class Team implements Comparable<Team>, Serializable {
 		return name;
 	}
 
-	public Team (int id, String name) {
-		this.name = name;
-		this.id = id;
-		players = new ArrayList<Player>();
-	}
-	
 	public int compareTo(Team t) {
 		return this.name.compareTo(t.name);
 
@@ -52,6 +61,12 @@ public class Team implements Comparable<Team>, Serializable {
 	
 	public void print() {
 		System.out.println(id + "\t" + name + "\t\t\t" + "Points = " + points);
+	}
+
+
+	public Player getRandomgoalScorer() {
+		int randomNumber = (new Random().nextInt(players.size()));
+		return players.get(randomNumber);
 	}
 
 }

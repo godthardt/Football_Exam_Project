@@ -55,18 +55,19 @@ public class Match implements Serializable {
 		return awayGoals + homeGoals;
 	}
 
-	public void addGoal(Goal.GoalType goaltype, int scoreMinute, int scoreSecond) {
+	public void addGoal(Goal.GoalType goaltype, int scoreMinute, int scoreSecond, Player goalScorer) {
 		// TODO Auto-generated method stub
 		if (goaltype==Goal.GoalType.Home)
 		{
 			homeGoals++;
-			goals.add(new Goal(Goal.GoalType.Home, scoreMinute, scoreSecond));
+			//goals.add(new Goal(Goal.GoalType.Home, scoreMinute, scoreSecond, goalScorer));
 		}
 		else 
 		{
 			awayGoals++;
-			goals.add(new Goal(Goal.GoalType.Away, scoreMinute, scoreSecond));			
+						
 		}
+		goals.add(new Goal(goaltype, scoreMinute, scoreSecond, goalScorer));
 			
 	}
 

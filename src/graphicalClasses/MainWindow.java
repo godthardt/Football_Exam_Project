@@ -58,7 +58,7 @@ public class MainWindow {
 	        	try {
 	        		mainPanel.clearTables();
 	        		turnament.reGenerateGoals();
-	        		//mainPanel.loadTeamsIntoTable();
+	        		mainPanel.loadTeamsIntoTable();
 	        		
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
