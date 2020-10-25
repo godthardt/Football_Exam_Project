@@ -1,3 +1,5 @@
+package graphicalClasses;
+
 
 
 import java.awt.*;
@@ -12,6 +14,14 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+
+import dataHandlingClasses.Constants;
+import dataHandlingClasses.ContractPeriod;
+import dataHandlingClasses.Goal;
+import dataHandlingClasses.GoalResult;
+import dataHandlingClasses.Match;
+import dataHandlingClasses.Team;
+import dataHandlingClasses.Turnament;
 
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
@@ -322,7 +332,7 @@ public class MainPanel extends JPanel{
 					int colNum = 0;					
 					goalTable.setValueAt(rowNumber, rowNumber, colNum++);
 					goalTable.setValueAt(goal.getMinute() + ":" + goal.getSecond(), rowNumber, Arrays.asList(goalTableColumnNames).indexOf(tidGoalColumn));
-					if (goal.getGoalType()== GoalType.Home) {
+					if (goal.getGoalType()== Goal.GoalType.Home) {
 						homeGoals++;
 					}
 					else {

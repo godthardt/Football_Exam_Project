@@ -1,3 +1,4 @@
+package dataHandlingClasses;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.LocalDate;
@@ -54,17 +55,17 @@ public class Match implements Serializable {
 		return awayGoals + homeGoals;
 	}
 
-	public void addGoal(GoalType goaltype, int scoreMinute, int scoreSecond) {
+	public void addGoal(Goal.GoalType goaltype, int scoreMinute, int scoreSecond) {
 		// TODO Auto-generated method stub
-		if (goaltype==GoalType.Home)
+		if (goaltype==Goal.GoalType.Home)
 		{
 			homeGoals++;
-			goals.add(new Goal(GoalType.Home, scoreMinute, scoreSecond));
+			goals.add(new Goal(Goal.GoalType.Home, scoreMinute, scoreSecond));
 		}
 		else 
 		{
 			awayGoals++;
-			goals.add(new Goal(GoalType.Away, scoreMinute, scoreSecond));			
+			goals.add(new Goal(Goal.GoalType.Away, scoreMinute, scoreSecond));			
 		}
 			
 	}

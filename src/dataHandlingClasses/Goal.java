@@ -1,13 +1,14 @@
+package dataHandlingClasses;
 
 
 import java.io.Serializable;
 import java.util.Comparator;
 
-enum GoalType { Home, Away}
-
 public class Goal implements Comparable<Goal>, Serializable {
 
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
+	
+	public static enum GoalType { Home, Away}
 	private int minute;
 	public int getMinute() { return minute;}
 	private int sec;

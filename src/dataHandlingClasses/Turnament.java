@@ -1,3 +1,5 @@
+package dataHandlingClasses;
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
@@ -6,7 +8,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.stream.Collector;
+
+//import TurnamentManager;
+
 import java.io.*;
 
 public class Turnament implements Serializable {
@@ -111,7 +116,7 @@ public class Turnament implements Serializable {
 		}
 	}
 
-	public void addGoal(int matchnumber, GoalType goaltype, int goalMinute, int goalSecond ) throws Exception {
+	public void addGoal(int matchnumber, Goal.GoalType goaltype, int goalMinute, int goalSecond ) throws Exception {
 		Match m = matches.get(matchnumber -1);//-1 because first matchnumber is 1 and first element in ArrryList is 0 
 		m.addGoal(goaltype, goalMinute, goalSecond);
 	}
@@ -190,7 +195,6 @@ public class Turnament implements Serializable {
 	public void generateRandomGoals() throws Exception {
 		final int stdMachTimeMiutes = 90;
 		Random r = new Random();
-		GoalType goaltype;
 		int minuteScored = 0;
 		int exstraTime = r.nextInt(Constants.maxExtraTimePrMatch);
 		
@@ -207,13 +211,11 @@ public class Turnament implements Serializable {
 						break;
 					}
 					case 1: {
-						goaltype = GoalType.Home;
-						addGoal(match.getMatchNo(), goaltype, nextScoreMinute, r.nextInt(59));
+						addGoal(match.getMatchNo(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));
 						break;						
 					}
 					case 2: {
-						goaltype = GoalType.Away;
-						addGoal(match.getMatchNo(), goaltype, nextScoreMinute, r.nextInt(59));
+						addGoal(match.getMatchNo(), Goal.GoalType.Away, nextScoreMinute, r.nextInt(59));
 						break;						
 					}
 				}
