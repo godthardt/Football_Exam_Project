@@ -5,11 +5,12 @@ import java.time.LocalDate;
 enum VictoryType { Home, Away, Draw}
 
 public class Match implements Serializable {
-	public Match (Team homeTeam, Team awayTeam, int matchNo, LocalDate matchDate) {
+	public Match (Team homeTeam, Team awayTeam, int matchNo, LocalDate matchDate, int roundNo) {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.matchNo = matchNo;
 		this.date = matchDate;
+		this.roundNo = roundNo;
 		goals = new ArrayList<Goal>();
 	}
 	
@@ -34,6 +35,10 @@ public class Match implements Serializable {
 	public int getAwayPoints() { return awayPoints; }
 	private ArrayList<Goal> goals;
 	private int minutesPlayed = 0;
+	public int getMinutesPlayed() { return minutesPlayed;};
+	private int roundNo;
+	public int getRoundNo() { return this.roundNo; }
+	
 	private VictoryType victoryType;
 	public VictoryType getVictoryType() { return victoryType; }
 	public ArrayList<Goal> getGoals() { return goals; }

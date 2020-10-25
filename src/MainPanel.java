@@ -1,6 +1,7 @@
 
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.Random;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -22,43 +24,45 @@ public class MainPanel extends JPanel{
 	JLabel matchesLabel = new JLabel();
 	JTextField player2nameTextField = new JTextField();
 	JButton closeButton = new JButton();
-	//JTextArea textArea = new JTextArea();
 	JTable teamTable;
 	DefaultTableModel teamTableModel;	
 	JTable matchTable;
 	JTable goalTable;
 	JTable playerTable;
+	
+	JTableColumnMetaData teamTableMetaData;
+	JTableColumnMetaData matchTableMetaData;
+	JTableColumnMetaData goalTableMetaData;
+	JTableColumnMetaData playerTableMetaData;	
+	
 
 	Random rand;
 	Turnament turnament;
 	int modus = 16; // Predefined modus for margin space etc.
+	int slimColumnWidth = modus;
+	int mediumWidth = 60;
+	int largeWidth = 80;	
 
 
 	// Column Names
 	final String teamIdColumn = "Hold Id";
 	String[] teamTableColumnNames =  { "Nr.", teamIdColumn, "Holdnavn", "Kampe", "Målscore", "Point"};
-	Integer[] teamTableColumnWidths = { 20, 20, 80, 20, 60, 20};
+	// Column widths
+	Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeWidth, slimColumnWidth, mediumWidth, slimColumnWidth};
 
 	final String matchIdColumn = "Kamp Id";
-	String[] matchTableColumnNames = { "Nr.", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score"};
-	Integer[] matchTableColumnWidths = { 20, 20, 20, 80, 60, 20};	
+	String[] matchTableColumnNames = { "Nr.", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score", "Runde"};
+	Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, slimColumnWidth, largeWidth, mediumWidth, slimColumnWidth, slimColumnWidth};	
 
 	final String tidGoalColumn = "Tid";	
 	String[] goalTableColumnNames =  { "Nr.", "Stilling", tidGoalColumn, "Målscorer"};
-	Integer[] goalTableColumnWidths = { 20, 60, 20, 20};
+	Integer[] goalTableColumnWidths = { slimColumnWidth, mediumWidth, slimColumnWidth, slimColumnWidth};
 	
 	String[] playerTableColumnNames =  { "Nr.", "Navn", "Kontraktudløb"};
-	Integer[] playerTableColumnWidths = { 20, 80, 60};	
+	Integer[] playerTableColumnWidths = { slimColumnWidth, largeWidth, mediumWidth};	
 
-
+	
 	private int currentTeamId;
-
-
-
-	public void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);              // call super to draw background
-	}
 
 	public MainPanel(MainWindow mainWindow, Turnament turnament) {
 		super();
@@ -71,6 +75,11 @@ public class MainPanel extends JPanel{
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g); // call super to ensure draw basic drawing
 	}
 
 	private void jbInit() throws Exception {
@@ -88,21 +97,13 @@ public class MainPanel extends JPanel{
 		player2nameTextField.setBounds(new Rectangle(350, 12, 112, 29));
 
 		closeButton.setText("Close");
-		closeButton.setBounds(modus,  modus, 8*modus, 2*modus);
+		closeButton.setBounds(10*modus,  modus, 8*modus, 2*modus);
 
 		int numberOfMatchesPrTeam = (turnament.getNumberOfTeams() - 1) * 2;
 		teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams() + 1, teamTableColumnNames.length); //+ 1 = line for column names
 		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam + 1, matchTableColumnNames.length);
 		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch + 1, goalTableColumnNames.length);
 		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam() + 1, playerTableColumnNames.length);		
-
-		// Set column Names
-		setColumnNamesAndWidthOnTable(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths);
-		setColumnNamesAndWidthOnTable(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths);
-		setColumnNamesAndWidthOnTable(playerTable, playerTableModel, playerTableColumnNames, playerTableColumnWidths);
-		setColumnNamesAndWidthOnTable(goalTable, goalTableModel, goalTableColumnNames, goalTableColumnWidths);
-		
-		loadTeamsIntoTable();
 
 		teamTable = new JTable(teamTableModel);
 		teamTable.setBounds(new Rectangle(modus, 4*modus, 600, 210));
@@ -115,8 +116,20 @@ public class MainPanel extends JPanel{
 		
 		playerTable = new JTable(playerTableModel);
 		playerTable.setBounds(new Rectangle(700, 4*modus, 300, 660));
-		
 
+		teamTableMetaData = new JTableColumnMetaData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths);
+		matchTableMetaData = new JTableColumnMetaData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths);
+		goalTableMetaData = new JTableColumnMetaData(goalTable, goalTableModel, goalTableColumnNames, goalTableColumnWidths);
+		playerTableMetaData = new JTableColumnMetaData(playerTable, playerTableModel, playerTableColumnNames, playerTableColumnWidths);	
+		
+		// Set column Names and column widths
+		setColumnNamesAndWidthOnTable(teamTableMetaData);
+		setColumnNamesAndWidthOnTable(matchTableMetaData);
+		setColumnNamesAndWidthOnTable(goalTableMetaData);
+		setColumnNamesAndWidthOnTable(playerTableMetaData);
+		
+		loadTeamsIntoTable();
+		
 		this.setLayout(null);
 		this.add(scoreBoardLabel);
 		this.add(matchesLabel);
@@ -228,14 +241,18 @@ public class MainPanel extends JPanel{
 
 
 	
-	public void setColumnNamesAndWidthOnTable(JTable jTable, DefaultTableModel modelTable, String[] headerNames, Integer[] columnWidths)
+	public void setColumnNamesAndWidthOnTable(JTableColumnMetaData jTableColumnMetaData)
 	{
 		try {
 
-			//System.out.println(jTable);
-			for (int i = 0; i < headerNames.length; i++) {
-				modelTable.setValueAt(headerNames[i], 0, i);
-				int width = columnWidths[i];
+			//jTableColumnMetaData.jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
+			for (int i = 0; i < jTableColumnMetaData.jTable.getColumnCount(); i++) {
+				
+				jTableColumnMetaData.modelTable.setValueAt(jTableColumnMetaData.getColumnHeader(i), 0, i);
+				int width = jTableColumnMetaData.getColumnWidth(i);
+				//jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setFont(new Font("SansSerif", Font.BOLD, 12));
+				jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setPreferredWidth(width);
+				
 				//jTable.getColumnModel().getColumn(i).setPreferredWidth(width);
 				//modelTable..getColumn(i).setMaxWidth(width);
 
@@ -246,9 +263,12 @@ public class MainPanel extends JPanel{
 			}			
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
-
+		//.setRowColour(1, Color.YELLOW);
 	}
+	
+	
 	
 	
 //	public void addSchrollbar (DefaultTableModel table) {
@@ -265,10 +285,11 @@ public class MainPanel extends JPanel{
 			if ((m.getHomeTeam().getId() == teamID) || (m.getAwayTeam().getId() == teamID)) {
 				matchTable.setValueAt(rowNumber, rowNumber, colNum++);
 				matchTable.setValueAt(m.getMatchNo(), rowNumber, colNum++);
-				matchTable.setValueAt(m.getDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString(), rowNumber, colNum++); 			
+				matchTable.setValueAt(m.getDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++); 			
 				matchTable.setValueAt(m.getHomeTeam().getName(), rowNumber, colNum++);
 				matchTable.setValueAt(m.getAwayTeam().getName(), rowNumber, colNum++);
-				matchTable.setValueAt(m.getHomeGoals() + " - " + m.getAwayGoals(), rowNumber, colNum++);			
+				matchTable.setValueAt(m.getHomeGoals() + " - " + m.getAwayGoals(), rowNumber, colNum++);
+				matchTable.setValueAt(m.getRoundNo(), rowNumber, colNum++);				
 				rowNumber++;
 			}
 		}
@@ -321,23 +342,46 @@ public class MainPanel extends JPanel{
 		clearTable(playerTable);
 		
 		int rowNumber = 1;		
-		for (ContractPeriod period : turnament.getContractPeriods()) {
+		for (ContractPeriod period : turnament.getTurnamentManager().getContractPeriods()) {
 			if (period.getTeamId() == teamId) {
 				int colNum = 0;
 				playerTable.setValueAt(rowNumber, rowNumber, colNum++);
 				playerTable.setValueAt(turnament.getPlayers().get(period.getPlayerId()).getName(), rowNumber, colNum++);
-				playerTable.setValueAt(period.getEndDatee().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString(), rowNumber, colNum++);				
+				playerTable.setValueAt(period.getEndDatee().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);				
 				rowNumber++;
 			}
 		}
 	}
 
 	public void clearTables() {
-		// TODO Auto-generated method stub
 		clearTable(teamTable);
 		clearTable(matchTable);
 		clearTable(goalTable);
 		clearTable(playerTable);					
 	}
 
+}
+
+class JTableColumnMetaData {
+	// Purpose: To organize data relating to the same JTable
+	private ArrayList<String> columnHeaderTitles;
+	private ArrayList<Integer> columnHeaderWidths;
+	JTable jTable;
+	DefaultTableModel modelTable; 
+
+	JTableColumnMetaData(JTable jTable, DefaultTableModel modelTable, String[] headerTitlesArray, Integer[] HeaderWidthsArray) {
+		columnHeaderTitles = new ArrayList<String>(Arrays.asList(headerTitlesArray));
+		columnHeaderWidths = new ArrayList<Integer>(Arrays.asList(HeaderWidthsArray));
+		this.jTable = jTable;
+		this.modelTable = modelTable;
+	}
+	
+	public String getColumnHeader(int index) {
+		return columnHeaderTitles.get(index).toString();
+	}
+
+	public int getColumnWidth(int index) {
+		return columnHeaderWidths.get(index).intValue();
+	}
+	
 }

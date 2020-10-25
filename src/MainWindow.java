@@ -45,14 +45,16 @@ public class MainWindow {
 	    mainJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    MainPanel mainPanel = new MainPanel(this, turnament);
 	    mainJFrame.add(mainPanel);
+	    //mainJFrame.add(new footballJPanel());
 	    mainJFrame.setVisible(true);
+	    
 
 	    refreshMenu.addActionListener(new java.awt.event.ActionListener() {
 	        public void actionPerformed(java.awt.event.ActionEvent e) {
 	        	try {
 	        		mainPanel.clearTables();
 	        		turnament.reGenerateGoals();
-	        		mainPanel.loadTeamsIntoTable();
+	        		//mainPanel.loadTeamsIntoTable();
 	        		
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block

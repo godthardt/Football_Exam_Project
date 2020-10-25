@@ -10,26 +10,25 @@ import java.util.stream.Collectors;
 import java.io.*;
 
 public class Turnament implements Serializable {
-	public Turnament(String name, LocalDate startDate, LocalDate endDate) throws IOException {
+	public Turnament(TurnamentManager turnamentManager, String name, LocalDate startDate, LocalDate endDate) throws IOException {
 		this.name = name;
+		this.turnamentManager = turnamentManager;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		teams = new ArrayList<Team>();
-		matches = new ArrayList<Match>();
-		players = new ArrayList<Player>();
-		contractPeriods = new ArrayList<ContractPeriod>();
+		this.teams = turnamentManager.getTeams();
+		this.players = turnamentManager.getPlayers();
 
-		loadTeams("teams.txt");
-		loadPlayers("players.txt");
+		matches = new ArrayList<Match>();
+		
 		//System.out.println("Number of teams in turnament " + turnament.getNumberOfTeams());
 		generateMatches();
 		//System.out.println("Number of matches in turnament " + turnament.getNumberOfMatches());
 		try {
 			generateRandomGoals();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		//System.out.println("Number of goals in turnament " + turnament.getNumberOfGoals());
 		
 		//turnament.listMatches();
@@ -39,9 +38,12 @@ public class Turnament implements Serializable {
 		// serialize turnament into stream
 		
 	}
+
+	public TurnamentManager getTurnamentManager() { return turnamentManager; }
 	
 	private String name;
 	public String getName() { return name; };
+	private TurnamentManager turnamentManager;	
 	private LocalDate startDate;
 	public LocalDate GetStartDate() { return startDate; }
 	private LocalDate endDate;
@@ -55,16 +57,11 @@ public class Turnament implements Serializable {
 	private ArrayList<Team> teams;
 	private ArrayList<Match> matches;
 	public  ArrayList<Match> getMatches() { return matches; }
-	private ArrayList<ContractPeriod> contractPeriods;
 	private ArrayList<Player> players;
 	public ArrayList<Player> getPlayers() { return players; }
-	public ArrayList<ContractPeriod> getContractPeriods() {return contractPeriods; } 
 	
 	public Team GetTeam(int teamNumber) {
 		return teams.get(teamNumber);
-	}
-	public void addTeam(Team team) {
-		teams.add(team);
 	}
 
 	public int getNumberOfMatches() {
@@ -87,112 +84,6 @@ public class Turnament implements Serializable {
 		return returnString;
 	}
 	
-	public boolean loadTeams(String filename) throws IOException {
-
-		FileReader fil = new FileReader(filename);
-		BufferedReader ind = new BufferedReader(fil);
-		int lineNo = 0;
-		try {
-			
-		String linje = ind.readLine();
-		while (linje != null)
-		{
-			String[] arrOfStr = linje.split(",");
-			addTeam(new Team(Integer.parseInt(arrOfStr[0]), arrOfStr[1]));
-			linje = ind.readLine();
-			lineNo++;
-		}
-		ind.close();
-		return true;
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println("Error while reading line number " + lineNo);
-			e.printStackTrace();
-			return false;			
-		}
-
-	}
-
-	
-	public int getHighestNumberOfPlayersInOneTeam() {
-		//sort contracts by teamId 
-		contractPeriods.sort(null);
-		
-		
-        //java.util.List<String> strings = Arrays.asList("Zohne", "Redy", "Zohne", "Redy", "Stome");
-//        java.util.Map<ContractPeriod, Long> teamCount = contractPeriods.stream().collect(Collectors.groupingBy(Integer -> Integer, Collectors.counting()));
-//        int lineNo = 1;
-//        teamCount.forEach((name, count) -> {
-//            System.out.println(name.getTeamId() + ":" + count);
-//
-//        });		
-		int currentTeamId;
-		int prevTeamId = -1;
-		int counter = 0;
-		int Number = 0;
-		// loop over contractPeriods, to find the  number of players in one team
-		for (ContractPeriod contractPeriod : contractPeriods) {
-			counter++;
-			currentTeamId = contractPeriod.getTeamId();
-
-			// is it a new team ?
-			if (currentTeamId != prevTeamId) {
-				// new  ?
-				if (counter > Number) {
-					Number = counter;
-					System.out.println("New  team: " + contractPeriod.getTeamId() + " - Number " + Number); 
-				}
-				// start over on new teamId
-				counter = 0;
-			}
-			prevTeamId = currentTeamId;
-			
-		}
-		System.out.println(" number: " + Number);
-		return Number;
-
-	}
-	
-	public boolean loadPlayers(String filename) throws IOException {
-
-		FileReader fil = new FileReader(filename);
-		BufferedReader ind = new BufferedReader(fil);
-		int lineNo = 0;
-		try {
-
-			String linje = ind.readLine();
-			while (linje != null)
-			{
-				String[] firstArrOfStr = linje.split(",");
-				// Input file line has format "Nicolaj Thomsen,52769,2021-06-30" the part after the last comma is the end date for the contract)
-
-				LocalDate contractExpire = LocalDate.parse(firstArrOfStr[2]);
-				Player player = new Player(firstArrOfStr[0]);
-				players.add(player);
-				int teamId = Integer.parseInt(firstArrOfStr[1]);
-				ContractPeriod contractPeriod = new ContractPeriod(player.getId(), teamId, contractExpire);
-				contractPeriods.add(contractPeriod );
-				linje = ind.readLine();
-				lineNo++;			
-			}
-			ind.close();
-			getHighestNumberOfPlayersInOneTeam();
-			return true;
-		} 
-		catch (Exception e) {
-			// TODO: handle exception
-			System.out.println("Error while reading line number " + lineNo);
-			e.printStackTrace();
-			return false;			
-		}
-
-	}
-	
-	private void addContractPeriod(int parseInt) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void SkrivTekstfil() throws IOException 
 	{
 //		FileWriter fil = new FileWriter("hold.txt");
@@ -270,15 +161,18 @@ public class Turnament implements Serializable {
 		Random r = new Random();
 		for (Team team : teams) 
 		{
+			int roundNo = 1;
 			for (int i = 0; i < teams.size(); i++) 
 			{
+				
 				// If team not equals itself
-				if (teams.get(i) != team) {
+				if (teams.get(i).getId() != team.getId()) {
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
-					Match m = new Match(team, teams.get(i), getNextMatchId(), matchDate);
+					Match m = new Match(team, teams.get(i), getNextMatchId(), matchDate, roundNo++);
 					m.endMatch(90);
 					addMatch(m);
+					//roundNo++;					
 				}
 			}
 		}
@@ -393,17 +287,21 @@ public class Turnament implements Serializable {
 		return numberOfMatches;
 		
 	}
+	
+	public int getHighestNumberOfPlayersInOneTeam() {
+		return turnamentManager.getHighestNumberOfPlayersInOneTeam();
+	}
 
 	public void reGenerateGoals() throws Exception {
-		players.clear();
-		contractPeriods.clear();
-		matches.clear();
-		teams.clear();
-		loadTeams("teams.txt");
-		loadPlayers("players.txt");
-		nextMatchId = 1;
-		generateMatches();
-		generateRandomGoals();
+//		players.clear();
+//		contractPeriods.clear();
+//		matches.clear();
+//		teams.clear();
+//		loadTeams("teams.txt");
+//		loadPlayers("players.txt");
+//		nextMatchId = 1;
+//		generateMatches();
+//		generateRandomGoals();
 	}
 
 	
