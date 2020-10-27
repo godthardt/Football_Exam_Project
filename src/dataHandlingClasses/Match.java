@@ -60,7 +60,6 @@ public class Match implements Serializable {
 		if (goaltype==Goal.GoalType.Home)
 		{
 			homeGoals++;
-			//goals.add(new Goal(Goal.GoalType.Home, scoreMinute, scoreSecond, goalScorer));
 		}
 		else 
 		{

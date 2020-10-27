@@ -12,7 +12,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 import dataHandlingClasses.Constants;
-import dataHandlingClasses.ContractPeriod;
+import dataHandlingClasses.Contract;
 import dataHandlingClasses.Goal;
 import dataHandlingClasses.GoalResult;
 import dataHandlingClasses.Match;
@@ -356,15 +356,16 @@ public class MainPanel extends JPanel{
 	{
 		clearTable(playerTable);
 		
-		int rowNumber = 1;		
-		for (ContractPeriod period : turnament.getTurnamentManager().getContractPeriods()) {
-			if (period.getTeamId() == teamId) {
+		int rowNumber = 1;
+		Team team = turnament.GetTeam(teamId);
+		for (Contract contract : team.getTeamContracts()) {
+
 				int colNum = 0;
 				playerTable.setValueAt(rowNumber, rowNumber, colNum++);
-				playerTable.setValueAt(turnament.getPlayers().get(period.getPlayerId()).getName(), rowNumber, colNum++);
-				playerTable.setValueAt(period.getEndDatee().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);				
+				playerTable.setValueAt(contract.getPlayerName(), rowNumber, colNum++);
+				playerTable.setValueAt(contract.getEndDatee().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);				
 				rowNumber++;
-			}
+
 		}
 	}
 

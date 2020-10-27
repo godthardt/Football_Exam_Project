@@ -15,34 +15,31 @@ import java.util.stream.Collector;
 import java.io.*;
 
 public class Turnament implements Serializable {
-	public Turnament(TurnamentManager turnamentManager, String name, LocalDate startDate, LocalDate endDate) throws IOException {
+	public Turnament(ArrayList<Team> turnamentTeams, ArrayList<Contract> turnamentContracts , String name, LocalDate startDate, LocalDate endDate) throws Exception {
 		this.name = name;
-		this.turnamentManager = turnamentManager;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.teams = turnamentManager.getTeams();
-		this.players = turnamentManager.getPlayers();
-
+		this.turnamentTeams = turnamentTeams;
+		this.players = new ArrayList<Player>();
+		this.turnamentContractPeriods = turnamentContracts;
+		populatePlayers();
 		matches = new ArrayList<Match>();
-		
-		generateMatches();
-
-		try {
-			generateRandomGoals();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		listTeamsByPoint(false);		
+		generateMatchesAndGoals();
+		listTeamsByPoint(true);		
 		//turnament.listTeamsAlfabetecally();
 	
 	}
 
-	public TurnamentManager getTurnamentManager() { return turnamentManager; }
+	private void populatePlayers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//public TurnamentManager getTurnamentManager() { return turnamentManager; }
 	
 	private String name;
 	public String getName() { return name; };
-	private TurnamentManager turnamentManager;	
+	//private TurnamentManager turnamentManager;	
 	private LocalDate startDate;
 	public LocalDate GetStartDate() { return startDate; }
 	private LocalDate endDate;
@@ -52,15 +49,28 @@ public class Turnament implements Serializable {
 		return nextMatchId++;
 	}
 
-	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
-	private ArrayList<Team> teams;
+	private static final long serialVersionUID = 2;  //Helps class control version of serialized objects
+	private ArrayList<Team> turnamentTeams;
 	private ArrayList<Match> matches;
 	public  ArrayList<Match> getMatches() { return matches; }
 	private ArrayList<Player> players;
-	public ArrayList<Player> getPlayers() { return players; }
+	public ArrayList<Player> getPlayers(LocalDate matchDay, int teamID) { return players; } //TODO filter players
+	private ArrayList<Contract> turnamentContractPeriods;
 	
-	public Team GetTeam(int teamNumber) {
-		return teams.get(teamNumber);
+	public Team GetTeam(int teamId) {
+		Team returnTeam = null;
+		for (Team team : turnamentTeams) {
+			if(team.getId() == teamId) {
+				returnTeam = team;
+				break;
+			}
+		}
+		
+		if (returnTeam== null) {
+			throw new NullPointerException("Team not found in method GetTeam(teamID="+ teamId +")");  
+		}
+		
+		return returnTeam;
 	}
 
 	public int getNumberOfMatches() {
@@ -72,20 +82,20 @@ public class Turnament implements Serializable {
 	}
 	
 	public ArrayList<Team> getTeams() {
-		return teams;
+		return turnamentTeams;
 	}
 	
 	public String toString() {
 		String returnString = "";
-		for (Team team : teams) {
+		for (Team team : turnamentTeams) {
 			returnString = returnString + team.getName() + "\n"; 
 		}
 		return returnString;
 	}
 	
 	public void listTeamsAlfabetecally() {
-		teams.sort(null);
-		for (Team team : teams) {
+		turnamentTeams.sort(null);
+		for (Team team : turnamentTeams) {
 			System.out.println(team.getName());			
 		}
 	}
@@ -104,10 +114,10 @@ public class Turnament implements Serializable {
 	}
 
 	public void listTeamsByPoint(Boolean doPrint) {
-		Collections.sort(teams, new SortbyPoints());
+		Collections.sort(turnamentTeams, new SortbyPoints());
 		if (doPrint) {
-			for (int i = 0; i < teams.size(); i++) {
-				teams.get(i).print();
+			for (int i = 0; i < turnamentTeams.size(); i++) {
+				turnamentTeams.get(i).print();
 			}
 		}
 	}
@@ -140,20 +150,21 @@ public class Turnament implements Serializable {
 		}
 	}
 
-	public void generateMatches() {
+	public void generateMatchesAndGoals() throws Exception {
 		
 		long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 		Random r = new Random();
-		for (Team team : teams) {
+		for (Team team : turnamentTeams) {
 			int roundNo = 1;
-			for (int i = 0; i < teams.size(); i++) {
+			for (int i = 0; i < turnamentTeams.size(); i++) {
 				// If team not equals itself
-				if (teams.get(i).getId() != team.getId()) {
+				if (turnamentTeams.get(i).getId() != team.getId()) {
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
-					Match m = new Match(team, teams.get(i), getNextMatchId(), matchDate, roundNo++);
+					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), matchDate, roundNo++);
 					m.endMatch(90);
 					addMatch(m);
+					generateRandomGoals(m);
 				}
 			}
 		}
@@ -167,40 +178,38 @@ public class Turnament implements Serializable {
 		return numberOfGoals;
 	}
 	
-	public void generateRandomGoals() throws Exception {
+	public void generateRandomGoals(Match match) throws Exception {
 		final int stdMachTimeMiutes = 90;
 		Random r = new Random();
 		int minuteScored = 0;
 		int exstraTime = r.nextInt(Constants.maxExtraTimePrMatch);
-		
-		for (Match match : matches) {
-			int numberOfGoalsToAdd = r.nextInt(Constants.maxGoalsOnePrMatch);
-			
-			for (int i = 0; i < numberOfGoalsToAdd; i++) {
-				int homeOrAway = r.nextInt(3);
-				int nextScoreMinute = r.nextInt(stdMachTimeMiutes - minuteScored);
-				minuteScored = nextScoreMinute;
-				switch (homeOrAway) {
-					case 0: {
-						// 0=no goal "pseudo random" ;-)
-						break;
-					}
-					case 1: {
-						addGoal(match.getMatchNo(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));
-						break;						
-					}
-					case 2: {
-						addGoal(match.getMatchNo(), Goal.GoalType.Away, nextScoreMinute, r.nextInt(59));
-						break;						
-					}
-				}
+
+		int numberOfGoalsToAdd = r.nextInt(Constants.maxGoalsOnePrMatch);
+
+		for (int i = 0; i < numberOfGoalsToAdd; i++) {
+			int homeOrAway = r.nextInt(3);
+			int nextScoreMinute = r.nextInt(stdMachTimeMiutes - minuteScored);
+			minuteScored = nextScoreMinute;
+			switch (homeOrAway) {
+			case 0: {
+				// 0=no goal "pseudo random" ;-)
+				break;
 			}
-			match.endMatch(90 + exstraTime); // Add up to 9 extra minutes 
+			case 1: {
+				addGoal(match.getMatchNo(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));
+				break;						
+			}
+			case 2: {
+				addGoal(match.getMatchNo(), Goal.GoalType.Away, nextScoreMinute, r.nextInt(59));
+				break;						
+			}
+			}
 		}
+		match.endMatch(90 + exstraTime); // Add up to 9 extra minutes 
 	}
 
 	public int getNumberOfTeams() {
-		return teams.size();
+		return turnamentTeams.size();
 	}
 
 	public void listMatches() {
@@ -265,15 +274,24 @@ public class Turnament implements Serializable {
 	}
 	
 	public int getHighestNumberOfPlayersInOneTeam() {
-		return turnamentManager.getHighestNumberOfPlayersInOneTeam();
+		int highestNumber = 0;
+		
+		for (Team team : turnamentTeams) {
+			if (team.getNumberOfPlayersInTeam() > highestNumber) {
+				highestNumber = team.getNumberOfPlayersInTeam();
+			}
+		}
+		System.out.println("highestNumber " + highestNumber);
+		return highestNumber; 
+
 	}
 
 	public void reGenerateGoals() throws Exception {
 		matches.clear();
 		nextMatchId = 1;
-		generateMatches();
+		generateMatchesAndGoals();
 		listTeamsByPoint(false);
-		generateRandomGoals();
 	}
+	
 	
 }

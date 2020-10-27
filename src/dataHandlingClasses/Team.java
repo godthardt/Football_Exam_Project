@@ -10,20 +10,45 @@ public class Team implements Comparable<Team>, Serializable {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects	
 	private String name;
 	private int id;
+	private int points = 0;
+	private ArrayList<Player> players;
+	private ArrayList<Contract> teamContracts;
+	public ArrayList<Contract> getTeamContracts() { return teamContracts; } 
+	private int level;  //eg. Superliga=0, 1.division=1, etc.
+	public int getLevel() { return this.level; }
+
+	// constructor
+	public Team (int id, String name, int level, ArrayList<Contract> contracts) {
+		this.name = name;
+		this.id = id;
+		this.level = level;
+		this.teamContracts = contracts;
+		players = new ArrayList<Player>();
+		//System.out.println(name + " num. players " + players.size() + " contracts  " + contracts.size());
+		try {
+			populatePlayersFromContractPeriods();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void populatePlayersFromContractPeriods() throws Exception {
+		for (Contract contract : teamContracts) {
+			if (contract.getTeamId() == id) {
+				players.add(new Player(contract.getPlayerId(), contract.getPlayerName()));
+			}
+			else
+				throw new Exception("Should not happen - wrong teamID in taems contracts");
+		}
+		
+	}
+
 	public int getId() {
 		return this.id;
 	}
-	
-	private int points = 0;
-	private ArrayList<Player> players;
 
-	public Team (int id, String name) {
-		this.name = name;
-		this.id = id;
-		players = new ArrayList<Player>();
-	}
-
-	public int getNumberOfPayersInTeam () {
+	public int getNumberOfPlayersInTeam () {
 		return players.size();
 	}
 	
@@ -65,8 +90,13 @@ public class Team implements Comparable<Team>, Serializable {
 
 
 	public Player getRandomgoalScorer() {
-		int randomNumber = (new Random().nextInt(players.size()));
-		return players.get(randomNumber);
+		if (players.size() > 0) {
+			int randomNumber = (new Random().nextInt(players.size()));
+			return players.get(randomNumber);
+		}
+		// Return an object, in order not to get an exception
+		// TODO Ensure that all team has attached players
+		return new Player("Sofus krølben");
 	}
 
 }

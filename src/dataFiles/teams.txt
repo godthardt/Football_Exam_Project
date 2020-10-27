@@ -1,12 +1,24 @@
-11906,Randers FC
-8838,AGF
-1399,OB
-14351,SønderjyskE
-6206,FC Midtjylland
-16409,FC Nordsjælland
-18052,Lyngby
-52769,FCK
-10773,AC Horsens
-64,Aab
-13039,Vejle
-16162,Brøndby
+11906,Randers FC,0
+8838,AGF,0
+1399,OB,0
+14351,SønderjyskE,0
+6206,FC Midtjylland,0
+16409,FC Nordsjælland,0
+18052,Lyngby,0
+52769,FCK,0
+10773,AC Horsens,0
+64,Aab,0
+13039,Vejle,0
+16162,Brøndby,0
+8213,Viborg FF,1
+9874,FC Fredericia,1
+12186,Silkeborg IF,1
+14083,Esbjerg fB,1
+328095,FC Helsingør,1
+20311,BK Fremad Amager,1
+3363,Hobro IK,1
+17101,HB Køge,1
+3335,Vendsyssel FF,1
+47279,Kolding IF,1
+20625,Hvidovre IF,1
+7287,Skive IK,1

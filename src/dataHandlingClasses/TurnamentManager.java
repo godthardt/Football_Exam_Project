@@ -4,15 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
-import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+//import java.util.Collections;
+//import java.util.Arrays;
+//import java.util.HashMap;
+//import java.util.List;
+//import java.util.Map;
 
 
 public class TurnamentManager implements Serializable  {
@@ -20,28 +18,52 @@ public class TurnamentManager implements Serializable  {
 	private String organisation;
 	public String getOrganisation() {return organisation; };
 	private ArrayList<Turnament> turnaments;
-	private ArrayList<Player> players;
-	public ArrayList<Player> getPlayers() { return players; }
-	private ArrayList<Team> teams;
-	public ArrayList<Team> getTeams() { return teams; }	
-	private ArrayList<ContractPeriod> contractPeriods;
-	public ArrayList<ContractPeriod> getContractPeriods() {return contractPeriods; } 
+	private ArrayList<Player> playersMasterList;
+	//public ArrayList<Player> getPlayers() { return playersMasterList; }
+	private ArrayList<Team> teamsMasterList;
+	//public ArrayList<Team> getTeams() { return teamsMasterList; }	
+	private ArrayList<Contract> periodsMasterList;
+	public ArrayList<Contract> getContractPeriods() {return periodsMasterList; } 
 	public ArrayList<Turnament> getTurnaments() {return turnaments; }
 	
 	// Constructor
 	public TurnamentManager(String organisation) throws IOException {
 		turnaments = new ArrayList<Turnament>();
 		this.organisation = organisation;
-		teams = new ArrayList<Team>();
-		players = new ArrayList<Player>();
-		contractPeriods = new ArrayList<ContractPeriod>();
-		loadTeams(Constants.stdDatafileFolder + "teams.txt");
+		teamsMasterList = new ArrayList<Team>();
+		playersMasterList = new ArrayList<Player>();
+		periodsMasterList = new ArrayList<Contract>();
 		loadPlayers(Constants.stdDatafileFolder + "players.txt");
-		
+		loadTeams(Constants.stdDatafileFolder + "teams.txt");
+		getHighestNumberOfPlayersInOneTeam();
+		//populatePlayersMasterList();
 	}
 	
+//	private void populatePlayersMasterList() {
+//		for (Contract contract : periodsMasterList) {
+//			playersMasterList.add(new)
+//			contract.getPlayerId()
+//		}
+//		
+//	}
+
 	public void addTurnament(Turnament turnament) {
-		turnaments.add(turnament);
+
+	turnaments.add(turnament);
+	}
+	
+	public Player getPlayer(int playerID) {
+		Player returnPlayer = null;
+		for (Player player : playersMasterList) {
+			if (player.getId() == playerID)
+				returnPlayer = player;
+		}
+		if (returnPlayer == null) {
+			throw new NullPointerException("PlayerId" + playerID + " not found in method getPlayer");  
+		}
+		
+		return returnPlayer;
+		
 	}
 	
 	public boolean loadPlayers(String filename) throws IOException {
@@ -54,21 +76,20 @@ public class TurnamentManager implements Serializable  {
 			String linje = ind.readLine();
 			while (linje != null)
 			{
-				String[] firstArrOfStr = linje.split(",");
+				String[] arrOfStr = linje.split(",");
 				// Input file line has format "Nicolaj Thomsen,52769,2021-06-30" the part after the last comma is the end date for the contract)
-				LocalDate contractExpire = LocalDate.parse(firstArrOfStr[2]);
-				Player player = new Player(firstArrOfStr[0]);
-				players.add(player);
-				int teamId = Integer.parseInt(firstArrOfStr[1]);
-				ContractPeriod contractPeriod = new ContractPeriod(player.getId(), teamId, contractExpire);
-				contractPeriods.add(contractPeriod );
+				LocalDate contractExpire = LocalDate.parse(arrOfStr[2]);
+				Player player = new Player(arrOfStr[0]);
+				playersMasterList.add(player);
+				int teamId = Integer.parseInt(arrOfStr[1]);
+				Contract contract = new Contract(player.getId(), player.getName(), teamId, contractExpire);
+				periodsMasterList.add(contract );
 				// Add the player to the relevant team
-				findTeamFromTeamId(teamId).addPlayer(player);				
+				//findTeamFromTeamId(teamId).addPlayer(player);				
 				linje = ind.readLine();
 				lineNo++;			
 			}
 			ind.close();
-			getHighestNumberOfPlayersInOneTeam();
 			//contractPeriods.sort(null);			
 			return true;
 		} 
@@ -84,9 +105,9 @@ public class TurnamentManager implements Serializable  {
 	public int getHighestNumberOfPlayersInOneTeam() {
 		int highestNumber = 0;
 		
-		for (Team team : teams) {
-			if (team.getNumberOfPayersInTeam() > highestNumber) {
-				highestNumber = team.getNumberOfPayersInTeam();
+		for (Team team : teamsMasterList) {
+			if (team.getNumberOfPlayersInTeam() > highestNumber) {
+				highestNumber = team.getNumberOfPlayersInTeam();
 			}
 		}
 		
@@ -109,7 +130,8 @@ public class TurnamentManager implements Serializable  {
 // 
 //        for (Map.Entry<Integer, Integer> entry : frequencyMap.entrySet()) {
 //            System.out.println(entry.getKey() + ": " + entry.getValue());
-//        }		
+//        }
+		System.out.println(highestNumber);
 		return highestNumber;
 	}
 	
@@ -123,8 +145,15 @@ public class TurnamentManager implements Serializable  {
 		String linje = ind.readLine();
 		while (linje != null)
 		{
-			String[] arrOfStr = linje.split(",");
-			teams.add(new Team(Integer.parseInt(arrOfStr[0]), arrOfStr[1]));
+			try {
+				String[] arrOfStr = linje.split(",");
+				int teamID = Integer.parseInt(arrOfStr[0]);
+				teamsMasterList.add(new Team(teamID, arrOfStr[1], Integer.parseInt(arrOfStr[2]), getContractPeriodsOfTeam(teamID)));
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("Exception " + e.toString() + " at line " + lineNo + " in file: " + filename);
+			}
 			linje = ind.readLine();
 			lineNo++;
 		}
@@ -136,16 +165,43 @@ public class TurnamentManager implements Serializable  {
 			e.printStackTrace();
 			return false;			
 		}
-
 	}
 	
 	public Team findTeamFromTeamId(int teamId) {
-		for (Team team : teams) {
+		for (Team team : teamsMasterList) {
 			if (team.getId() == teamId) {
 				return team; 
 			}
 		}
 		throw new NullPointerException("Team not Found");
+	}
+	
+	public ArrayList<Team> getTeamsOfLevel(int level) {
+		// construct an object to return to caller
+		ArrayList<Team> returnTeams = new ArrayList<Team>(); 
+		for (Team team : teamsMasterList) {
+			// correct level ?
+			if (team.getLevel() == level) {
+				// add team
+				returnTeams.add(team);
+			}
+		}
+
+		return returnTeams;		
+	}
+
+	private ArrayList<Contract> getContractPeriodsOfTeam(int teamId) {
+		// construct an object to return to caller
+		ArrayList<Contract> returnContracts = new ArrayList<Contract>(); 
+		for (Contract contract : periodsMasterList) {
+			// correct level ?
+			if (contract.getTeamId() == teamId) {
+				// add contractperiod for this team(id)
+				returnContracts.add(contract);
+			}
+		}
+
+		return returnContracts;		
 	}
 	
 }

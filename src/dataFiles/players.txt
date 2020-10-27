@@ -27,6 +27,7 @@ Pep Biel,52769,2024-06-30
 Robert Mudražija,52769,2024-12-31
 Mikkel Kaufmann,52769,2024-12-31
 Jonas Wind,52769,2025-06-30
+Carl "Skomager" Hansen,52769,1925-06-30
 Daniel Granli,64,2020-12-31
 Jores Okore,64,2021-06-30
 Kasper Pedersen,64,2021-06-30

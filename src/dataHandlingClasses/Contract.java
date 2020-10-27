@@ -2,7 +2,7 @@ package dataHandlingClasses;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ContractPeriod implements Comparable<ContractPeriod>, Serializable {
+public class Contract implements Comparable<Contract>, Serializable {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
 	//private LocalDate startDate;
 	private LocalDate endDate;
@@ -10,17 +10,20 @@ public class ContractPeriod implements Comparable<ContractPeriod>, Serializable 
 	//private double TransferSum;
 	//private Boolean hasBeenExtended = false;
 	private int playerId;
-	public int getPlayerId() { return playerId; }	
+	public int getPlayerId() { return playerId;	}	
+	private String playerName; 
+	public String getPlayerName() { return playerName; }	
 
 	private int teamId;
 	public int getTeamId() { return teamId; }
-	public ContractPeriod(int playerId, int teamId, LocalDate endDate) {
+	public Contract(int playerId, String playerName, int teamId, LocalDate endDate) {
 		this.playerId = playerId;
 		this.teamId = teamId; 
 		this.endDate = endDate;
+		this.playerName = playerName;
 	}
 	
-	public int compareTo(ContractPeriod c) {
+	public int compareTo(Contract c) {
 		int result = 0;
 		if (this.teamId > c.teamId)
 			result = 1;
