@@ -60,7 +60,7 @@ public class Main {
 		MainWindow mainWindow = new MainWindow(turnament);
 		
 	    MainPanel mainPanel = new MainPanel(turnament);
-	    mainPanel.setLocation(20, 20);
+	    mainPanel.setLocation(40, 40);
 	    mainPanel.setSize(300, 300);
 	    mainWindow.mainJFrame.add(mainPanel);	    
 	    mainPanel.setVisible(true);
@@ -68,7 +68,7 @@ public class Main {
 
 	    MainPanel mainPanel2 = new MainPanel(cupTurnament);
 	    mainPanel2.setLocation(80, 80);
-	    mainPanel2.setSize(200, 200);	    
+	    mainPanel2.setSize(400, 400);	    
 	    mainPanel2.setVisible(true);	    
 	    mainWindow.mainJFrame.add(mainPanel2);
 	    

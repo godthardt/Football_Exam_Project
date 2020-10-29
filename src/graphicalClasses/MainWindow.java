@@ -29,11 +29,15 @@ public class MainWindow {
 
 	    JMenu     fileMenu   = new JMenu();
 	    JMenuItem refreshMenu   = new JMenuItem();
+	    JMenuItem loadSerializedTurnament = new JMenuItem();
+	    JMenuItem saveSerializedTurnament = new JMenuItem();	    
 	    JMenuItem closeMenu  = new JMenuItem();
 
 	    fileMenu.setText("Fil");
 	    fileMenu.setMnemonic(KeyEvent.VK_F);
 	    refreshMenu.setText("Opdater");
+	    loadSerializedTurnament.setText("Åbn serialiseret turnering fra fil");
+	    saveSerializedTurnament.setText("Gem serialiseret turnering i fil");
 	    closeMenu.setText("Afslut");
 	    closeMenu.setMnemonic(KeyEvent.VK_A);
 
@@ -48,6 +52,8 @@ public class MainWindow {
 	    mainJFrame.setLocation(dim.width/2-mainJFrame.getSize().width/2, dim.height/2-mainJFrame.getSize().height/2); //source https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
 	    mainJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    mainJFrame.setExtendedState(mainJFrame.NORMAL);
+	    
+	    
 
 	    refreshMenu.addActionListener(new java.awt.event.ActionListener() {
 	        public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -62,10 +68,17 @@ public class MainWindow {
 				}
 	        }
 	      });	    
-	    
+
 	    closeMenu.addActionListener(new java.awt.event.ActionListener() {
 	        public void actionPerformed(java.awt.event.ActionEvent e) {
 	          System.out.println("Farvel!");
+	          System.exit(0);
+	        }
+	      });
+
+	    closeMenu.addActionListener(new java.awt.event.ActionListener() {
+	        public void actionPerformed(java.awt.event.ActionEvent e) {
+	          System.out.println("Farvel og tak til Jacob Nordfalk for kapitel 11 i OOP 6. udgave :-)");
 	          System.exit(0);
 	        }
 	      });

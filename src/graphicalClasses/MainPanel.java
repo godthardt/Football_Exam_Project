@@ -24,13 +24,14 @@ import java.time.format.DateTimeFormatter;
 
 public class MainPanel extends JInternalFrame{
 	private static final long serialVersionUID = 1;
-	//MDIFrame mainWindow;
+
 	JLabel teamTableLabel = new JLabel();
 	JLabel matchTableLabel = new JLabel();
 	JLabel goalTableLabel = new JLabel();
 	JLabel playerTabelLabel = new JLabel();	
 
 	JButton closeButton = new JButton();
+
 	JTable teamTable;
 	JTable matchTable;
 	JTable goalTable;
@@ -74,6 +75,11 @@ public class MainPanel extends JInternalFrame{
 		try {
 			this.turnament = turnament;
 			this.title = turnament.getName();
+//			this.setMaximizable(true); // maximize
+//			this.setIconifiable(true); // set minimize
+//			this.setClosable(true); // set closed
+//			this.setResizable(true); // set resizable
+			
 			initGraphics();
 		}
 		catch(Exception e) {
@@ -83,7 +89,10 @@ public class MainPanel extends JInternalFrame{
 
 	public void paintComponent(Graphics g)
 	{
-		super.paintComponent(g); // call super to ensure basic drawing
+		if (iconable==false) {
+			super.paintComponent(g); // call super to ensure basic drawing			
+		}
+
 	}
 
 	private void initGraphics() throws Exception {
@@ -145,12 +154,22 @@ public class MainPanel extends JInternalFrame{
 		loadTeamsIntoTable();
 		
 		this.getContentPane().setLayout(null);
+		
+		//setOpaque(false);
+		
+		// Labels
 		this.getContentPane().add(teamTableLabel);
 		this.getContentPane().add(matchTableLabel);
 		this.getContentPane().add(goalTableLabel);		
 		this.getContentPane().add(playerTabelLabel);		
+
 		this.getContentPane().add(closeButton);
+		
+		// Tables
 		this.getContentPane().add(teamTable);
+		//JScrollPane pane = new JScrollPane(teamTable);
+		//this.getContentPane().add(pane);		
+
 		this.getContentPane().add(matchTable);
 		this.getContentPane().add(goalTable);
 		this.getContentPane().add(playerTable);
@@ -163,12 +182,12 @@ public class MainPanel extends JInternalFrame{
 
 			private void closeButton_actionPerformed(ActionEvent e) {
 				try {
-				      setClosed(true);
-				    } catch (Exception ex) {
-				        System.err.println("Closing Exception");
-				    }
-				//System.exit(0);
-
+					// Close the panel (MDI child)
+					setClosed(true);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					System.err.println("Closing Exception");
+				}
 			}
 		});
 

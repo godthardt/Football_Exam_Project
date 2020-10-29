@@ -26,7 +26,7 @@ public class Turnament implements Serializable {
 		populatePlayers();
 		matches = new ArrayList<Match>();
 		generateMatchesAndGoals();
-		listTeamsByPoint(true);
+		listTeamsByPoint(false);
 		//"Turnering: " + turnament.getName() + " - afvikles fra " + turnament.GetStartDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + " til " + turnament.GetEndDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString()
 		//turnament.listTeamsAlfabetecally();
 	
@@ -37,11 +37,9 @@ public class Turnament implements Serializable {
 		
 	}
 
-	//public TurnamentManager getTurnamentManager() { return turnamentManager; }
-	
+
 	private String name;
 	public String getName() { return name; };
-	//private TurnamentManager turnamentManager;	
 	private LocalDate startDate;
 	public LocalDate GetStartDate() { return startDate; }
 	private LocalDate endDate;
@@ -98,7 +96,7 @@ public class Turnament implements Serializable {
 	public void listTeamsAlfabetecally() {
 		turnamentTeams.sort(null);
 		for (Team team : turnamentTeams) {
-			System.out.println(team.getName());			
+			//System.out.println(team.getName());			
 		}
 	}
 
@@ -214,13 +212,13 @@ public class Turnament implements Serializable {
 		return turnamentTeams.size();
 	}
 
-	public void listMatches() {
-		System.out.println("No.  Hometeam         Awayteam score homepoints awaypoints\n");		
-		for (Match m : matches) {
-			System.out.println( m.getMatchNo() + " " + m.getHomeTeam().getName() + " " + m.getAwayTeam().getName() +" " + m.getHomeGoals() + " " + m.getAwayGoals() + " " + m.getHomePoints() + " " + m.getAwayPoints());
-		}
-
-	}
+//	public void listMatches() {
+//		System.out.println("No.  Hometeam         Awayteam score homepoints awaypoints\n");		
+//		for (Match m : matches) {
+//			System.out.println( m.getMatchNo() + " " + m.getHomeTeam().getName() + " " + m.getAwayTeam().getName() +" " + m.getHomeGoals() + " " + m.getAwayGoals() + " " + m.getHomePoints() + " " + m.getAwayPoints());
+//		}
+//
+//	}
 
 	public int getHomeGoals(Team t) {
 		int homeGoals = 0;
@@ -283,7 +281,7 @@ public class Turnament implements Serializable {
 				highestNumber = team.getNumberOfPlayersInTeam();
 			}
 		}
-		System.out.println("highestNumber " + highestNumber);
+		//System.out.println("highestNumber of player in one team " + highestNumber);
 		return highestNumber; 
 
 	}
