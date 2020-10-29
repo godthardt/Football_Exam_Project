@@ -2,6 +2,7 @@ package dataHandlingClasses;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +26,8 @@ public class Turnament implements Serializable {
 		populatePlayers();
 		matches = new ArrayList<Match>();
 		generateMatchesAndGoals();
-		listTeamsByPoint(true);		
+		listTeamsByPoint(true);
+		//"Turnering: " + turnament.getName() + " - afvikles fra " + turnament.GetStartDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + " til " + turnament.GetEndDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString()
 		//turnament.listTeamsAlfabetecally();
 	
 	}

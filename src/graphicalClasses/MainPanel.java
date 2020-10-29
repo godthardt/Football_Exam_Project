@@ -22,9 +22,9 @@ import dataHandlingClasses.Turnament;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
 
-public class MainPanel extends JPanel{
+public class MainPanel extends JInternalFrame{
 	private static final long serialVersionUID = 1;
-	MainWindow mainWindow;
+	//MDIFrame mainWindow;
 	JLabel teamTableLabel = new JLabel();
 	JLabel matchTableLabel = new JLabel();
 	JLabel goalTableLabel = new JLabel();
@@ -69,11 +69,11 @@ public class MainPanel extends JPanel{
 	
 	private int currentTeamId;
 
-	public MainPanel(MainWindow mainWindow, Turnament turnament) {
-		super();
+	public MainPanel(Turnament turnament) {
+		super(turnament.getName(), true, true, true, true);
 		try {
 			this.turnament = turnament;
-			this.mainWindow = mainWindow;
+			this.title = turnament.getName();
 			initGraphics();
 		}
 		catch(Exception e) {
@@ -95,7 +95,7 @@ public class MainPanel extends JPanel{
 		playerTabelLabel.setText("Kontraktspillere:");
 		
 		closeButton.setText("Close");
-		closeButton.setBounds(10*modus,  modus, 8*modus, 2*modus);
+		closeButton.setBounds(10*modus,  modus, 6*modus, 2*modus);
 
 		int numberOfMatchesPrTeam = (turnament.getNumberOfTeams() - 1) * 2;
 		int tableWidth = 38 * modus;
@@ -144,16 +144,17 @@ public class MainPanel extends JPanel{
 		
 		loadTeamsIntoTable();
 		
-		this.setLayout(null);
-		this.add(teamTableLabel);
-		this.add(matchTableLabel);
-		this.add(goalTableLabel);		
-		this.add(playerTabelLabel);		
-		this.add(closeButton);
-		this.add(teamTable);
-		this.add(matchTable);
-		this.add(goalTable);
-		this.add(playerTable);		
+		this.getContentPane().setLayout(null);
+		this.getContentPane().add(teamTableLabel);
+		this.getContentPane().add(matchTableLabel);
+		this.getContentPane().add(goalTableLabel);		
+		this.getContentPane().add(playerTabelLabel);		
+		this.getContentPane().add(closeButton);
+		this.getContentPane().add(teamTable);
+		this.getContentPane().add(matchTable);
+		this.getContentPane().add(goalTable);
+		this.getContentPane().add(playerTable);
+		System.out.println("Fully loaded");
 
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -161,7 +162,12 @@ public class MainPanel extends JPanel{
 			}
 
 			private void closeButton_actionPerformed(ActionEvent e) {
-				System.exit(0);
+				try {
+				      setClosed(true);
+				    } catch (Exception ex) {
+				        System.err.println("Closing Exception");
+				    }
+				//System.exit(0);
 
 			}
 		});
@@ -374,6 +380,10 @@ public class MainPanel extends JPanel{
 		clearTable(matchTable);
 		clearTable(goalTable);
 		clearTable(playerTable);					
+	}
+	
+	public void regerateTurnament() {
+		//TODO Call turnament regerate
 	}
 
 }

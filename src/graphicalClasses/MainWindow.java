@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 public class MainWindow {
 	
-	private JFrame mainJFrame;
+	public MDIFrame mainJFrame;
 	public Turnament turnament;
 	public Dimension dim;
 	public MainWindow(Turnament turnament) {
@@ -22,7 +22,7 @@ public class MainWindow {
 
 	private boolean initMainWindows() {
 	try {
-		mainJFrame = new JFrame("Turnering: " + turnament.getName() + " - afvikles fra " + turnament.GetStartDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + " til " + turnament.GetEndDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString());
+		mainJFrame = new MDIFrame("Simulering af fodboldturneringer");
 	    mainJFrame.setSize(1100, 1000);
 
 	    JMenuBar  menubar = new JMenuBar();
@@ -47,18 +47,14 @@ public class MainWindow {
 	    // Center JFrame
 	    mainJFrame.setLocation(dim.width/2-mainJFrame.getSize().width/2, dim.height/2-mainJFrame.getSize().height/2); //source https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
 	    mainJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	    MainPanel mainPanel = new MainPanel(this, turnament);
-	    mainJFrame.add(mainPanel);
-	    //mainJFrame.add(new footballJPanel());
-	    mainJFrame.setVisible(true);
-	    
+	    mainJFrame.setExtendedState(mainJFrame.NORMAL);
 
 	    refreshMenu.addActionListener(new java.awt.event.ActionListener() {
 	        public void actionPerformed(java.awt.event.ActionEvent e) {
 	        	try {
-	        		mainPanel.clearTables();
-	        		turnament.reGenerateGoals();
-	        		mainPanel.loadTeamsIntoTable();
+//	        		mainPanel.clearTables();
+//	        		turnament.reGenerateGoals();
+//	        		mainPanel.loadTeamsIntoTable();
 	        		
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
