@@ -57,7 +57,7 @@ public class Main {
 		}
 
 		// Start the Circus :-)
-		MainWindow mainWindow = new MainWindow(turnament);
+		MainWindow mainWindow = new MainWindow();
 		
 	    MainPanel mainPanel = new MainPanel(turnament);
 	    mainPanel.setLocation(40, 40);

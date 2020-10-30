@@ -1,9 +1,13 @@
 package graphicalClasses;
 
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+
 import javax.swing.*;
 
 import dataHandlingClasses.Turnament;
+import dataHandlingClasses.TurnamentManager;
 
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
@@ -12,36 +16,47 @@ import java.time.format.DateTimeFormatter;
 public class MainWindow {
 	
 	public MDIFrame mainJFrame;
-	public Turnament turnament;
+	TurnamentManager turnamentManager;
+	//public Turnament turnament;
 	public Dimension dim;
-	public MainWindow(Turnament turnament) {
+	public MainWindow() {
 		super();
-		this.turnament = turnament;
+		//this.turnament = turnament;
+		try {
+			turnamentManager = new TurnamentManager("DBU");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		initMainWindows();
 	};
 
 	private boolean initMainWindows() {
 	try {
 		mainJFrame = new MDIFrame("Simulering af fodboldturneringer");
-	    mainJFrame.setSize(1100, 1000);
+	    //mainJFrame.setSize(1100, 1000);
+		mainJFrame.setSize(500, 600);
 
 	    JMenuBar  menubar = new JMenuBar();
 
 	    JMenu     fileMenu   = new JMenu();
 	    JMenuItem refreshMenu   = new JMenuItem();
-	    JMenuItem loadSerializedTurnament = new JMenuItem();
-	    JMenuItem saveSerializedTurnament = new JMenuItem();	    
+	    JMenuItem newTurnamentMenu   = new JMenuItem();
+	    JMenuItem newCupTurnamentMenu   = new JMenuItem();	    
+	    JMenuItem loadSerializedTurnamentMenu = new JMenuItem();
+	    JMenuItem saveSerializedTurnamentMenu = new JMenuItem();	    
 	    JMenuItem closeMenu  = new JMenuItem();
 
 	    fileMenu.setText("Fil");
 	    fileMenu.setMnemonic(KeyEvent.VK_F);
 	    refreshMenu.setText("Opdater");
-	    loadSerializedTurnament.setText("Åbn serialiseret turnering fra fil");
-	    saveSerializedTurnament.setText("Gem serialiseret turnering i fil");
+	    loadSerializedTurnamentMenu.setText("Åbn serialiseret turnering fra fil");
+	    saveSerializedTurnamentMenu.setText("Gem serialiseret turnering i fil");
 	    closeMenu.setText("Afslut");
 	    closeMenu.setMnemonic(KeyEvent.VK_A);
 
 	    fileMenu.add(refreshMenu);
+	    fileMenu.add(loadSerializedTurnamentMenu);	    
 	    fileMenu.add(closeMenu);
 	    menubar.add(fileMenu);
 
@@ -69,10 +84,17 @@ public class MainWindow {
 	        }
 	      });	    
 
-	    closeMenu.addActionListener(new java.awt.event.ActionListener() {
+	    loadSerializedTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
 	        public void actionPerformed(java.awt.event.ActionEvent e) {
-	          System.out.println("Farvel!");
-	          System.exit(0);
+	        	JFileChooser fileChooser = new JFileChooser();
+	        	//fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+	        	int result = fileChooser.showOpenDialog(null);
+	        	if (result == JFileChooser.APPROVE_OPTION) {
+	        	    File selectedFile = fileChooser.getSelectedFile();
+	        	    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+	        	}
+	        	
+	        	
 	        }
 	      });
 
