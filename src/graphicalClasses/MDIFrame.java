@@ -48,7 +48,7 @@ public class MDIFrame extends JFrame {
 
 	  this.add(desktopPane, BorderLayout.CENTER);
 
-	  this.setMinimumSize(new Dimension(300, 300));
+	  this.setMinimumSize(new Dimension(950, 1050));
 	  //this.pack();
 
   }
