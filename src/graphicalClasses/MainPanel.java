@@ -64,11 +64,6 @@ public class MainPanel extends JInternalFrame{
 		try {
 			this.turnament = turnament;
 			this.title = turnament.getName();
-//			this.setMaximizable(true); // maximize
-//			this.setIconifiable(true); // set minimize
-//			this.setClosable(true); // set closed
-//			this.setResizable(true); // set resizable
-			
 			initGraphics();
 		}
 		catch(Exception e) {
@@ -246,8 +241,8 @@ public class MainPanel extends JInternalFrame{
 			jTable.setValueAt(j+1, j, colNum++);    	
 			jTable.setValueAt(t.getId(), j, colNum++);
 			jTable.setValueAt(t.getName(), j, colNum++);
-			int test = turnament.GetNumberOfMatchesForTeam(t);
-			System.out.println("Number of goals = " + test);
+			//int test = turnament.GetNumberOfMatchesForTeam(t);
+			//System.out.println("Number of goals = " + test);
 			jTable.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
 			// Get goal score for team 
 			GoalResult goalResult = turnament.goalsScoredAndTakenForTeam(t);
