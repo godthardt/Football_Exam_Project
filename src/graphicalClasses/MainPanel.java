@@ -95,10 +95,15 @@ public class MainPanel extends JInternalFrame{
 		int tableWidth = 38 * modus;
 
 		
-		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams(), 0);
-		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam, 0);
-		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch, 0);
-		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), 0);
+//		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams(), 0);
+//		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam, 0);
+//		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch, 0);
+//		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), 0);
+
+		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams() + 1, teamTableColumnNames.length);
+		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam + 1, matchTableColumnNames.length);
+		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch + 1, goalTableColumnNames.length);
+		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam() + 1, goalTableColumnNames.length);
 
 		teamTableMetaData = new JTableColumnMetaData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 4*modus, tableWidth, 210), teamTableLabel);
 		matchTableMetaData = new JTableColumnMetaData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 20*modus, 600, 370), matchTableLabel);
@@ -126,8 +131,6 @@ public class MainPanel extends JInternalFrame{
 		
 		this.getContentPane().setLayout(null);
 		
-		//setOpaque(false);
-		
 		// Labels
 		this.getContentPane().add(teamTableLabel);
 		this.getContentPane().add(matchTableLabel);
@@ -136,21 +139,6 @@ public class MainPanel extends JInternalFrame{
 
 		this.getContentPane().add(closeButton);
 		
-		
-//		JScrollPane pane = new JScrollPane(teamTable);
-//		this.getContentPane().add(pane);
-//		JScrollPane pane = new JScrollPane(teamTable);
-//		this.getContentPane().add(pane);
-//		
-//		Object rowData[][] = { { "Row1-Column1", "Row1-Column2", "Row1-Column3"},
-//                { "Row2-Column1", "Row2-Column2", "Row2-Column3"} };
-//            Object columnNames[] = { "Column One", "Column Two", "Column Three"};
-//            JTable jTable = new JTable(rowData, columnNames);
-//            jTable.setBounds(new Rectangle(1, 1, 600, 370));
-//            jTable.getColumnModel().getColumn(0).setHeaderValue("newHeader");
-//            this.getContentPane().add(jTable);
-            
-            
 		// Tables
 		this.getContentPane().add(teamTable);
 		this.getContentPane().add(matchTable);
@@ -228,21 +216,18 @@ public class MainPanel extends JInternalFrame{
 				}
 			}
 		});
-		
 
 	}
 
 	public void loadTeamsIntoTable(JTable jTable) {
 		
 		//clearTable(teamTable);
-		int j = 0;
+		int j = 1;
 		for (Team t : turnament.getTeams()) {
 			int colNum = 0;
-			jTable.setValueAt(j+1, j, colNum++);    	
+			jTable.setValueAt(j, j, colNum++);    	
 			jTable.setValueAt(t.getId(), j, colNum++);
 			jTable.setValueAt(t.getName(), j, colNum++);
-			//int test = turnament.GetNumberOfMatchesForTeam(t);
-			//System.out.println("Number of goals = " + test);
 			jTable.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
 			// Get goal score for team 
 			GoalResult goalResult = turnament.goalsScoredAndTakenForTeam(t);
@@ -262,8 +247,6 @@ public class MainPanel extends JInternalFrame{
 	{
 		listGoals(matchId);
 	}
-
-
 	
 	public JTable createJtables(JTableColumnMetaData jTableColumnMetaData)
 	{
@@ -278,32 +261,24 @@ public class MainPanel extends JInternalFrame{
 			//columnHeaderTitles
 			for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
 				
-				String test = jTableColumnMetaData.getColumnHeader(i);
-				
-				System.out.println(test);
+				//String test = jTableColumnMetaData.getColumnHeader(i);
+				//System.out.println(test);
 				//jTableColumnMetaData.modelTable.addColumn(test);
-				
-				TableColumn c = new TableColumn(i);
-		        c.setHeaderValue(jTableColumnMetaData.getColumnHeader(i));
-		        System.out.println("c = " +  c.getHeaderValue().toString());
-		        jTableColumnMetaData.modelTable.addColumn(c);
-		        
-				
+				//TableColumn c = new TableColumn(i);
+		        //c.setHeaderValue(jTableColumnMetaData.getColumnHeader(i));
+		        //System.out.println("c = " +  c.getHeaderValue().toString());
+		        //jTableColumnMetaData.modelTable.addColumn(c);
 				//jTableColumnMetaData.jTable.addColumn(test);
 				
-				//String test2 =  jTableColumnMetaData.modelTable.setValueAt(jTableColumnMetaData.getColumnHeader(i), 0, i);
+				// Set Headervalue like normal row, since I can't get JTable columns to show :-(
+				jTableColumnMetaData.modelTable.setValueAt(jTableColumnMetaData.getColumnHeader(i), 0, i);
+				//goalTableColumnNames
+				
 				
 				int width = jTableColumnMetaData.getColumnWidth(i);
 				//jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setFont(new Font("SansSerif", Font.BOLD, 12));
 				jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setPreferredWidth(width);
 				
-				//jTable.getColumnModel().getColumn(i).setPreferredWidth(width);
-				//modelTable..getColumn(i).setMaxWidth(width);
-
-				//			if (columnWidths != null) {
-				//				TableColumn tc = jTable.getColumn(headerNames[i]);
-				//				tc.setMaxWidth(width);				
-				//			}
 			}
 			jTableColumnMetaData.jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
 		} catch (Exception e) {
@@ -324,7 +299,7 @@ public class MainPanel extends JInternalFrame{
 	private void listMatches(int teamID) {
 		clearTable(goalTable);
 		
-		int rowNumber = 0;
+		int rowNumber = 1;
 		for (Match m : turnament.getMatches()) {
 			int colNum = 0;
 
@@ -387,7 +362,7 @@ public class MainPanel extends JInternalFrame{
 	{
 		clearTable(playerTable);
 		
-		int rowNumber = 0;
+		int rowNumber = 1;
 		Team team = turnament.GetTeam(teamId);
 		for (Contract contract : team.getTeamContracts()) {
 

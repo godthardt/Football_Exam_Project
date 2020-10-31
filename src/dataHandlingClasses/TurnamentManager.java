@@ -6,12 +6,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-//import java.util.Collections;
-//import java.util.Arrays;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-
 
 public class TurnamentManager implements Serializable  {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
@@ -19,9 +13,7 @@ public class TurnamentManager implements Serializable  {
 	public String getOrganisation() {return organisation; };
 	private ArrayList<Turnament> turnaments;
 	private ArrayList<Player> playersMasterList;
-	//public ArrayList<Player> getPlayers() { return playersMasterList; }
 	private ArrayList<Team> teamsMasterList;
-	//public ArrayList<Team> getTeams() { return teamsMasterList; }	
 	private ArrayList<Contract> periodsMasterList;
 	public ArrayList<Contract> getContractPeriods() {return periodsMasterList; } 
 	public ArrayList<Turnament> getTurnaments() {return turnaments; }
@@ -36,17 +28,8 @@ public class TurnamentManager implements Serializable  {
 		loadPlayers(Constants.stdDatafileFolder + "players.txt");
 		loadTeams(Constants.stdDatafileFolder + "teams.txt");
 		getHighestNumberOfPlayersInOneTeam();
-		//populatePlayersMasterList();
 	}
 	
-//	private void populatePlayersMasterList() {
-//		for (Contract contract : periodsMasterList) {
-//			playersMasterList.add(new)
-//			contract.getPlayerId()
-//		}
-//		
-//	}
-
 	public void addTurnament(Turnament turnament) {
 
 	turnaments.add(turnament);
@@ -63,7 +46,6 @@ public class TurnamentManager implements Serializable  {
 		}
 		
 		return returnPlayer;
-		
 	}
 	
 	public boolean loadPlayers(String filename) throws IOException {
@@ -110,28 +92,7 @@ public class TurnamentManager implements Serializable  {
 				highestNumber = team.getNumberOfPlayersInTeam();
 			}
 		}
-		
-//		// Inspired from https://www.techiedelight.com/count-frequency-elements-list-java/
-//		List<Integer> list=new ArrayList<Integer>();
-//        
-//        // Extract teamIds, and put them into <Integer> list
-//		for (ContractPeriod contractPeriod : contractPeriods) {
-//			list.add(contractPeriod.getTeamId());
-//		}
-//        
-//        // Do a map (consists of a key + value) the key is the teamID 
-//		Map<Integer, Integer> frequencyMap = new HashMap<>();
-//        for (Integer teamId: list) {
-//            Integer count = frequencyMap.get(teamId);
-//            if (count == null) count = 0;
-// 
-//            frequencyMap.put(teamId, count + 1);
-//        }
-// 
-//        for (Map.Entry<Integer, Integer> entry : frequencyMap.entrySet()) {
-//            System.out.println(entry.getKey() + ": " + entry.getValue());
-//        }
-		System.out.println(highestNumber);
+	
 		return highestNumber;
 	}
 	

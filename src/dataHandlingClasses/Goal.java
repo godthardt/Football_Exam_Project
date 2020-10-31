@@ -1,8 +1,6 @@
 package dataHandlingClasses;
 
-
 import java.io.Serializable;
-//import java.util.Comparator;
 
 public class Goal implements Comparable<Goal>, Serializable {
 
@@ -38,12 +36,10 @@ public class Goal implements Comparable<Goal>, Serializable {
 		return result;
 	}
 
-	public Goal(GoalType goalType, int minute, int sec, Player goalScorer) { //ToDo, Player goalScorer) {
+	public Goal(GoalType goalType, int minute, int sec, Player goalScorer) { 
 		this.minute = minute;
 		this.sec = sec;
 		this.goalType = goalType;
 		this.goalScorer = goalScorer;
-
-		//ToDo this.goalScorer = goalScorer;
 	}
 }	

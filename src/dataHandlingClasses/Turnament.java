@@ -14,21 +14,10 @@ public class Turnament implements Serializable {
 		this.endDate = endDate;
 		this.turnamentTeams = turnamentTeams;
 		this.players = new ArrayList<Player>();
-		//this.turnamentContractPeriods = turnamentContracts;
-		populatePlayers();
 		matches = new ArrayList<Match>();
 		generateMatchesAndGoals();
 		listTeamsByPoint(false);
-		//"Turnering: " + turnament.getName() + " - afvikles fra " + turnament.GetStartDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + " til " + turnament.GetEndDate().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString()
-		//turnament.listTeamsAlfabetecally();
-	
 	}
-
-	private void populatePlayers() {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 	private String name;
 	public String getName() { return name; };
@@ -41,13 +30,12 @@ public class Turnament implements Serializable {
 		return nextMatchId++;
 	}
 
-	private static final long serialVersionUID = 2;  //Helps class control version of serialized objects
+	private static final long serialVersionUID = 3;  //Helps class control version of serialized objects
 	private ArrayList<Team> turnamentTeams;
 	private ArrayList<Match> matches;
 	public  ArrayList<Match> getMatches() { return matches; }
 	private ArrayList<Player> players;
 	public ArrayList<Player> getPlayers(LocalDate matchDay, int teamID) { return players; } //TODO filter players
-	//private ArrayList<Contract> turnamentContractPeriods;
 	
 	public Team GetTeam(int teamId) {
 		Team returnTeam = null;
@@ -238,8 +226,6 @@ public class Turnament implements Serializable {
 					gr.scored += m.getAwayGoals();
 					gr.taken += m.getHomeGoals();
 				}
-					
-				//awayGoals += m.getHomeGoals();
 			}
 
 		}
@@ -286,6 +272,6 @@ public class Turnament implements Serializable {
 		generateMatchesAndGoals();
 		listTeamsByPoint(false);
 	}
-	
+
 	
 }
