@@ -2,24 +2,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.awt.event.*;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.Icon;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
-
 import utils.Serialize;
 
 // project packages
@@ -66,11 +48,11 @@ public class Main {
 	    mainPanel.setVisible(true);
 
 
-//	    MainPanel mainPanel2 = new MainPanel(cupTurnament);
-//	    mainPanel2.setLocation(80, 80);
-//	    mainPanel2.setSize(400, 400);	    
-//	    mainPanel2.setVisible(true);	    
-//	    mainWindow.mainJFrame.add(mainPanel2);
+	    MainPanel mainPanel2 = new MainPanel(cupTurnament);
+	    mainPanel2.setLocation(80, 80);
+	    mainPanel2.setSize(400, 400);	    
+	    mainPanel2.setVisible(true);	    
+	    mainWindow.mainJFrame.add(mainPanel2);
 	    
 	    mainWindow.mainJFrame.setVisible(true);
 		

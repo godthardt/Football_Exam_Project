@@ -6,12 +6,8 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import dataHandlingClasses.Turnament;
-import dataHandlingClasses.TurnamentManager;
-
+import dataHandlingClasses.*;
 import java.awt.*;
-import java.time.format.DateTimeFormatter;
-
 
 public class MainWindow {
 	
@@ -41,8 +37,8 @@ public class MainWindow {
 
 	    JMenu     fileMenu   = new JMenu();
 	    JMenuItem refreshMenu   = new JMenuItem();
-	    JMenuItem newTurnamentMenu   = new JMenuItem();
-	    JMenuItem newCupTurnamentMenu   = new JMenuItem();	    
+//	    JMenuItem newTurnamentMenu   = new JMenuItem();
+//	    JMenuItem newCupTurnamentMenu   = new JMenuItem();	    
 	    JMenuItem loadSerializedTurnamentMenu = new JMenuItem();
 	    JMenuItem saveSerializedTurnamentMenu = new JMenuItem();	    
 	    JMenuItem closeMenu  = new JMenuItem();
@@ -66,7 +62,7 @@ public class MainWindow {
 	    // Center JFrame
 	    mainJFrame.setLocation(dim.width/2-mainJFrame.getSize().width/2, dim.height/2-mainJFrame.getSize().height/2); //source https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
 	    mainJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	    mainJFrame.setExtendedState(mainJFrame.NORMAL);
+	    mainJFrame.setExtendedState(MDIFrame.NORMAL);
 	    
 	    
 

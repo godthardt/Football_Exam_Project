@@ -1,15 +1,7 @@
 package dataHandlingClasses;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Arrays;
-import java.util.stream.Collector;
+import java.util.*;
 
 //import TurnamentManager;
 
@@ -22,7 +14,7 @@ public class Turnament implements Serializable {
 		this.endDate = endDate;
 		this.turnamentTeams = turnamentTeams;
 		this.players = new ArrayList<Player>();
-		this.turnamentContractPeriods = turnamentContracts;
+		//this.turnamentContractPeriods = turnamentContracts;
 		populatePlayers();
 		matches = new ArrayList<Match>();
 		generateMatchesAndGoals();
@@ -55,7 +47,7 @@ public class Turnament implements Serializable {
 	public  ArrayList<Match> getMatches() { return matches; }
 	private ArrayList<Player> players;
 	public ArrayList<Player> getPlayers(LocalDate matchDay, int teamID) { return players; } //TODO filter players
-	private ArrayList<Contract> turnamentContractPeriods;
+	//private ArrayList<Contract> turnamentContractPeriods;
 	
 	public Team GetTeam(int teamId) {
 		Team returnTeam = null;
@@ -93,11 +85,13 @@ public class Turnament implements Serializable {
 		return returnString;
 	}
 	
-	public void listTeamsAlfabetecally() {
+	public void listTeamsAlfabetecally(boolean doPrint) {
 		turnamentTeams.sort(null);
-		for (Team team : turnamentTeams) {
-			//System.out.println(team.getName());			
-		}
+		if (doPrint) {
+			for (Team team : turnamentTeams) {
+				System.out.println(team.getName());			
+			}
+		}		
 	}
 
 	public void addGoal(int matchnumber, Goal.GoalType goaltype, int goalMinute, int goalSecond ) throws Exception {

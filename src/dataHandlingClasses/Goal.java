@@ -2,7 +2,7 @@ package dataHandlingClasses;
 
 
 import java.io.Serializable;
-import java.util.Comparator;
+//import java.util.Comparator;
 
 public class Goal implements Comparable<Goal>, Serializable {
 

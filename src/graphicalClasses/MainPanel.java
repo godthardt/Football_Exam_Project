@@ -1,23 +1,12 @@
 package graphicalClasses;
 
-
-
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import javax.swing.table.*;
-import dataHandlingClasses.Constants;
-import dataHandlingClasses.Contract;
-import dataHandlingClasses.Goal;
-import dataHandlingClasses.GoalResult;
-import dataHandlingClasses.Match;
-import dataHandlingClasses.Team;
-import dataHandlingClasses.Turnament;
+
+import dataHandlingClasses.*;
 
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
