@@ -48,11 +48,11 @@ public class Main {
 	    mainPanel.setVisible(true);
 
 
-	    MainPanel mainPanel2 = new MainPanel(cupTurnament);
-	    mainPanel2.setLocation(80, 80);
-	    mainPanel2.setSize(400, 400);	    
-	    mainPanel2.setVisible(true);	    
-	    mainWindow.mainJFrame.add(mainPanel2);
+//	    MainPanel mainPanel2 = new MainPanel(cupTurnament);
+//	    mainPanel2.setLocation(80, 80);
+//	    mainPanel2.setSize(400, 400);	    
+//	    mainPanel2.setVisible(true);	    
+//	    mainWindow.mainJFrame.add(mainPanel2);
 	    
 	    mainWindow.mainJFrame.setVisible(true);
 		

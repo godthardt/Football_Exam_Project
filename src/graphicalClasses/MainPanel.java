@@ -1,15 +1,15 @@
 package graphicalClasses;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
-
-import dataHandlingClasses.*;
-
-import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
+
+// Own classes
+import dataHandlingClasses.*;
 
 public class MainPanel extends JInternalFrame{
 	private static final long serialVersionUID = 1;
@@ -26,7 +26,7 @@ public class MainPanel extends JInternalFrame{
 	JTable goalTable;
 	JTable playerTable;
 	
-	DefaultTableModel teamTableModel;	
+	//DefaultTableModel teamTableModel;	
 	
 	JTableColumnMetaData teamTableMetaData;
 	JTableColumnMetaData matchTableMetaData;
@@ -36,26 +36,26 @@ public class MainPanel extends JInternalFrame{
 	Turnament turnament;
 	int modus = 16; // Predefined modus for margin space etc.
 	int slimColumnWidth = modus;
-	int mediumWidth = 60;
-	int largeWidth = 80;	
+	int mediumColumnWidth = 60;
+	int largeColimnWidth = 80;	
 
 	// Column Names
 	final String teamIdColumn = "Hold Id";
 	String[] teamTableColumnNames =  { "Nr.", teamIdColumn, "Holdnavn", "Kampe", "Målscore", "Point"};
 	// Column widths
-	Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeWidth, slimColumnWidth, mediumWidth, slimColumnWidth};
+	Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
 
 	final String matchIdColumn = "Kamp Id";
 	String[] matchTableColumnNames = { "Nr.", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score", "Runde"};
-	Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, mediumWidth, largeWidth, mediumWidth, slimColumnWidth, slimColumnWidth};	
+	Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};	
 
 	final String tidGoalColumn = "Tid";	
 	final String goalScorerColumn = "Målscorer";	
 	String[] goalTableColumnNames =  { "Nr.", "Stilling", tidGoalColumn, goalScorerColumn};
-	Integer[] goalTableColumnWidths = { slimColumnWidth, mediumWidth, slimColumnWidth, slimColumnWidth};
+	Integer[] goalTableColumnWidths = { slimColumnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};
 	
 	String[] playerTableColumnNames =  { "Nr.", "Navn", "Kontraktudløb"};
-	Integer[] playerTableColumnWidths = { slimColumnWidth, largeWidth, mediumWidth};	
+	Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, mediumColumnWidth};	
 	
 	private int currentTeamId;
 
@@ -100,7 +100,7 @@ public class MainPanel extends JInternalFrame{
 		int tableWidth = 38 * modus;
 
 		
-		teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams(), 0);
+		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams(), 0);
 		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam, 0);
 		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch, 0);
 		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), 0);
@@ -127,7 +127,7 @@ public class MainPanel extends JInternalFrame{
 		matchTable.repaint();
 		
 		
-		loadTeamsIntoTable();
+		loadTeamsIntoTable(teamTable);
 		
 		this.getContentPane().setLayout(null);
 		
@@ -199,12 +199,11 @@ public class MainPanel extends JInternalFrame{
 					teamTableSelectionChanged(currentTeamId);
 				}
 				else {
-					// It is the column header row which i selected
+					// It is the column header row which was selected
 					clearTable(matchTable);
 					clearTable(goalTable);
 					clearTable(playerTable);					
 				}
-				
 			}
 		});
 
@@ -220,7 +219,7 @@ public class MainPanel extends JInternalFrame{
 			}
 		});
 
-		// Respond to change in selected row (eg. use arraw up / down
+		// Respond to change in selected row (eg. use arrow up / down
 		matchTable.getSelectionModel().addListSelectionListener((ListSelectionListener) new ListSelectionListener(){ //https://stackoverflow.com/questions/10128064/jtable-selected-row-click-event
 			public void valueChanged(ListSelectionEvent event) {
 				// ignore row 1 (column headers)
@@ -238,19 +237,22 @@ public class MainPanel extends JInternalFrame{
 
 	}
 
-	public void loadTeamsIntoTable() {
+	public void loadTeamsIntoTable(JTable jTable) {
 		
 		//clearTable(teamTable);
 		int j = 0;
 		for (Team t : turnament.getTeams()) {
 			int colNum = 0;
-			teamTableModel.setValueAt(j+1, j, colNum++);    	
-			teamTableModel.setValueAt(t.getId(), j, colNum++);
-			teamTableModel.setValueAt(t.getName(), j, colNum++);
-			teamTableModel.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
+			jTable.setValueAt(j+1, j, colNum++);    	
+			jTable.setValueAt(t.getId(), j, colNum++);
+			jTable.setValueAt(t.getName(), j, colNum++);
+			int test = turnament.GetNumberOfMatchesForTeam(t);
+			System.out.println("Number of goals = " + test);
+			jTable.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
+			// Get goal score for team 
 			GoalResult goalResult = turnament.goalsScoredAndTakenForTeam(t);
-			teamTableModel.setValueAt(goalResult.scored + " - " + goalResult.taken, j, colNum++);			
-			teamTableModel.setValueAt(t.getPoints(), j, colNum++);    	
+			jTable.setValueAt(goalResult.scored + " - " + goalResult.taken, j, colNum++);			
+			jTable.setValueAt(t.getPoints(), j, colNum++);    	
 			j++;
 		}
 	}
@@ -277,16 +279,22 @@ public class MainPanel extends JInternalFrame{
 			// Place label 2 * modus above JTable
 			jTableColumnMetaData.rectangle.y = jTableColumnMetaData.rectangle.y - jTableColumnMetaData.jTable.getHeight() / 2 - modus; 		
 			jTableColumnMetaData.tableLabel.setBounds(jTableColumnMetaData.rectangle);		
-			
-			
-			//jTableColumnMetaData.jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
 
 			//columnHeaderTitles
 			for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
 				
 				String test = jTableColumnMetaData.getColumnHeader(i);
+				
 				System.out.println(test);
-				jTableColumnMetaData.modelTable.addColumn(test);
+				//jTableColumnMetaData.modelTable.addColumn(test);
+				
+				TableColumn c = new TableColumn(i);
+		        c.setHeaderValue(jTableColumnMetaData.getColumnHeader(i));
+		        System.out.println("c = " +  c.getHeaderValue().toString());
+		        jTableColumnMetaData.modelTable.addColumn(c);
+		        
+				
+				//jTableColumnMetaData.jTable.addColumn(test);
 				
 				//String test2 =  jTableColumnMetaData.modelTable.setValueAt(jTableColumnMetaData.getColumnHeader(i), 0, i);
 				
@@ -301,7 +309,8 @@ public class MainPanel extends JInternalFrame{
 				//				TableColumn tc = jTable.getColumn(headerNames[i]);
 				//				tc.setMaxWidth(width);				
 				//			}
-			}			
+			}
+			jTableColumnMetaData.jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
