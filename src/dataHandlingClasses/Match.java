@@ -7,11 +7,11 @@ enum VictoryType { Home, Away, Draw}
 
 public class Match implements Serializable {
 	public Match (Team homeTeam, Team awayTeam, int matchNo, LocalDate matchDate, int roundNo) {
+		this.matchNo = matchNo;
+		this.roundNo = roundNo;
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
-		this.matchNo = matchNo;
 		this.date = matchDate;
-		this.roundNo = roundNo;
 		goals = new ArrayList<Goal>();
 	}
 	
