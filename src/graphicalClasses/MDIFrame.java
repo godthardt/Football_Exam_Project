@@ -31,38 +31,17 @@ public class MDIFrame extends JFrame {
   System.out.println(f);
 };
   
-  public void addPanel(MainPanel panel) {
+  public void addPanel(MDIChild panel) {
 	  // OK desktopPane.add(panel);
 	  desktopPane.add(panel,JDesktopPane.DEFAULT_LAYER);
   }
   
   public void loadTheStuff() {
 
-//	  JInternalFrame frame1 = new JInternalFrame("Frame 1", true, true, true,
-//			  true);
-//
-//	  JInternalFrame frame2 = new JInternalFrame("Frame 2", true, true, true,
-//			  true);
-//
-//	  frame1.getContentPane().add(new JLabel("Frame 1  contents..."));
-//	  frame1.pack();
-//	  frame1.setVisible(true);
-//
-//	  frame2.getContentPane().add(new JLabel("Frame 2  contents..."));
-//	  frame2.pack();
-//	  frame2.setVisible(true);
-//
-//	  int x2 = frame1.getX() + frame1.getWidth() + 10;
-//	  int y2 = frame1.getY();
-//	  frame2.setLocation(x2, y2);
-
-//	  desktopPane.add(frame1);
-//	  desktopPane.add(frame2);
-
+	  this.setMinimumSize(new Dimension(350, 450));
+	  this.setPreferredSize(new Dimension(950, 1050));
+	  this.pack();
 	  this.add(desktopPane, BorderLayout.CENTER);
-
-	  this.setMinimumSize(new Dimension(950, 1050));
-	  //this.pack();
 
   }
   

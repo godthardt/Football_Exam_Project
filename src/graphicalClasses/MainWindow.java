@@ -41,8 +41,7 @@ public class MainWindow {
 	try {
 		mainJFrame = new MDIFrame("Simulering af fodboldturneringer");
 		layeredPane = mainJFrame.getLayeredPane();
-	    //mainJFrame.setSize(1100, 1000);
-		mainJFrame.setSize(500, 600);
+	    mainJFrame.setSize(1100, 900);
 
 	    JMenuBar  menubar = new JMenuBar();
 
@@ -86,7 +85,18 @@ public class MainWindow {
 	    // Center JFrame
 	    mainJFrame.setLocation(dim.width/2-mainJFrame.getSize().width/2, dim.height/2-mainJFrame.getSize().height/2); //source https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
 	    mainJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	    mainJFrame.setExtendedState(MDIFrame.MAXIMIZED_BOTH); //.NORMAL
+	    mainJFrame.setExtendedState(MDIFrame.MAXIMIZED_BOTH); //.NORMAL or MAXIMIZED_BOTH
+	    
+	    try {
+
+	    	Turnament deSerializedTurnamentObject = (Turnament) Serialize.load("turnament_v3.ser");
+	    	addNewTurnament(deSerializedTurnamentObject);	    
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    	// TODO: handle exception
+	    }
+	    
+	    	    
 	    
 	    newTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
 	        public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -181,10 +191,11 @@ public class MainWindow {
 	
 	private void addNewTurnament(Turnament turnament) {
 		turnamentManager.addTurnament(turnament);
-		MainPanel mainPanel = new MainPanel(turnament);
+		MDIChild mainPanel = new MDIChild(turnament);
 	    mainPanel.setLocation(childWindowsNumber*10, childWindowsNumber*10);
 	    childWindowsNumber++;
-	    mainPanel.setSize(900, 900);
+	    //mainPanel.setSize(1000, 800);
+	    mainPanel.setSize(1200, 1000);
 	    mainJFrame.desktopPane.add(mainPanel);	    
 	    mainPanel.setVisible(true);
 	    JMenuItem childWindowMenu   = new JMenuItem();
