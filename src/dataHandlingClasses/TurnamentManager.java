@@ -14,27 +14,26 @@ public class TurnamentManager implements Serializable  {
 	private ArrayList<Turnament> turnaments;
 	private ArrayList<Player> playersMasterList;
 	private ArrayList<Team> teamsMasterList;
-	private ArrayList<Contract> periodsMasterList;
-	public ArrayList<Contract> getContractPeriods() {return periodsMasterList; } 
+	private ArrayList<Contract> contractsMasterList;
+	public ArrayList<Contract> getContractPeriods() {return contractsMasterList; } 
 	public ArrayList<Turnament> getTurnaments() {return turnaments; }
-	
+
 	// Constructor
 	public TurnamentManager(String organisation) throws IOException {
 		turnaments = new ArrayList<Turnament>();
 		this.organisation = organisation;
 		teamsMasterList = new ArrayList<Team>();
 		playersMasterList = new ArrayList<Player>();
-		periodsMasterList = new ArrayList<Contract>();
-		loadPlayers(Constants.stdDatafileFolder + "players.txt");
-		loadTeams(Constants.stdDatafileFolder + "teams.txt");
+		contractsMasterList = new ArrayList<Contract>();
+		loadPlayersFromTxtFile(Constants.stdDatafileFolder + "players.txt");
+		loadTeamsFromTxtFile(Constants.stdDatafileFolder + "teams.txt");
 		getHighestNumberOfPlayersInOneTeam();
 	}
-	
-	public void addTurnament(Turnament turnament) {
 
-	turnaments.add(turnament);
+	public void addTurnament(Turnament turnament) {
+		turnaments.add(turnament);
 	}
-	
+
 	public Player getPlayer(int playerID) {
 		Player returnPlayer = null;
 		for (Player player : playersMasterList) {
@@ -44,11 +43,11 @@ public class TurnamentManager implements Serializable  {
 		if (returnPlayer == null) {
 			throw new NullPointerException("PlayerId" + playerID + " not found in method getPlayer");  
 		}
-		
+
 		return returnPlayer;
 	}
-	
-	public boolean loadPlayers(String filename) throws IOException {
+
+	private boolean loadPlayersFromTxtFile(String filename) throws IOException {
 
 		FileReader fil = new FileReader(filename);
 		BufferedReader ind = new BufferedReader(fil);
@@ -65,7 +64,7 @@ public class TurnamentManager implements Serializable  {
 				playersMasterList.add(player);
 				int teamId = Integer.parseInt(arrOfStr[1]);
 				Contract contract = new Contract(player.getId(), player.getName(), teamId, contractExpire);
-				periodsMasterList.add(contract );
+				contractsMasterList.add(contract );
 				// Add the player to the relevant team
 				//findTeamFromTeamId(teamId).addPlayer(player);				
 				linje = ind.readLine();
@@ -83,43 +82,43 @@ public class TurnamentManager implements Serializable  {
 		}
 
 	}
-	
+
 	public int getHighestNumberOfPlayersInOneTeam() {
 		int highestNumber = 0;
-		
+
 		for (Team team : teamsMasterList) {
 			if (team.getNumberOfPlayersInTeam() > highestNumber) {
 				highestNumber = team.getNumberOfPlayersInTeam();
 			}
 		}
-	
+
 		return highestNumber;
 	}
-	
-	public boolean loadTeams(String filename) throws IOException {
+
+	private boolean loadTeamsFromTxtFile(String filename) throws IOException {
 
 		FileReader fil = new FileReader(filename);
 		BufferedReader ind = new BufferedReader(fil);
 		int lineNo = 0;
 		try {
-			
-		String linje = ind.readLine();
-		while (linje != null)
-		{
-			try {
-				String[] arrOfStr = linje.split(",");
-				int teamID = Integer.parseInt(arrOfStr[0]);
-				teamsMasterList.add(new Team(teamID, arrOfStr[1], Integer.parseInt(arrOfStr[2]), getContractPeriodsOfTeam(teamID)));
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("Exception " + e.toString() + " at line " + lineNo + " in file: " + filename);
+
+			String linje = ind.readLine();
+			while (linje != null)
+			{
+				try {
+					String[] arrOfStr = linje.split(",");
+					int teamID = Integer.parseInt(arrOfStr[0]);
+					teamsMasterList.add(new Team(teamID, arrOfStr[1], Integer.parseInt(arrOfStr[2]), getContractPeriodsOfTeam(teamID)));
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("Exception " + e.toString() + " at line " + lineNo + " in file: " + filename);
+				}
+				linje = ind.readLine();
+				lineNo++;
 			}
-			linje = ind.readLine();
-			lineNo++;
-		}
-		ind.close();
-		return true;
+			ind.close();
+			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Error while reading line number " + lineNo);
@@ -127,7 +126,7 @@ public class TurnamentManager implements Serializable  {
 			return false;			
 		}
 	}
-	
+
 	public Team findTeamFromTeamId(int teamId) {
 		for (Team team : teamsMasterList) {
 			if (team.getId() == teamId) {
@@ -136,7 +135,7 @@ public class TurnamentManager implements Serializable  {
 		}
 		throw new NullPointerException("Team not Found");
 	}
-	
+
 	public ArrayList<Team> getTeamsOfLevel(int level) {
 		// construct an object to return to caller
 		ArrayList<Team> returnTeams = new ArrayList<Team>(); 
@@ -154,7 +153,7 @@ public class TurnamentManager implements Serializable  {
 	private ArrayList<Contract> getContractPeriodsOfTeam(int teamId) {
 		// construct an object to return to caller
 		ArrayList<Contract> returnContracts = new ArrayList<Contract>(); 
-		for (Contract contract : periodsMasterList) {
+		for (Contract contract : contractsMasterList) {
 			// correct level ?
 			if (contract.getTeamId() == teamId) {
 				// add contractperiod for this team(id)
@@ -164,5 +163,5 @@ public class TurnamentManager implements Serializable  {
 
 		return returnContracts;		
 	}
-	
+
 }

@@ -1,12 +1,13 @@
 // project packages
-import graphicalClasses.MainWindow;
+import graphicalClasses.*;
+
 
 public class Main {
 
 	public static void main(String[] args) throws Exception {
 		// Start the Circus :-)
-		MainWindow mainWindow = new MainWindow();
-	    mainWindow.mainJFrame.setVisible(true);
+		MDIFrame mainJFrame = new MDIFrame("Simulering af fodboldturneringer");
+	    mainJFrame.setVisible(true);
 	}
 	
 }

@@ -14,51 +14,51 @@ import dataHandlingClasses.*;
 public class MDIChild extends JInternalFrame{
 	private static final long serialVersionUID = 1;
 
-	JPanel panel = new JPanel();
+	private JPanel panel = new JPanel();
 	//JDesktopPane desktopPane = new JDesktopPane();
 	
-	JLabel teamTableLabel = new JLabel();
-	JLabel matchTableLabel = new JLabel();
-	JLabel goalTableLabel = new JLabel();
-	JLabel playerTabelLabel = new JLabel();	
+	private JLabel teamTableLabel = new JLabel();
+	private JLabel matchTableLabel = new JLabel();
+	private JLabel goalTableLabel = new JLabel();
+	private JLabel playerTabelLabel = new JLabel();	
 
-	JButton closeButton = new JButton();
+	private JButton closeButton = new JButton();
 
-	JTable teamTable;
-	JTable matchTable;
-	JTable goalTable;
-	JTable playerTable;
+	private JTable teamTable;
+	private JTable matchTable;
+	private JTable goalTable;
+	private JTable playerTable;
 	
 	//DefaultTableModel teamTableModel;	
 	
-	JTableColumnMetaData teamTableMetaData;
-	JTableColumnMetaData matchTableMetaData;
-	JTableColumnMetaData goalTableMetaData;
-	JTableColumnMetaData playerTableMetaData;	
+	private JTableColumnMetaData teamTableMetaData;
+	private JTableColumnMetaData matchTableMetaData;
+	private JTableColumnMetaData goalTableMetaData;
+	private JTableColumnMetaData playerTableMetaData;	
 	
 	Turnament turnament;
-	int modus = 16; // Predefined modus for margin space etc.
-	int slimColumnWidth = modus;
-	int mediumColumnWidth = 60;
-	int largeColimnWidth = 80;	
+	private int modus = 16; // Predefined modus for margin space etc.
+	private int slimColumnWidth = modus;
+	private int mediumColumnWidth = 60;
+	private int largeColimnWidth = 80;	
 
 	// Column Names
-	final String teamIdColumn = "Hold Id";
-	String[] teamTableColumnNames =  { "Nr.", teamIdColumn, "Holdnavn", "Kampe", "Målscore", "Point"};
+	private final String teamIdColumn = "Hold Id";
+	private String[] teamTableColumnNames =  { "Nr.", teamIdColumn, "Holdnavn", "Kampe", "Målscore", "Point"};
 	// Column widths
-	Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
+	private Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
 
-	final String matchIdColumn = "Kamp Id";
-	String[] matchTableColumnNames = { "Nr.", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score", "Runde"};
-	Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};	
+	private final String matchIdColumn = "Kamp Id";
+	private String[] matchTableColumnNames = { "Nr.", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score", "Runde"};
+	private Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};	
 
-	final String tidGoalColumn = "Tid";	
-	final String goalScorerColumn = "Målscorer";	
-	String[] goalTableColumnNames =  { "Nr.", "Stilling", tidGoalColumn, goalScorerColumn};
-	Integer[] goalTableColumnWidths = { slimColumnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};
+	private final String tidGoalColumn = "Tid";	
+	private final String goalScorerColumn = "Målscorer";	
+	private String[] goalTableColumnNames =  { "Nr.", "Stilling", tidGoalColumn, goalScorerColumn};
+	private Integer[] goalTableColumnWidths = { slimColumnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};
 	
-	String[] playerTableColumnNames =  { "Nr.", "Navn", "Kontraktudløb"};
-	Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, mediumColumnWidth};	
+	private String[] playerTableColumnNames =  { "Nr.", "Navn", "Kontraktudløb"};
+	private Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, mediumColumnWidth};	
 	
 	private int currentTeamId;
 
@@ -252,7 +252,7 @@ public class MDIChild extends JInternalFrame{
 
 	}
 
-	public void loadTeamsIntoTable(JTable jTable) {
+	private void loadTeamsIntoTable(JTable jTable) {
 		
 		//clearTable(teamTable);
 		int j = 1;
@@ -270,19 +270,19 @@ public class MDIChild extends JInternalFrame{
 		}
 	}
 	
-	public void teamTableSelectionChanged(int teamId)
+	private void teamTableSelectionChanged(int teamId)
 	{
 		
 		listMatches(currentTeamId);
 		listPlayers(currentTeamId);
 	}
 
-	public void matchTableSelectionChanged(int matchId)
+	private void matchTableSelectionChanged(int matchId)
 	{
 		listGoals(matchId);
 	}
 	
-	public JTable createJtables(JTableColumnMetaData jTableColumnMetaData)
+	private JTable createJtables(JTableColumnMetaData jTableColumnMetaData)
 	{
 		try {
 			jTableColumnMetaData.jTable = new JTable(jTableColumnMetaData.modelTable);
