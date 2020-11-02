@@ -15,7 +15,7 @@ public class MDIChild extends JInternalFrame{
 	private static final long serialVersionUID = 1;
 
 	private JPanel panel = new JPanel();
-	//JDesktopPane desktopPane = new JDesktopPane();
+	JDesktopPane desktopPane = new JDesktopPane();
 	
 	private JLabel teamTableLabel = new JLabel();
 	private JLabel matchTableLabel = new JLabel();
@@ -58,8 +58,8 @@ public class MDIChild extends JInternalFrame{
 	private Integer[] goalTableColumnWidths = { slimColumnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};
 	
 	private String[] playerTableColumnNames =  { "Nr.", "Navn", "Kontraktudløb"};
-	private Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, mediumColumnWidth};	
-	
+	private Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, mediumColumnWidth};
+		
 	private int currentTeamId;
 
 	public MDIChild(Turnament turnament) {
@@ -85,32 +85,26 @@ public class MDIChild extends JInternalFrame{
 	private void initGraphics() throws Exception {
 
 
-		//setLayout(new BorderLayout()); 
 		teamTableLabel.setText("Stillingen:");
 		matchTableLabel.setText("Kampe:");
 		goalTableLabel.setText("Mål:");
 		playerTabelLabel.setText("Kontraktspillere:");
 		
 		int numberOfMatchesPrTeam = (turnament.getNumberOfTeams() - 1) * 2;
-		int tableWidth = 38 * modus;
+		int stdTableWidth = 34 * modus;
 
 		closeButton.setText("Luk");
-		closeButton.setBounds(tableWidth + 6* modus,  26*modus, 4*modus, 2*modus);
+		closeButton.setBounds(stdTableWidth + 6* modus,  26*modus, 4*modus, 2*modus);
 		
-//		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams(), 0);
-//		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam, 0);
-//		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch, 0);
-//		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), 0);
-
 		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams() + 1, teamTableColumnNames.length);
 		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam + 1, matchTableColumnNames.length);
 		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch + 1, goalTableColumnNames.length);
 		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam() + 1, goalTableColumnNames.length);
 
-		teamTableMetaData = new JTableColumnMetaData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, tableWidth, 210), teamTableLabel);
-		matchTableMetaData = new JTableColumnMetaData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 18*modus, tableWidth, 370), matchTableLabel);
-		goalTableMetaData = new JTableColumnMetaData(goalTable, goalTableModel, goalTableColumnNames, goalTableColumnWidths, new Rectangle(modus, 44*modus, tableWidth, 180), goalTableLabel);
-		playerTableMetaData = new JTableColumnMetaData(playerTable, playerTableModel, playerTableColumnNames, playerTableColumnWidths, new Rectangle(tableWidth + 6* modus, 2*modus, tableWidth*2, 41*modus), playerTabelLabel);	
+		teamTableMetaData = new JTableColumnMetaData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, stdTableWidth, 13*modus), teamTableLabel);
+		matchTableMetaData = new JTableColumnMetaData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 17*modus, stdTableWidth, 18*modus), matchTableLabel);
+		goalTableMetaData = new JTableColumnMetaData(goalTable, goalTableModel, goalTableColumnNames, goalTableColumnWidths, new Rectangle(modus, 37*modus, stdTableWidth, 11*modus), goalTableLabel);
+		playerTableMetaData = new JTableColumnMetaData(playerTable, playerTableModel, playerTableColumnNames, playerTableColumnWidths, new Rectangle(stdTableWidth + 4* modus, 2*modus, stdTableWidth / 2, 41*modus), playerTabelLabel);	
 		
 		// Set column Names and column widths
 		teamTable = createJtables(teamTableMetaData);
@@ -142,23 +136,29 @@ public class MDIChild extends JInternalFrame{
 		
 		// Tables
 		
-//		JScrollPane scrollpane = new JScrollPane(teamTable);
+		
 //		scrollpane.setViewportView(teamTable);
 //		this.getContentPane().add(scrollpane, BorderLayout.CENTER);
 
-//	    desktopPane.setPreferredSize(new Dimension(1200, 1000));
-//	    desktopPane.add(this);
-//		desktopPane.add(this);
-		
 		panel.add(teamTable);
 		panel.add(matchTable);
 		panel.add(goalTable);
 		panel.add(playerTable);
 		
-		panel.setSize(1200, 1000);
-		//panel.setSize(this.getSize());
+		
+		panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
 		panel.setLayout(null);
 		panel.setVisible(true);
+		
+	    desktopPane.setPreferredSize(panel.getSize());
+	    desktopPane.setVisible(true);
+		desktopPane.add(panel);
+		
+		
+//		JScrollPane scrollpane = new JScrollPane(panel);
+//		scrollpane.setViewportView(panel);
+//		scrollpane.setVisible(true);
+		
 		this.getContentPane().add(panel);
 		System.out.println("Fully loaded");
 
@@ -292,7 +292,7 @@ public class MDIChild extends JInternalFrame{
 			jTableColumnMetaData.rectangle.y = jTableColumnMetaData.rectangle.y - jTableColumnMetaData.jTable.getHeight() / 2 - modus; 		
 			jTableColumnMetaData.tableLabel.setBounds(jTableColumnMetaData.rectangle);		
 
-			//columnHeaderTitles
+			// Set column"Header"Titles
 			for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
 				
 				//String test = jTableColumnMetaData.getColumnHeader(i);
@@ -332,7 +332,6 @@ public class MDIChild extends JInternalFrame{
 	
 	private void listMatches(int teamID) {
 		clearTable(goalTable);
-		
 		int rowNumber = 1;
 		for (Match m : turnament.getMatches()) {
 			int colNum = 0;
@@ -348,6 +347,9 @@ public class MDIChild extends JInternalFrame{
 				rowNumber++;
 			}
 		}
+		// Make the first row the selected
+		matchTable.setRowSelectionInterval(1, 1);
+
 	}
 
 	private void clearTable(JTable table) {
@@ -375,7 +377,7 @@ public class MDIChild extends JInternalFrame{
 				for (Goal goal : m.getGoals()) {
 					int colNum = 0;					
 					goalTable.setValueAt(rowNumber, rowNumber, colNum++);
-					goalTable.setValueAt(goal.getMinute() + ":" + goal.getSecond(), rowNumber, Arrays.asList(goalTableColumnNames).indexOf(tidGoalColumn));
+					goalTable.setValueAt(goal.getMinute() + ":" + String.format("%02d", goal.getSecond()), rowNumber, Arrays.asList(goalTableColumnNames).indexOf(tidGoalColumn));
 					if (goal.getGoalType()== Goal.GoalType.Home) {
 						homeGoals++;
 					}

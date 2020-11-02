@@ -16,6 +16,9 @@ public class Team implements Comparable<Team>, Serializable {
 	public ArrayList<Contract> getTeamContracts() { return teamContracts; } 
 	private int level;  //eg. Superliga=0, 1.division=1, etc.
 	public int getLevel() { return this.level; }
+	private boolean kicedkOut = false;
+	public boolean getkickedOut() { return kicedkOut; }
+
 
 	// constructor
 	public Team (int id, String name, int level, ArrayList<Contract> contracts) {

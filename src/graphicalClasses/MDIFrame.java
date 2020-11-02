@@ -2,6 +2,7 @@ package graphicalClasses;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
@@ -16,6 +17,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import dataHandlingClasses.Constants;
 import dataHandlingClasses.CupTurnament;
 import dataHandlingClasses.Team;
 import dataHandlingClasses.Turnament;
@@ -58,7 +60,7 @@ public class MDIFrame extends JFrame {
 		desktopPane.setDesktopManager(desktopManager);
 
 		layeredPane = getLayeredPane();
-		setSize(1100, 900);
+		setSize(Constants.mDIFrameWidth, Constants.mDIFrameHigth);
 
 		addMenus();
 		centerJFrame();
@@ -75,7 +77,7 @@ public class MDIFrame extends JFrame {
 			// Center JFrame
 			setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2); //source https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			setExtendedState(MDIFrame.MAXIMIZED_BOTH); //.NORMAL or MAXIMIZED_BOTH
+			setExtendedState(MDIFrame.NORMAL); //.NORMAL or MAXIMIZED_BOTH
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,10 +103,10 @@ public class MDIFrame extends JFrame {
 	private void addNewTurnament(Turnament turnament) {
 		turnamentManager.addTurnament(turnament);
 		MDIChild mainPanel = new MDIChild(turnament);
-		mainPanel.setLocation(childWindowNumber*10, childWindowNumber*10);
+		Insets i = this.getInsets(); // Insets contains top (size of titlebar), left, etc. of the "JFrame", found on https://www.programcreek.com/java-api-examples/?class=java.awt.Container&method=getInsets
+		mainPanel.setLocation(childWindowNumber* i.top / 2, childWindowNumber * i.top / 2); //on my Pc i.top = 31
 		childWindowNumber++;
-		//mainPanel.setSize(1000, 800);
-		mainPanel.setSize(1200, 1000);
+		mainPanel.setSize(Constants.mDIChildWidth + i.left, Constants.mDIChildHigth + i.left); //on my Pc i.left = 8		
 		desktopPane.add(mainPanel);	    
 		mainPanel.setVisible(true);
 		JMenuItem childWindowMenu   = new JMenuItem();

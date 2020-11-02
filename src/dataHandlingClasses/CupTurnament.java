@@ -12,5 +12,7 @@ public class CupTurnament extends Turnament implements Serializable {
 		super(turnamentTeams, turnamentContractPeriods, name, startDate, endDate);
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 
 }

@@ -19,22 +19,23 @@ public class Turnament implements Serializable {
 		listTeamsByPoint(false);
 	}
 
-	private String name;
+	protected String name;
 	public String getName() { return name; };
-	private LocalDate startDate;
+	protected LocalDate startDate;
 	public LocalDate GetStartDate() { return startDate; }
-	private LocalDate endDate;
+	protected LocalDate endDate;
 	public LocalDate GetEndDate() { return endDate; }	
-	private int nextMatchId = 1;
+	protected int nextMatchId = 1;
 	public int getNextMatchId() {
 		return nextMatchId++;
 	}
 
-	private static final long serialVersionUID = 3;  //Helps class control version of serialized objects
-	private ArrayList<Team> turnamentTeams;
-	private ArrayList<Match> matches;
+	protected int roundNumber = 1;
+	protected static final long serialVersionUID = 3;  //Helps class control version of serialized objects
+	protected ArrayList<Team> turnamentTeams;
+	protected ArrayList<Match> matches;
 	public  ArrayList<Match> getMatches() { return matches; }
-	private ArrayList<Player> players;
+	protected ArrayList<Player> players;
 	public ArrayList<Player> getPlayers(LocalDate matchDay, int teamID) { return players; } //TODO filter players
 	
 	public Team GetTeam(int teamId) {
@@ -137,13 +138,13 @@ public class Turnament implements Serializable {
 		long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 		Random r = new Random();
 		for (Team team : turnamentTeams) {
-			int roundNo = 1;
+			roundNumber = 1;
 			for (int i = 0; i < turnamentTeams.size(); i++) {
 				// If team not equals itself
 				if (turnamentTeams.get(i).getId() != team.getId()) {
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
-					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), matchDate, roundNo++);
+					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), matchDate, roundNumber++);
 					m.endMatch(90);
 					addMatch(m);
 					generateRandomGoals(m);
