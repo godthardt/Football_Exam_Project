@@ -38,6 +38,19 @@ public class Turnament implements Serializable {
 	protected ArrayList<Player> players;
 	public ArrayList<Player> getPlayers(LocalDate matchDay, int teamID) { return players; } //TODO filter players
 	
+	public int GetGoalsForPlayer(int playerId) {
+		int numberOfGoals = 0;
+		for (Match match : matches) {
+			for (Goal goal : match.getGoals()) {
+				if (goal.getGoalScorer().getId() == playerId) {
+					numberOfGoals++;
+				}
+			}
+			
+		}
+		return numberOfGoals;
+	}
+	
 	public Team GetTeam(int teamId) {
 		Team returnTeam = null;
 		for (Team team : turnamentTeams) {
@@ -117,16 +130,16 @@ public class Turnament implements Serializable {
 			if (match.getHasFinished()) {
 				switch (match.getVictoryType()) {
 					case Home: {
-						match.getHomeTeam().addPoints(3);
+						match.getHomeTeam().addPoints(Constants.pointForWin);
 					}
 					case Away:
 					{
-						match.getAwayTeam().addPoints(3);						
+						match.getAwayTeam().addPoints(Constants.pointForWin);						
 					}
 					case Draw:
 					{
-						match.getHomeTeam().addPoints(1);
-						match.getAwayTeam().addPoints(1);						
+						match.getHomeTeam().addPoints(Constants.pointForDraw);
+						match.getAwayTeam().addPoints(Constants.pointForDraw);						
 					}
 				}
 			}

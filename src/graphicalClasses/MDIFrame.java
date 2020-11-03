@@ -26,7 +26,7 @@ import utils.Serialize;
 
 // MDI (Multiple Document interface) is built in to C++, C# and Delphi, and lot of functionality are build into classes like TMDIxxx clases -
 // but in Java this is not the case, but from Java 8 (check) JInternalFrame (as MDI.childs) (a lightweight JFrame is supplied to offer MDI functionality
-// I have sought inspiration on:
+// I have sought inspiration from:
 // http://www.java2s.com/Tutorials/Java/Java_Swing/1600__Java_Swing_MDI.htm 
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/friends/mdi-swing/mdi-swing.html
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/archive/tech_topics_arch/frames_panes/frames_panes.html
@@ -48,7 +48,6 @@ public class MDIFrame extends JFrame {
 		try {
 			turnamentManager = new TurnamentManager("Kan håndtere x turneringer, og har totallister over hold og spillere");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -93,7 +92,7 @@ public class MDIFrame extends JFrame {
 			addNewTurnament(deSerializedTurnamentObject);	    
 		} catch (Exception e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Kunne ikke deserialisere filen " + fileName + " som et Turnament objekt!",
+			JOptionPane.showMessageDialog(null, "Kunne ikke deserialisere filen " + fileName + " som et Turnament objekt! Exception:\n\n" + e.getMessage(),
 					"Fejl ved deserialisering", JOptionPane.ERROR_MESSAGE);
 			System.err.println("Turnament object in " + fileName + " could not be de-serialized :-(");
 			e.printStackTrace();
@@ -201,9 +200,7 @@ public class MDIFrame extends JFrame {
 		refreshMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
-					//  	        		mainPanel.clearTables();
-					//  	        		turnament.reGenerateGoals();
-					//  	        		mainPanel.loadTeamsIntoTable();
+					// ToDo!!! MDIChild recalc
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -223,12 +220,8 @@ public class MDIFrame extends JFrame {
 				if (result == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
 					System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-
-					//  	        		String turnamentManagerFileNameOfToday = "turnamentManager_" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + ".ser";
-					//  	        		Serialize.save(turnamentManager, turnamentManagerFileNameOfToday);		
-
 					try {
-						// de-serialize / restore a Turnament object
+						// de-serialize a Turnament object
 						addNewTurnament(selectedFile.getAbsolutePath());
 					} catch (Exception ex) {
 						JOptionPane.showMessageDialog(null, "Kunne ikke deserialisere filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt!",
@@ -236,7 +229,6 @@ public class MDIFrame extends JFrame {
 						System.err.println("Turnament object in " + selectedFile + " could not be de-serialized :-(");
 						ex.printStackTrace();
 					}
-
 				}
 			}
 		});
@@ -265,6 +257,8 @@ public class MDIFrame extends JFrame {
 						e1.printStackTrace();
 					}
 				}
+				//Reposition the next "first" window
+				childWindowNumber = 1;
 			}
 		});
 
@@ -281,15 +275,6 @@ public class MDIFrame extends JFrame {
 	
 	public void addPanel(MDIChild panel) {
 		desktopPane.add(panel,JDesktopPane.DEFAULT_LAYER);
-	}
-
-	public void loadTheStuff() {
-
-		this.setMinimumSize(new Dimension(350, 450));
-		this.setPreferredSize(new Dimension(950, 1050));
-		this.pack();
-		this.add(desktopPane, BorderLayout.CENTER);
-
 	}
 
 }

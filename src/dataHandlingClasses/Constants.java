@@ -8,6 +8,11 @@ public class Constants {
 	public final static int mDIFrameWidth = 1100;
 	public final static int mDIFrameHigth = 980;	
 	public final static int mDIChildWidth = mDIFrameWidth - 200;
-	public final static int mDIChildHigth = mDIFrameHigth - 150;	
+	public final static int mDIChildHigth = mDIFrameHigth - 150;
+	public final static int dummyGetItYourself = -2;
+	public final static int pointForWin = 3;
+	public final static int pointForDraw = 1;	
+	
+	
 	
 }
