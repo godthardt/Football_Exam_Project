@@ -61,6 +61,8 @@ public class MDIChild extends JInternalFrame{
 	private Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, mediumColumnWidth};
 		
 	private int currentTeamId;
+	
+	private FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT);
 
 	public MDIChild(Turnament turnament) {
 		super(turnament.getName(), true, true, true, true);
@@ -114,7 +116,11 @@ public class MDIChild extends JInternalFrame{
 		
  		
 		
-		getContentPane().setLayout(null);
+		//getContentPane().setLayout(null);
+		     
+		
+		panel.setLayout(flowLayout);
+		panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		
 		// Labels
 		panel.add(teamTableLabel);
@@ -125,16 +131,29 @@ public class MDIChild extends JInternalFrame{
 		//panel.add(closeButton);
 		
 		// Tables
-		panel.add(teamTable);
-		panel.add(matchTable);
-		panel.add(goalTable);
+		//panel.add(teamTable);
+		//panel.add(matchTable);
+		//panel.add(goalTable);
 		//panel.add(playerTable);
 		
-		TablePanel tablePanel = new TablePanel(teamTableMetaData);
+		TablePanel teamTablePanel = new TablePanel(teamTableMetaData, Color.CYAN);
+		panel.add(teamTablePanel);
+		
+		TablePanel matchTablePanel = new TablePanel(matchTableMetaData, Color.YELLOW);
+		panel.add(matchTablePanel);
 
+		TablePanel playerTablePanel = new TablePanel(playerTableMetaData, Color.RED);
+		panel.add(playerTablePanel);
+
+		TablePanel goalTablePanel = new TablePanel(goalTableMetaData, Color.BLACK);
+		//goalTablePanel.setLocation(500, 500);
+		panel.add(goalTablePanel);
+		
+		//panel.setOpaque(false);
+		//matchTablePanel.set setBounds(matchTableMetaData.rectangle);
 		//testTable.setBounds(teamTableMetaData.rectangle);
 		
-		panel.add(tablePanel);
+
 		
 		
 		panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
@@ -147,6 +166,7 @@ public class MDIChild extends JInternalFrame{
 		loadTeamsIntoTable(teamTable);		
 		
 		System.out.println("Fully loaded");
+		pack();
 
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -272,17 +292,14 @@ public class MDIChild extends JInternalFrame{
 	{
 		try {
 			jTableColumnMetaData.jTable = new JTable(jTableColumnMetaData.modelTable);
-			jTableColumnMetaData.jTable.setBounds(jTableColumnMetaData.rectangle);
+			//jTableColumnMetaData.jTable.setBounds(jTableColumnMetaData.rectangle);
 
 			// Place label 2 * modus above JTable
 			jTableColumnMetaData.rectangle.y = jTableColumnMetaData.rectangle.y - jTableColumnMetaData.jTable.getHeight() / 2 - modus; 		
-			jTableColumnMetaData.tableLabel.setBounds(jTableColumnMetaData.rectangle);		
+			//jTableColumnMetaData.tableLabel.setBounds(jTableColumnMetaData.rectangle);		
 
 			// Set column"Header"Titles
 			for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
-				
-				String test = jTableColumnMetaData.getColumnHeader(i);
-				//System.out.println(test);
 				
 				int width = jTableColumnMetaData.getColumnWidth(i);
 				//jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -293,16 +310,16 @@ public class MDIChild extends JInternalFrame{
 				TableColumnModel tcm = th.getColumnModel();
 				TableColumn tc = tcm.getColumn(i);
 
-				tc.setHeaderValue( test);
+				tc.setHeaderValue(jTableColumnMetaData.getColumnHeader(i));
 				
 //				DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
 //				renderer.setPreferredSize(new Dimension(200, 200));
 //				jTableColumnMetaData.jTable.getTableHeader().setDefaultRenderer(renderer);				
 				
 				
-				System.out.println(tc.getHeaderValue());
+				//System.out.println(tc.getHeaderValue());
 				
-				th.repaint();
+				//th.repaint();
 				
 				//jTableColumnMetaData.modelTable.getColumnHeader().setVisible(
 				
@@ -454,11 +471,11 @@ class JTableColumnMetaData {
 
 class TablePanel extends JPanel{
 
-	private static final long serialVersionUID = -693649850852994871L;
+	private static final long serialVersionUID = 1;
 
-	public TablePanel(JTableColumnMetaData jTableColumnMetaData){
+	public TablePanel(JTableColumnMetaData jTableColumnMetaData, Color color){
 
-		
+		this.setBackground(color);
 		for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
 			// Set column widths
 			jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setPreferredWidth(jTableColumnMetaData.getColumnWidth(i));
@@ -472,7 +489,7 @@ class TablePanel extends JPanel{
 
 		try {
 			// Try to set header in bold font
-			//jTableColumnMetaData.jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));	
+			jTableColumnMetaData.jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));	
 		} catch (Exception e) {
 			// Font could not be set - not very important
 			e.printStackTrace();
@@ -481,8 +498,9 @@ class TablePanel extends JPanel{
 		// Define the size of the panel on which the table is placed
 		setSize(new Dimension(jTableColumnMetaData.rectangle.width , jTableColumnMetaData.rectangle.height));
 		//jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width -20, jTableColumnMetaData.rectangle.height - 20));//new Dimension(180,100)
-		jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width -20,100));
-		jTableColumnMetaData.jTable.setFillsViewportHeight(true);
+		jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width -20, jTableColumnMetaData.rectangle.height-20));
+		//jTableColumnMetaData.jTable.setFillsViewportHeight(true);
+		setLocation(jTableColumnMetaData.rectangle.x, jTableColumnMetaData.rectangle.y);
 
 		JScrollPane jScrollPane=new JScrollPane(jTableColumnMetaData.jTable);
 		jScrollPane.setVisible(true);
