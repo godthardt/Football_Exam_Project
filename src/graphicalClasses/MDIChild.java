@@ -96,10 +96,10 @@ public class MDIChild extends JInternalFrame{
 		closeButton.setText("Luk");
 		closeButton.setBounds(stdTableWidth + 6* modus,  26*modus, 4*modus, 2*modus);
 		
-		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams() + 1, teamTableColumnNames.length);
-		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam + 1, matchTableColumnNames.length);
-		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch + 1, goalTableColumnNames.length);
-		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam() + 1, goalTableColumnNames.length);
+		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams(), teamTableColumnNames.length);
+		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam, matchTableColumnNames.length);
+		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch, goalTableColumnNames.length);
+		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), goalTableColumnNames.length);
 
 		teamTableMetaData = new JTableColumnMetaData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, stdTableWidth, 13*modus), teamTableLabel);
 		matchTableMetaData = new JTableColumnMetaData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 17*modus, stdTableWidth, 18*modus), matchTableLabel);
@@ -112,18 +112,8 @@ public class MDIChild extends JInternalFrame{
 		goalTable = createJtables(goalTableMetaData);
 		playerTable = createJtables(playerTableMetaData);
 		
-//		matchTable.getColumnModel().getColumn(0).setHeaderValue("newHeader");
-//		matchTable.getTableHeader().repaint();
+ 		
 		
-//		JTableHeader th = matchTable.getTableHeader();
-//		TableColumnModel tcm = th.getColumnModel();
-//		TableColumn tc = tcm.getColumn(1);
-//		tc.setHeaderValue( "???" );
-//		th.repaint();
-//		matchTable.repaint();
-		
-		
-		loadTeamsIntoTable(teamTable);
 		getContentPane().setLayout(null);
 		
 		// Labels
@@ -135,31 +125,27 @@ public class MDIChild extends JInternalFrame{
 		//panel.add(closeButton);
 		
 		// Tables
-		
-		
-//		scrollpane.setViewportView(teamTable);
-//		this.getContentPane().add(scrollpane, BorderLayout.CENTER);
-
 		panel.add(teamTable);
 		panel.add(matchTable);
 		panel.add(goalTable);
-		panel.add(playerTable);
+		//panel.add(playerTable);
+		
+		TablePanel tablePanel = new TablePanel(teamTableMetaData);
+
+		//testTable.setBounds(teamTableMetaData.rectangle);
+		
+		panel.add(tablePanel);
 		
 		
 		panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
 		panel.setLayout(null);
 		panel.setVisible(true);
-		
-	    desktopPane.setPreferredSize(panel.getSize());
-	    desktopPane.setVisible(true);
-		desktopPane.add(panel);
-		
-		
-//		JScrollPane scrollpane = new JScrollPane(panel);
-//		scrollpane.setViewportView(panel);
-//		scrollpane.setVisible(true);
+	
 		
 		this.getContentPane().add(panel);
+
+		loadTeamsIntoTable(teamTable);		
+		
 		System.out.println("Fully loaded");
 
 		closeButton.addActionListener(new ActionListener() {
@@ -255,10 +241,10 @@ public class MDIChild extends JInternalFrame{
 	private void loadTeamsIntoTable(JTable jTable) {
 		
 		//clearTable(teamTable);
-		int j = 1;
+		int j = 0;
 		for (Team t : turnament.getTeams()) {
 			int colNum = 0;
-			jTable.setValueAt(j, j, colNum++);    	
+			jTable.setValueAt(j+1, j, colNum++);    	
 			jTable.setValueAt(t.getId(), j, colNum++);
 			jTable.setValueAt(t.getName(), j, colNum++);
 			jTable.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
@@ -295,23 +281,34 @@ public class MDIChild extends JInternalFrame{
 			// Set column"Header"Titles
 			for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
 				
-				//String test = jTableColumnMetaData.getColumnHeader(i);
+				String test = jTableColumnMetaData.getColumnHeader(i);
 				//System.out.println(test);
-				//jTableColumnMetaData.modelTable.addColumn(test);
-				//TableColumn c = new TableColumn(i);
-		        //c.setHeaderValue(jTableColumnMetaData.getColumnHeader(i));
-		        //System.out.println("c = " +  c.getHeaderValue().toString());
-		        //jTableColumnMetaData.modelTable.addColumn(c);
-				//jTableColumnMetaData.jTable.addColumn(test);
-				
-				// Set Headervalue like normal row, since I can't get JTable columns to show :-(
-				jTableColumnMetaData.modelTable.setValueAt(jTableColumnMetaData.getColumnHeader(i), 0, i);
-				//goalTableColumnNames
-				
 				
 				int width = jTableColumnMetaData.getColumnWidth(i);
 				//jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setFont(new Font("SansSerif", Font.BOLD, 12));
 				jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setPreferredWidth(width);
+			
+
+				JTableHeader th = jTableColumnMetaData.jTable.getTableHeader();
+				TableColumnModel tcm = th.getColumnModel();
+				TableColumn tc = tcm.getColumn(i);
+
+				tc.setHeaderValue( test);
+				
+//				DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+//				renderer.setPreferredSize(new Dimension(200, 200));
+//				jTableColumnMetaData.jTable.getTableHeader().setDefaultRenderer(renderer);				
+				
+				
+				System.out.println(tc.getHeaderValue());
+				
+				th.repaint();
+				
+				//jTableColumnMetaData.modelTable.getColumnHeader().setVisible(
+				
+				// Set Headervalue like normal row, since I can't get JTable columns to show :-(
+				//Manual "headers"  
+				//jTableColumnMetaData.modelTable.setValueAt(jTableColumnMetaData.getColumnHeader(i), 0, i);
 				
 			}
 			jTableColumnMetaData.jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -319,25 +316,27 @@ public class MDIChild extends JInternalFrame{
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		//.setRowColour(1, Color.YELLOW);
+		//jTableColumnMetaData.jTable.getColumnModel().setRowColour(1, Color.YELLOW);
+		
+//		jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(100,63));
+//		jTableColumnMetaData.jTable.setFillsViewportHeight(true);
+//
+//		JScrollPane jScrollPane=new JScrollPane(jTableColumnMetaData.jTable);
+//		jScrollPane.setVisible(true);
+//		this.getContentPane().add(jScrollPane);
+		
+		
 		return jTableColumnMetaData.jTable;
 	}
 	
-	
-	
-	
-//	public void addSchrollbar (DefaultTableModel table) {
-//		JScrollPane scrollPane = new JScrollPane(table, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
-//	}
-	
 	private void listMatches(int teamID) {
 		clearTable(goalTable);
-		int rowNumber = 1;
+		int rowNumber = 0;
 		for (Match m : turnament.getMatches()) {
 			int colNum = 0;
 
 			if ((m.getHomeTeam().getId() == teamID) || (m.getAwayTeam().getId() == teamID)) {
-				matchTable.setValueAt(rowNumber, rowNumber, colNum++);
+				matchTable.setValueAt(rowNumber + 1, rowNumber, colNum++);
 				matchTable.setValueAt(m.getMatchNo(), rowNumber, colNum++);
 				matchTable.setValueAt(m.getDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++); 			
 				matchTable.setValueAt(m.getHomeTeam().getName(), rowNumber, colNum++);
@@ -367,7 +366,7 @@ public class MDIChild extends JInternalFrame{
 		
 		turnament.sortGoalsByTime();
 		
-		int rowNumber = 1;
+		int rowNumber = 0;
 		// ToDo Kig på findMatch via ID i stedet for at rulle
 		for (Match m : turnament.getMatches()) {
 			if (m.getMatchNo() == matchId) {
@@ -376,7 +375,7 @@ public class MDIChild extends JInternalFrame{
 				
 				for (Goal goal : m.getGoals()) {
 					int colNum = 0;					
-					goalTable.setValueAt(rowNumber, rowNumber, colNum++);
+					goalTable.setValueAt(rowNumber +1, rowNumber, colNum++);
 					goalTable.setValueAt(goal.getMinute() + ":" + String.format("%02d", goal.getSecond()), rowNumber, Arrays.asList(goalTableColumnNames).indexOf(tidGoalColumn));
 					if (goal.getGoalType()== Goal.GoalType.Home) {
 						homeGoals++;
@@ -398,12 +397,12 @@ public class MDIChild extends JInternalFrame{
 	{
 		clearTable(playerTable);
 		
-		int rowNumber = 1;
+		int rowNumber = 0;
 		Team team = turnament.GetTeam(teamId);
 		for (Contract contract : team.getTeamContracts()) {
 
 				int colNum = 0;
-				playerTable.setValueAt(rowNumber, rowNumber, colNum++);
+				playerTable.setValueAt(rowNumber+1, rowNumber, colNum++);
 				playerTable.setValueAt(contract.getPlayerName(), rowNumber, colNum++);
 				playerTable.setValueAt(contract.getEndDatee().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);				
 				rowNumber++;
@@ -451,4 +450,44 @@ class JTableColumnMetaData {
 		return columnHeaderWidths.get(index).intValue();
 	}
 	
+}
+
+class TablePanel extends JPanel{
+
+	private static final long serialVersionUID = -693649850852994871L;
+
+	public TablePanel(JTableColumnMetaData jTableColumnMetaData){
+
+		
+		for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
+			// Set column widths
+			jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setPreferredWidth(jTableColumnMetaData.getColumnWidth(i));
+		
+			// Set column Headers (Title of column)
+			JTableHeader th = jTableColumnMetaData.jTable.getTableHeader();
+			TableColumnModel tcm = th.getColumnModel();
+			TableColumn tc = tcm.getColumn(i);
+			tc.setHeaderValue(jTableColumnMetaData.getColumnHeader(i));
+		}
+
+		try {
+			// Try to set header in bold font
+			//jTableColumnMetaData.jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));	
+		} catch (Exception e) {
+			// Font could not be set - not very important
+			e.printStackTrace();
+		}
+
+		// Define the size of the panel on which the table is placed
+		setSize(new Dimension(jTableColumnMetaData.rectangle.width , jTableColumnMetaData.rectangle.height));
+		//jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width -20, jTableColumnMetaData.rectangle.height - 20));//new Dimension(180,100)
+		jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width -20,100));
+		jTableColumnMetaData.jTable.setFillsViewportHeight(true);
+
+		JScrollPane jScrollPane=new JScrollPane(jTableColumnMetaData.jTable);
+		jScrollPane.setVisible(true);
+		add(jScrollPane);
+	}
+
+
 }
