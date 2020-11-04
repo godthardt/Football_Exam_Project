@@ -35,6 +35,7 @@ public class MDIChild extends JInternalFrame{
 	
 	Turnament turnament;
 	private int modus = 16; // Predefined modus for margin space etc.
+	int stdTableWidth = 34 * modus;	
 	private int slimColumnWidth = modus;
 	private int mediumColumnWidth = 60;
 	private int largeColimnWidth = 80;	
@@ -86,7 +87,6 @@ public class MDIChild extends JInternalFrame{
 		playerTabelLabel.setText("Kontraktspillere:");
 		
 		int numberOfMatchesPrTeam = (turnament.getNumberOfTeams() - 1) * 2;
-		int stdTableWidth = 34 * modus;
 
 		closeButton.setText("Luk");
 		closeButton.setBounds(stdTableWidth + 6* modus,  26*modus, 4*modus, 2*modus);
@@ -131,17 +131,16 @@ public class MDIChild extends JInternalFrame{
 		//goalTablePanel.setLocation(500, 500);
 		panel.add(new TablePanel(goalTableMetaData, Color.BLACK));
 		
-		//panel.setOpaque(false);
-		//matchTablePanel.set setBounds(matchTableMetaData.rectangle);
-		//testTable.setBounds(teamTableMetaData.rectangle);
-		
+//		//panel.setOpaque(false);
+//		//matchTablePanel.set setBounds(matchTableMetaData.rectangle);
+//		//testTable.setBounds(teamTableMetaData.rectangle);
+//		
 
 		
 		
 		panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
 		panel.setLayout(null);
 		panel.setVisible(true);
-	
 		
 		this.getContentPane().add(panel);
 
@@ -281,7 +280,7 @@ public class MDIChild extends JInternalFrame{
 			jTableColumnMetaData.jTable = new JTable(jTableColumnMetaData.modelTable);
 
 			// Place label 2 * modus above JTable
-			jTableColumnMetaData.tableLabel.setLocation(jTableColumnMetaData.rectangle.x, jTableColumnMetaData.rectangle.y - 2 * modus);
+			jTableColumnMetaData.tableLabel.setBounds(new Rectangle(jTableColumnMetaData.rectangle.x, jTableColumnMetaData.rectangle.y - 3 * modus, stdTableWidth, 5 * modus));
 
 			// Set column"Header"Titles
 			for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
@@ -458,6 +457,7 @@ class TablePanel extends JPanel{
 		//jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width -20, jTableColumnMetaData.rectangle.height - 20));//new Dimension(180,100)
 		jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width - 30, jTableColumnMetaData.rectangle.height - 30));
 		//jTableColumnMetaData.jTable.setFillsViewportHeight(true);
+		jTableColumnMetaData.jTable.setAutoCreateRowSorter(true); 
 		setLocation(jTableColumnMetaData.rectangle.x, jTableColumnMetaData.rectangle.y);
 
 		JScrollPane jScrollPane=new JScrollPane(jTableColumnMetaData.jTable);
