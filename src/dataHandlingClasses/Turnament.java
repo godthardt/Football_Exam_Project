@@ -3,6 +3,8 @@ package dataHandlingClasses;
 import java.time.LocalDate;
 import java.util.*;
 
+import utils.Serialize;
+
 //import TurnamentManager;
 
 import java.io.*;
@@ -151,13 +153,13 @@ public class Turnament implements Serializable {
 		long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 		Random r = new Random();
 		for (Team team : turnamentTeams) {
-			roundNumber = 1;
+			//roundNumber = 1;
 			for (int i = 0; i < turnamentTeams.size(); i++) {
 				// If team not equals itself
 				if (turnamentTeams.get(i).getId() != team.getId()) {
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
-					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), matchDate, roundNumber++);
+					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), matchDate, GetNumberOfMatchesForTeam(turnamentTeams.get(i))+ 1);
 					m.endMatch(90);
 					addMatch(m);
 					generateRandomGoals(m);
@@ -287,5 +289,16 @@ public class Turnament implements Serializable {
 		listTeamsByPoint(false);
 	}
 
+	public boolean serializeTurnament(String filename) {
+		try {
+			Serialize.save(this, filename);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+
+	}
 	
 }

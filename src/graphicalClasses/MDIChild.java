@@ -11,9 +11,12 @@ import java.time.format.DateTimeFormatter;
 // Own classes
 import dataHandlingClasses.*;
 
+// Inspired by https://docs.oracle.com/javase/tutorial/uiswing/components/internalframe.html
 public class MDIChild extends JInternalFrame{
 	private static final long serialVersionUID = 1;
 
+	private UUID guid = java.util.UUID.randomUUID(); // use GUID to identify the object - inspired from https://stackoverflow.com/questions/2982748/create-a-guid-in-java
+	public UUID getGuid() { return guid;}
 	private JPanel panel = new JPanel();
 
 	private JLabel teamTableLabel = new JLabel();
@@ -50,10 +53,10 @@ public class MDIChild extends JInternalFrame{
 	private String[] matchTableColumnNames = { "Nr.", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score", "Runde"};
 	private Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};	
 
-	private final String tidGoalColumn = "Tid";	 //"tagged" so I can search for column later
+	private final String tidGoalColumn = "Scoringstidspunkt";	 //"tagged" so I can search for column later
 	private final String goalScorerColumn = "Målscorer"; //"tagged" so I can search for column later
 	private String[] goalTableColumnNames =  { "Nr.", "Stilling", tidGoalColumn, goalScorerColumn};
-	private Integer[] goalTableColumnWidths = { slimColumnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};
+	private Integer[] goalTableColumnWidths = { slimColumnWidth, mediumColumnWidth, slimColumnWidth, largeColimnWidth};
 	
 	private String[] playerTableColumnNames =  { "Nr.", "Navn", "Kontraktudløb", "Mål"};
 	private Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};
@@ -118,25 +121,10 @@ public class MDIChild extends JInternalFrame{
 		panel.add(goalTableLabel);		
 		panel.add(playerTabelLabel);		
 
-		//TablePanel teamTablePanel = new TablePanel(teamTableMetaData, Color.CYAN);
-		panel.add(new TablePanel(teamTableMetaData, Color.CYAN));
-		
-		//TablePanel matchTablePanel = new TablePanel(matchTableMetaData, Color.YELLOW);
-		panel.add(new TablePanel(matchTableMetaData, Color.YELLOW));
-
-		//TablePanel playerTablePanel = new TablePanel(playerTableMetaData, Color.RED);
-		panel.add(new TablePanel(playerTableMetaData, Color.RED));
-
-		//TablePanel goalTablePanel = new TablePanel(goalTableMetaData, Color.BLACK);
-		//goalTablePanel.setLocation(500, 500);
-		panel.add(new TablePanel(goalTableMetaData, Color.BLACK));
-		
-//		//panel.setOpaque(false);
-//		//matchTablePanel.set setBounds(matchTableMetaData.rectangle);
-//		//testTable.setBounds(teamTableMetaData.rectangle);
-//		
-
-		
+		panel.add(new TablePanel(teamTableMetaData));
+		panel.add(new TablePanel(matchTableMetaData));
+		panel.add(new TablePanel(playerTableMetaData));
+		panel.add(new TablePanel(goalTableMetaData));
 		
 		panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
 		panel.setLayout(null);
@@ -393,6 +381,17 @@ public class MDIChild extends JInternalFrame{
 		//TODO Call turnament regenerate
 	}
 
+	public boolean serializeTurnament(String filename) {
+		try {
+			turnament.serializeTurnament(filename);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
 }
 
 class JTableColumnMetaData {
@@ -421,6 +420,37 @@ class JTableColumnMetaData {
 	public int getColumnWidth(int index) {
 		return columnHeaderWidths.get(index).intValue();
 	}
+
+//	InternalFrameListener internalFramelistener = new InternalFrameListener() {	
+//	      public void internalFrameActivated(InternalFrameEvent e) {
+//	          System.out.println("Activated");
+//	        }
+//
+//	        public void internalFrameClosed(InternalFrameEvent e) {
+//	          System.out.println("Closed");
+//	        }
+//
+//	        public void internalFrameClosing(InternalFrameEvent e) {
+//	          System.out.println("Closing");
+//	        }
+//
+//	        public void internalFrameDeactivated(InternalFrameEvent e) {
+//	          System.out.println("Deactivated");
+//	        }
+//
+//	        public void internalFrameDeiconified(InternalFrameEvent e) {
+//	          System.out.println("Deiconified");
+//	        }
+//
+//	        public void internalFrameIconified(InternalFrameEvent e) {
+//	          System.out.println("Iconified");
+//	        }
+//
+//	        public void internalFrameOpened(InternalFrameEvent e) {
+//	          System.out.println("Opened");
+//	        }
+//	};
+	
 	
 }
 
@@ -428,9 +458,8 @@ class TablePanel extends JPanel{
 
 	private static final long serialVersionUID = 1;
 
-	public TablePanel(JTableColumnMetaData jTableColumnMetaData, Color color){
+	public TablePanel(JTableColumnMetaData jTableColumnMetaData){
 
-		//this.setBackground(color);
 		this.setBackground(Color.GRAY);
 		
 		for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {

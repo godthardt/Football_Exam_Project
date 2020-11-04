@@ -113,12 +113,12 @@ public class MDIFrame extends JFrame {
 		windowMenu.add(childWindowMenu);
 		layeredPane.moveToFront(mainPanel);
 		repaint();
-		try {
-			String turnamentFileNameOfToday = "turnament_" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + ".ser";
-			Serialize.save(turnament, turnamentFileNameOfToday);			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			String turnamentFileNameOfToday = "turnament_" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + ".ser";
+//			Serialize.save(turnament, turnamentFileNameOfToday);			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	private void addMenus() {
@@ -154,6 +154,7 @@ public class MDIFrame extends JFrame {
 
 		fileMenu.add(refreshMenu);
 		fileMenu.add(loadSerializedTurnamentMenu);
+		fileMenu.add(saveSerializedTurnamentMenu);		
 
 		fileMenu.add(newTurnamentMenu);
 		fileMenu.add(newCupTurnamentMenu);	    
@@ -223,6 +224,38 @@ public class MDIFrame extends JFrame {
 					try {
 						// de-serialize a Turnament object
 						addNewTurnament(selectedFile.getAbsolutePath());
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(null, "Kunne ikke deserialisere filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt!",
+								"Fejl ved deserialisering", JOptionPane.ERROR_MESSAGE);
+						System.err.println("Turnament object in " + selectedFile + " could not be de-serialized :-(");
+						ex.printStackTrace();
+					}
+				}
+			}
+		});
+
+		saveSerializedTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				File initialDir = new File(System.getProperty("java.class.path"));
+				initialDir = initialDir.getParentFile();
+				fileChooser.setCurrentDirectory(initialDir);
+				FileFilter filter = new FileNameExtensionFilter("Serialiserede objekter (*.ser)","ser");
+				fileChooser.addChoosableFileFilter(filter);
+				fileChooser.setAcceptAllFileFilterUsed(false);
+				int result = fileChooser.showSaveDialog(null);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = fileChooser.getSelectedFile();
+					System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+					try {
+						MDIChild child = (MDIChild) desktopPane.getSelectedFrame();
+						if (child != null) {
+							boolean serializationResult = child.serializeTurnament(selectedFile.getAbsolutePath());
+							if (serializationResult==false) {
+								throw new Exception("Turnering blev ikke serialiseret.");
+							}
+						}
+
 					} catch (Exception ex) {
 						JOptionPane.showMessageDialog(null, "Kunne ikke deserialisere filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt!",
 								"Fejl ved deserialisering", JOptionPane.ERROR_MESSAGE);
