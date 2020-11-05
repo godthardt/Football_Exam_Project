@@ -1,4 +1,4 @@
-package utils;
+
 import java.io.*;
 
 public class Serialize {

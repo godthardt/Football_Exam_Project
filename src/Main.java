@@ -1,6 +1,3 @@
-// project packages
-import graphicalClasses.*;
-
 
 public class Main {
 

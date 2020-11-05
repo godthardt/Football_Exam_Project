@@ -1,4 +1,4 @@
-package graphicalClasses;
+
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,13 +17,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import dataHandlingClasses.Constants;
-import dataHandlingClasses.CupTurnament;
-import dataHandlingClasses.Team;
-import dataHandlingClasses.Turnament;
-import dataHandlingClasses.TurnamentManager;
-import utils.Serialize;
 
 // MDI (Multiple Document interface) is built in to C++, C# and Delphi, and lot of functionality are build into classes like TMDIxxx clases -
 // but in Java this is not the case, but from Java 8 (check) JInternalFrame (as MDI.childs) (a lightweight JFrame is supplied to offer MDI functionality
@@ -70,7 +63,7 @@ public class MDIFrame extends JFrame {
 		setVisible(true);
 
 		// Deserialize a Turnament object, in order to have something to look at
-		addNewTurnament("turnament_v3.ser");
+		addNewTurnament("serializedTurnamentExample.ser");
 
 	}
 	
@@ -90,7 +83,7 @@ public class MDIFrame extends JFrame {
 
 	private void centerJFrame() {
 		try {
-			
+			dim = Toolkit.getDefaultToolkit().getScreenSize();
 			setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2); //source https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			setExtendedState(MDIFrame.NORMAL); //.NORMAL or MAXIMIZED_BOTH

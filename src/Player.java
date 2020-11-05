@@ -1,12 +1,14 @@
-package dataHandlingClasses;
-
-
 import java.io.Serializable;
 
-public class Player extends Person implements Serializable {
+public class Player implements Serializable {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
+	private static int nextId = 0;
+	private String name;
+	public String getName() {return name; }; 
+	private  int id;
+	public int getId() { return id;}
+	
 	public Player(String name) {
-		super();
 		this.name = name;
 		id = nextId++;
 	}
@@ -18,7 +20,6 @@ public class Player extends Person implements Serializable {
 		nextId++;
 	}
 
-@Override
 public String toString() {
 	return name;
 }

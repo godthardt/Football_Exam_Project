@@ -1,4 +1,4 @@
-package graphicalClasses;
+
 
 import java.awt.*;
 import java.awt.event.*;
@@ -7,9 +7,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import java.time.format.DateTimeFormatter;
-
-// Own classes
-import dataHandlingClasses.*;
 
 // Inspired by https://docs.oracle.com/javase/tutorial/uiswing/components/internalframe.html
 public class MDIChild extends JInternalFrame{

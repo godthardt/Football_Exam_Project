@@ -1,4 +1,4 @@
-package dataHandlingClasses;
+
 
 public class GoalResult {
 	public int scored = 0;

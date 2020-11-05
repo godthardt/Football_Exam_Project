@@ -1,4 +1,4 @@
-package dataHandlingClasses;
+
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -25,8 +25,8 @@ public class TurnamentManager implements Serializable  {
 		teamsMasterList = new ArrayList<Team>();
 		playersMasterList = new ArrayList<Player>();
 		contractsMasterList = new ArrayList<Contract>();
-		loadPlayersFromTxtFile(Constants.stdDatafileFolder + "players.txt");
-		loadTeamsFromTxtFile(Constants.stdDatafileFolder + "teams.txt");
+		loadPlayersFromTxtFile("players.txt");
+		loadTeamsFromTxtFile("teams.txt");
 		getHighestNumberOfPlayersInOneTeam();
 	}
 
