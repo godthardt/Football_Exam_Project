@@ -3,6 +3,7 @@ package graphicalClasses;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
@@ -53,27 +54,43 @@ public class MDIFrame extends JFrame {
 
 		desktopPane = new JDesktopPane();
 		desktopPane.setOpaque(false);
+		
+		//setMDIFrameSize();		
 		getContentPane().add(desktopPane,BorderLayout.CENTER);
 
 		desktopManager = new DefaultDesktopManager();
 		desktopPane.setDesktopManager(desktopManager);
 
 		layeredPane = getLayeredPane();
+		
 		setSize(Constants.mDIFrameWidth, Constants.mDIFrameHigth);
 
 		addMenus();
 		centerJFrame();
 		setVisible(true);
 
+		// Deserialize a Turnament object, in order to have something to look at
 		addNewTurnament("turnament_v3.ser");
 
+	}
+	
+	private void setMDIFrameSize() {
+		dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		// Make sure there is space for the mainwindow on my old laptop ;-)
+		if ((dim.width < Constants.mDIFrameWidth) || (dim.height < Constants.mDIFrameHigth)) {
+			//setSize(dim.width, dim.height -50);
+			setSize(6000, dim.height -50);
+			//getContentPane().add(new ScrollPane());
+		}
+		else {
+			setSize(Constants.mDIFrameWidth, Constants.mDIFrameHigth);
+		}
 	}
 
 	private void centerJFrame() {
 		try {
-			dim = Toolkit.getDefaultToolkit().getScreenSize();
-
-			// Center JFrame
+			
 			setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2); //source https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			setExtendedState(MDIFrame.NORMAL); //.NORMAL or MAXIMIZED_BOTH

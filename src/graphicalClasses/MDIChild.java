@@ -117,6 +117,7 @@ public class MDIChild extends JInternalFrame{
 		goalTable = createJtables(goalTableMetaData);
 		playerTable = createJtables(playerTableMetaData);
 		
+		goalTable.add(boringLabel);
 
 		// Tried with a layoutmanager, which is the Java "way" but it doesn't look good in my opinion
 		//FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT);
@@ -362,8 +363,6 @@ public class MDIChild extends JInternalFrame{
 
         boringLabel.setBounds(modus, modus, 19* modus, 6 * modus);
         boringLabel.setLocation(8 * modus, 1);
-		boringLabel.setVisible(true);
-		goalTable.add(boringLabel, BorderLayout.CENTER);
 		boringLabel.setVisible(noGoals);
 		boringLabel.repaint();
 	}
