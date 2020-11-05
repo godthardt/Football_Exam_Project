@@ -22,7 +22,8 @@ public class MDIChild extends JInternalFrame{
 	private JLabel teamTableLabel = new JLabel();
 	private JLabel matchTableLabel = new JLabel();
 	private JLabel goalTableLabel = new JLabel();
-	private JLabel playerTabelLabel = new JLabel();	
+	private JLabel playerTabelLabel = new JLabel();
+	private JLabel boringLabel = new JLabel();
 
 	private JButton closeButton = new JButton();
 
@@ -60,12 +61,15 @@ public class MDIChild extends JInternalFrame{
 	
 	private String[] playerTableColumnNames =  { "Nr.", "Navn", "Kontraktudløb", "Mål"};
 	private Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};
+	
+	ImageIcon imageIcon;
 		
 	public MDIChild(Turnament turnament) {
 		super(turnament.getName(), true, true, true, true);
 		try {
 			this.turnament = turnament;
 			this.title = turnament.getName();
+			addInternalFrameListener(internalFramelistener);
 			initGraphics();
 		}
 		catch(Exception e) {
@@ -88,6 +92,9 @@ public class MDIChild extends JInternalFrame{
 		matchTableLabel.setText("Kampe:");
 		goalTableLabel.setText("Mål:");
 		playerTabelLabel.setText("Kontraktspillere:");
+
+        loadImage("boring.jpg");
+        boringLabel.setIcon(imageIcon);
 		
 		int numberOfMatchesPrTeam = (turnament.getNumberOfTeams() - 1) * 2;
 
@@ -110,11 +117,12 @@ public class MDIChild extends JInternalFrame{
 		goalTable = createJtables(goalTableMetaData);
 		playerTable = createJtables(playerTableMetaData);
 		
-		//getContentPane().setLayout(null);
-		FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT);
-		panel.setLayout(flowLayout);
-		panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		
+
+		// Tried with a layoutmanager, which is the Java "way" but it doesn't look good in my opinion
+		//FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT);
+		//panel.setLayout(flowLayout);
+		//panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+
 		// Labels
 		panel.add(teamTableLabel);
 		panel.add(matchTableLabel);
@@ -124,7 +132,7 @@ public class MDIChild extends JInternalFrame{
 		panel.add(new TablePanel(teamTableMetaData));
 		panel.add(new TablePanel(matchTableMetaData));
 		panel.add(new TablePanel(playerTableMetaData));
-		panel.add(new TablePanel(goalTableMetaData));
+		panel.add(new TablePanel(goalTableMetaData));		
 		
 		panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
 		panel.setLayout(null);
@@ -137,6 +145,8 @@ public class MDIChild extends JInternalFrame{
 		System.out.println("Fully loaded");
 		pack();
 
+		
+		
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				closeButton_actionPerformed(e);
@@ -322,6 +332,7 @@ public class MDIChild extends JInternalFrame{
 		turnament.sortGoalsByTime();
 		
 		int rowNumber = 0;
+		boolean noGoals = true;
 		// ToDo Kig på findMatch via ID i stedet for at rulle
 		for (Match m : turnament.getMatches()) {
 			if (m.getMatchNo() == matchId) {
@@ -334,9 +345,11 @@ public class MDIChild extends JInternalFrame{
 					goalTable.setValueAt(goal.getMinute() + ":" + String.format("%02d", goal.getSecond()), rowNumber, Arrays.asList(goalTableColumnNames).indexOf(tidGoalColumn));
 					if (goal.getGoalType()== Goal.GoalType.Home) {
 						homeGoals++;
+						noGoals = false;
 					}
 					else {
 						awayGoals++;
+						noGoals = false;						
 					}
 					goalTable.setValueAt(homeGoals + "-" + awayGoals, rowNumber, 1);
 					goalTable.setValueAt(goal.getGoalScorer().getName(), rowNumber, Arrays.asList(goalTableColumnNames).indexOf(goalScorerColumn));
@@ -346,6 +359,13 @@ public class MDIChild extends JInternalFrame{
 			}
 
 		}
+
+        boringLabel.setBounds(modus, modus, 19* modus, 6 * modus);
+        boringLabel.setLocation(8 * modus, 1);
+		boringLabel.setVisible(true);
+		goalTable.add(boringLabel, BorderLayout.CENTER);
+		boringLabel.setVisible(noGoals);
+		boringLabel.repaint();
 	}
 	
 	private void listPlayers(int teamId)
@@ -391,6 +411,50 @@ public class MDIChild extends JInternalFrame{
 		return false;
 
 	}
+	
+	private boolean loadImage(String filename) {
+		try {
+			imageIcon = new ImageIcon(filename);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}	
+
+	InternalFrameListener internalFramelistener = new InternalFrameListener() {	//inspired from http://www.java2s.com/Code/Java/Event/DemonstratingtheInternalFrameListener.htm
+		public void internalFrameActivated(InternalFrameEvent e) {
+			System.out.println("Activated");
+		}
+
+		// I need to implement all methods from interface, in order to get the compiler to eat to code
+		// If not I receive the Error: The type new InternalFrameListener(){} must implement the inherited abstract method InternalFrameListener.internalFrameClosing(InternalFrameEvent)
+		public void internalFrameClosed(InternalFrameEvent e) {
+			System.out.println("Closed");
+		}
+
+		public void internalFrameClosing(InternalFrameEvent e) {
+			System.out.println("Closing");
+		}
+
+		public void internalFrameDeactivated(InternalFrameEvent e) {
+			System.out.println("Deactivated");
+		}
+
+		public void internalFrameDeiconified(InternalFrameEvent e) {
+			System.out.println("Deiconified");
+		}
+
+		public void internalFrameIconified(InternalFrameEvent e) {
+			System.out.println("Iconified");
+		}
+
+		public void internalFrameOpened(InternalFrameEvent e) {
+			System.out.println("Opened");
+		}
+
+};
+
 
 }
 
@@ -420,37 +484,6 @@ class JTableColumnMetaData {
 	public int getColumnWidth(int index) {
 		return columnHeaderWidths.get(index).intValue();
 	}
-
-//	InternalFrameListener internalFramelistener = new InternalFrameListener() {	
-//	      public void internalFrameActivated(InternalFrameEvent e) {
-//	          System.out.println("Activated");
-//	        }
-//
-//	        public void internalFrameClosed(InternalFrameEvent e) {
-//	          System.out.println("Closed");
-//	        }
-//
-//	        public void internalFrameClosing(InternalFrameEvent e) {
-//	          System.out.println("Closing");
-//	        }
-//
-//	        public void internalFrameDeactivated(InternalFrameEvent e) {
-//	          System.out.println("Deactivated");
-//	        }
-//
-//	        public void internalFrameDeiconified(InternalFrameEvent e) {
-//	          System.out.println("Deiconified");
-//	        }
-//
-//	        public void internalFrameIconified(InternalFrameEvent e) {
-//	          System.out.println("Iconified");
-//	        }
-//
-//	        public void internalFrameOpened(InternalFrameEvent e) {
-//	          System.out.println("Opened");
-//	        }
-//	};
-	
 	
 }
 
@@ -483,15 +516,15 @@ class TablePanel extends JPanel{
 
 		// Define the size of the panel on which the JTable is placed
 		setSize(new Dimension(jTableColumnMetaData.rectangle.width , jTableColumnMetaData.rectangle.height));
-		//jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width -20, jTableColumnMetaData.rectangle.height - 20));//new Dimension(180,100)
 		jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width - 30, jTableColumnMetaData.rectangle.height - 30));
-		//jTableColumnMetaData.jTable.setFillsViewportHeight(true);
+		// Use predefined columnsorter, which sorts on strings "11" before "2" - could be improved
 		jTableColumnMetaData.jTable.setAutoCreateRowSorter(true); 
 		setLocation(jTableColumnMetaData.rectangle.x, jTableColumnMetaData.rectangle.y);
 
 		JScrollPane jScrollPane=new JScrollPane(jTableColumnMetaData.jTable);
 		jScrollPane.setVisible(true);
 		add(jScrollPane);
+
 	}
 
 
