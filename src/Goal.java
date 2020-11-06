@@ -42,4 +42,9 @@ public class Goal implements Comparable<Goal>, Serializable {
 		this.goalType = goalType;
 		this.goalScorer = goalScorer;
 	}
-}	
+}
+
+class GoalResult {
+	public int scored = 0;
+	public int taken = 0;
+}

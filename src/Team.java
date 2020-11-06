@@ -11,11 +11,11 @@ public class Team implements Comparable<Team>, Serializable {
 	private String name;
 	private int id;
 	private int points = 0;
-	private ArrayList<Player> players;
+	private ArrayList<Player> players = new ArrayList<Player>();
 	private ArrayList<Contract> teamContracts;
 	public ArrayList<Contract> getTeamContracts() { return teamContracts; } 
 	private int level;  //eg. Superliga=0, 1.division=1, etc.
-	public int getLevel() { return this.level; }
+	public int getLevel() { return level; }
 	private boolean kicedkOut = false;
 	public boolean getkickedOut() { return kicedkOut; }
 	//public Team clone() 
@@ -27,15 +27,26 @@ public class Team implements Comparable<Team>, Serializable {
 		this.id = id;
 		this.level = level;
 		this.teamContracts = contracts;
-		players = new ArrayList<Player>();
-		//System.out.println(name + " num. players " + players.size() + " contracts  " + contracts.size());
 		try {
 			populatePlayersFromContractPeriods();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	// another constructor to support deep copy
+	public Team(Team team) {
+		this.name = team.name;
+		this.id = team.id;
+		this.level = team.level;
+		// no need for deep copy of contracts, since they are never changed
+		this.teamContracts = team.teamContracts;
+		try {
+			populatePlayersFromContractPeriods();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 
 	private void populatePlayersFromContractPeriods() throws Exception {
 		for (Contract contract : teamContracts) {
@@ -100,7 +111,7 @@ public class Team implements Comparable<Team>, Serializable {
 		}
 		// Return an object, in order not to get an exception
 		// TODO Ensure that all team has attached players
-		return new Player("Sofus krølben");
+		return new Player("Ukendt spiller");
 	}
 
 }

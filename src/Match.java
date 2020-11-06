@@ -6,9 +6,8 @@ import java.time.LocalDate;
 enum VictoryType { Home, Away, Draw}
 
 public class Match implements Serializable {
-	public Match (Team homeTeam, Team awayTeam, int matchNo, LocalDate matchDate, int roundNo) {
+	public Match (Team homeTeam, Team awayTeam, int matchNo, LocalDate matchDate) {
 		this.matchNo = matchNo;
-		this.roundNo = roundNo;
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.date = matchDate;
@@ -37,8 +36,6 @@ public class Match implements Serializable {
 	private ArrayList<Goal> goals;
 	private int minutesPlayed = 0;
 	public int getMinutesPlayed() { return minutesPlayed;};
-	private int roundNo;
-	public int getRoundNo() { return this.roundNo; }
 	
 	private VictoryType victoryType;
 	public VictoryType getVictoryType() { return victoryType; }

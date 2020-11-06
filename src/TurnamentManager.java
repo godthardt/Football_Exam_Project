@@ -140,21 +140,16 @@ public class TurnamentManager implements Serializable  {
 	public ArrayList<Team> getTeamsOfLevel(int level) {
 		// construct an object to return to caller
 		ArrayList<Team> returnTeams = new ArrayList<Team>();
-		ArrayList<Team> clonedDogs = teamsMasterList.stream().map(Team::new).collect(toCollection(ArrayList::new));
 
 		for (Team team : teamsMasterList) {
 			// correct level ?
 			if (team.getLevel() == level) {
-				// add team
-				returnTeams.add(team);
+				// add team as deep copy in order not to have side effect
+				returnTeams.add(new Team(team));
 			}
 		}
-
-		//
-		//List<Dog> clonedDogs = dogs.stream().map(Dog::new).collect(toList());
-		// From https://www.generacodice.com/en/articolo/201023/How-to-clone-ArrayList-and-also-clone-its-contents
-		//ArrayList<Dog> clonedDogs = dogs.stream().map(Dog::new).collect(toCollection(ArrayList::new));
-		
+		// Using "copy" constructor inspired from 
+		// https://www.generacodice.com/en/articolo/201023/How-to-clone-ArrayList-and-also-clone-its-contents
 		
 		return returnTeams;		
 	}

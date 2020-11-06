@@ -4,11 +4,8 @@ import java.time.LocalDate;
 
 public class Contract implements Comparable<Contract>, Serializable {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
-	//private LocalDate startDate;
 	private LocalDate endDate;
 	public LocalDate  getEndDatee() { return endDate;}
-	//private double TransferSum;
-	//private Boolean hasBeenExtended = false;
 	private int playerId;
 	public int getPlayerId() { return playerId;	}	
 	private String playerName; 

@@ -44,7 +44,6 @@ public class Turnament implements Serializable {
 					numberOfGoals++;
 				}
 			}
-			
 		}
 		return numberOfGoals;
 	}
@@ -149,13 +148,13 @@ public class Turnament implements Serializable {
 		long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 		Random r = new Random();
 		for (Team team : turnamentTeams) {
-			//roundNumber = 1;
 			for (int i = 0; i < turnamentTeams.size(); i++) {
-				// If team not equals itself
+				// If team not equals itself, set up a match
 				if (turnamentTeams.get(i).getId() != team.getId()) {
+					// Spread matches on a timeline
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
-					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), matchDate, GetNumberOfMatchesForTeam(turnamentTeams.get(i))+ 1);
+					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), matchDate);
 					m.endMatch(90);
 					addMatch(m);
 					generateRandomGoals(m);
@@ -206,14 +205,6 @@ public class Turnament implements Serializable {
 		return turnamentTeams.size();
 	}
 
-//	public void listMatches() {
-//		System.out.println("No.  Hometeam         Awayteam score homepoints awaypoints\n");		
-//		for (Match m : matches) {
-//			System.out.println( m.getMatchNo() + " " + m.getHomeTeam().getName() + " " + m.getAwayTeam().getName() +" " + m.getHomeGoals() + " " + m.getAwayGoals() + " " + m.getHomePoints() + " " + m.getAwayPoints());
-//		}
-//
-//	}
-
 	public int getHomeGoals(Team t) {
 		int homeGoals = 0;
 		for (Match m : matches) {
@@ -239,7 +230,6 @@ public class Turnament implements Serializable {
 					gr.taken += m.getHomeGoals();
 				}
 			}
-
 		}
 		return gr;		
 	}
@@ -262,7 +252,6 @@ public class Turnament implements Serializable {
 			}
 		}
 		return numberOfMatches;
-		
 	}
 	
 	public int getHighestNumberOfPlayersInOneTeam() {
@@ -275,7 +264,6 @@ public class Turnament implements Serializable {
 		}
 		//System.out.println("highestNumber of player in one team " + highestNumber);
 		return highestNumber; 
-
 	}
 
 	public void reGenerateGoals() throws Exception {
@@ -294,7 +282,6 @@ public class Turnament implements Serializable {
 			return false;
 		}
 		return true;
-
 	}
 	
 }

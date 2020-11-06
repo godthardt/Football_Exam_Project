@@ -48,8 +48,8 @@ public class MDIChild extends JInternalFrame{
 	private Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
 
 	private final String matchIdColumn = "Kamp Id"; //"tagged" so I can search for column later
-	private String[] matchTableColumnNames = { "Nr.", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score", "Runde"};
-	private Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth, slimColumnWidth};	
+	private String[] matchTableColumnNames = { "Nr.", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score"};
+	private Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};	
 
 	private final String tidGoalColumn = "Scoringstidspunkt";	 //"tagged" so I can search for column later
 	private final String goalScorerColumn = "Målscorer"; //"tagged" so I can search for column later
@@ -305,7 +305,6 @@ public class MDIChild extends JInternalFrame{
 				matchTable.setValueAt(m.getHomeTeam().getName(), rowNumber, colNum++);
 				matchTable.setValueAt(m.getAwayTeam().getName(), rowNumber, colNum++);
 				matchTable.setValueAt(m.getHomeGoals() + " - " + m.getAwayGoals(), rowNumber, colNum++);
-				matchTable.setValueAt(m.getRoundNo(), rowNumber, colNum++);				
 				rowNumber++;
 			}
 		}
