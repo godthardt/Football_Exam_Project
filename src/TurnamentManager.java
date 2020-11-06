@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TurnamentManager implements Serializable  {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
@@ -135,10 +136,12 @@ public class TurnamentManager implements Serializable  {
 		}
 		throw new NullPointerException("Team not Found");
 	}
-
+	
 	public ArrayList<Team> getTeamsOfLevel(int level) {
 		// construct an object to return to caller
-		ArrayList<Team> returnTeams = new ArrayList<Team>(); 
+		ArrayList<Team> returnTeams = new ArrayList<Team>();
+		ArrayList<Team> clonedDogs = teamsMasterList.stream().map(Team::new).collect(toCollection(ArrayList::new));
+
 		for (Team team : teamsMasterList) {
 			// correct level ?
 			if (team.getLevel() == level) {
@@ -147,6 +150,12 @@ public class TurnamentManager implements Serializable  {
 			}
 		}
 
+		//
+		//List<Dog> clonedDogs = dogs.stream().map(Dog::new).collect(toList());
+		// From https://www.generacodice.com/en/articolo/201023/How-to-clone-ArrayList-and-also-clone-its-contents
+		//ArrayList<Dog> clonedDogs = dogs.stream().map(Dog::new).collect(toCollection(ArrayList::new));
+		
+		
 		return returnTeams;		
 	}
 

@@ -18,6 +18,7 @@ public class Team implements Comparable<Team>, Serializable {
 	public int getLevel() { return this.level; }
 	private boolean kicedkOut = false;
 	public boolean getkickedOut() { return kicedkOut; }
+	//public Team clone() 
 
 
 	// constructor
