@@ -18,9 +18,9 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-// MDI (Multiple Document interface) is built in to C++, C# and Delphi, and lot of functionality are build into classes like TMDIxxx clases -
-// but in Java this is not the case, but from Java 8 (check) JInternalFrame (as MDI.childs) (a lightweight JFrame is supplied to offer MDI functionality
-// I have sought inspiration from:
+// MDI (Multiple Document interface) is built in to C++, C# and Delphi, and a lot of functionality are build into classes like TMDIxxx classes -
+// but in Java this is not the case, but from Java 8 (check) JInternalFrame (as MDIchilds) (a lightweight JFrame is supplied to offer MDI functionality
+// I have sought inspiration at:
 // http://www.java2s.com/Tutorials/Java/Java_Swing/1600__Java_Swing_MDI.htm 
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/friends/mdi-swing/mdi-swing.html
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/archive/tech_topics_arch/frames_panes/frames_panes.html
@@ -48,7 +48,7 @@ public class MDIFrame extends JFrame {
 		desktopPane = new JDesktopPane();
 		desktopPane.setOpaque(false);
 		
-		//setMDIFrameSize();		
+		setMDIFrameSize();		
 		getContentPane().add(desktopPane,BorderLayout.CENTER);
 
 		desktopManager = new DefaultDesktopManager();
@@ -56,7 +56,7 @@ public class MDIFrame extends JFrame {
 
 		layeredPane = getLayeredPane();
 		
-		setSize(Constants.mDIFrameWidth, Constants.mDIFrameHigth);
+		//setSize(Constants.mDIFrameWidth, Constants.mDIFrameHigth);
 
 		addMenus();
 		centerJFrame();
@@ -72,9 +72,9 @@ public class MDIFrame extends JFrame {
 
 		// Make sure there is space for the mainwindow on my old laptop ;-)
 		if ((dim.width < Constants.mDIFrameWidth) || (dim.height < Constants.mDIFrameHigth)) {
-			//setSize(dim.width, dim.height -50);
-			setSize(6000, dim.height -50);
-			//getContentPane().add(new ScrollPane());
+			setSize(dim.width, dim.height -50);
+			JOptionPane.showMessageDialog(this, "Den aktuelle skærmopløsning giver ikke plads til den ønskede vinduesstørrelse - nogle ting kan se forkerte ud",
+					"Skærmopløsning", JOptionPane.WARNING_MESSAGE);			
 		}
 		else {
 			setSize(Constants.mDIFrameWidth, Constants.mDIFrameHigth);
@@ -99,10 +99,14 @@ public class MDIFrame extends JFrame {
 		try {
 
 			Turnament deSerializedTurnamentObject = (Turnament) Serialize.load(fileName);
+			// Indicate to the GUI, that the turnament has been deserialized
+			String newTurnamentName = deSerializedTurnamentObject.getName() + " - deserialiseret d. " + LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString();
+			deSerializedTurnamentObject.setName(newTurnamentName);
+			
 			addNewTurnament(deSerializedTurnamentObject);	    
 		} catch (Exception e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Kunne ikke deserialisere filen " + fileName + " som et Turnament objekt! Exception:\n\n" + e.getMessage(),
+			JOptionPane.showMessageDialog(this, "Kunne ikke deserialisere filen " + fileName + " som et Turnament objekt! Exception:\n\n" + e.getMessage(),
 					"Fejl ved deserialisering", JOptionPane.ERROR_MESSAGE);
 			System.err.println("Turnament object in " + fileName + " could not be de-serialized :-(");
 			e.printStackTrace();
@@ -111,73 +115,68 @@ public class MDIFrame extends JFrame {
 
 	private void addNewTurnament(Turnament turnament) {
 		turnamentManager.addTurnament(turnament);
-		MDIChild mainPanel = new MDIChild(turnament);
+		MDIChild mainPanel = new MDIChild(childWindowNumber, turnament);
 		Insets i = this.getInsets(); // Insets contains top (size of titlebar), left, etc. of the "JFrame", found on https://www.programcreek.com/java-api-examples/?class=java.awt.Container&method=getInsets
 		mainPanel.setLocation(childWindowNumber* i.top / 2, childWindowNumber * i.top / 2); //on my Pc i.top = 31
 		childWindowNumber++;
 		mainPanel.setSize(Constants.mDIChildWidth + i.left, Constants.mDIChildHigth + i.left); //on my Pc i.left = 8		
 		desktopPane.add(mainPanel);	    
 		mainPanel.setVisible(true);
-		JMenuItem childWindowMenu   = new JMenuItem();
-		childWindowMenu.setText(childWindowNumber + " " + turnament.getName());
-		windowMenu.add(childWindowMenu);
 		layeredPane.moveToFront(mainPanel);
 		repaint();
-//		try {
-//			String turnamentFileNameOfToday = "turnament_" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd. MMM YYYY")).toString() + ".ser";
-//			Serialize.save(turnament, turnamentFileNameOfToday);			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		listChildMenusInWindowTopMenu();
 	}
 
 	private void addMenus() {
+		// Menubar to contain top menus
 		JMenuBar  menubar = new JMenuBar();
 
+		//Top menus
 		JMenu     fileMenu   = new JMenu();
+		fileMenu.setText("Fil");
+		fileMenu.setMnemonic(KeyEvent.VK_F);
+		windowMenu   = new JMenu();
+		windowMenu.setText("Vindue");
+		windowMenu.setMnemonic(KeyEvent.VK_V);		
+		
+		//Sub menus
 		JMenuItem refreshMenu   = new JMenuItem();
 		JMenuItem newTurnamentMenu   = new JMenuItem();
 		JMenuItem newCupTurnamentMenu   = new JMenuItem();	    
 		JMenuItem loadSerializedTurnamentMenu = new JMenuItem();
 		JMenuItem saveSerializedTurnamentMenu = new JMenuItem();	    
 		JMenuItem closeMenu  = new JMenuItem();
-
-		windowMenu   = new JMenu();	    
 		JMenuItem closeAllWindowsMenu  = new JMenuItem();
 		JMenuItem minimizeAllWindowsMenu  = new JMenuItem();
-
-		fileMenu.setText("Fil");
-		fileMenu.setMnemonic(KeyEvent.VK_F);
-		refreshMenu.setText("Opdater");
-		newTurnamentMenu.setText("Vis ny superliga");
-		newCupTurnamentMenu.setText("Vis ny pokalturnering");	    
-		loadSerializedTurnamentMenu.setText("Åbn serialiseret turnering fra fil");
-		saveSerializedTurnamentMenu.setText("Gem serialiseret turnering i fil");
-		closeMenu.setText("Afslut");
-		closeMenu.setMnemonic(KeyEvent.VK_A);
-
-		windowMenu.setText("Vindue");
-		minimizeAllWindowsMenu.setText("Minimer alle Vinduer");		
-		closeAllWindowsMenu.setText("Luk alle Vinduer");
+		JMenuItem testMenu  = new JMenuItem();
 		
-		fileMenu.setMnemonic(KeyEvent.VK_V);
-
-		fileMenu.add(refreshMenu);
-		fileMenu.add(loadSerializedTurnamentMenu);
-		fileMenu.add(saveSerializedTurnamentMenu);		
-
-		fileMenu.add(newTurnamentMenu);
-		fileMenu.add(newCupTurnamentMenu);	    
-
-		fileMenu.add(closeMenu);
+		// Set text and shortcuts on sub menu items, and attach submenu to top menu
+		addMenuMneMonics(fileMenu, refreshMenu, "Resimuler matchafvikling i valgt turnering", KeyEvent.VK_F5);		
+		addMenuMneMonics(fileMenu, newTurnamentMenu, "Ny superliga", KeyEvent.VK_N);		
+		addMenuMneMonics(fileMenu, newCupTurnamentMenu, "Ny pokalturnering", KeyEvent.VK_P);
+		addMenuMneMonics(fileMenu, loadSerializedTurnamentMenu, "Åbn serialiseret turnering fra fil", KeyEvent.VK_O);
+		addMenuMneMonics(fileMenu, saveSerializedTurnamentMenu, "Gem serialiseret turnering i fil", KeyEvent.VK_S);		
+		addMenuMneMonics(fileMenu, closeMenu, "Afslut", KeyEvent.VK_A);
+		addMenuMneMonics(fileMenu, testMenu, "Test", KeyEvent.VK_T);
+		
+		
+		
+		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M);		
+		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle Vinduer", KeyEvent.VK_L);		
+		
 		menubar.add(fileMenu);
-		
-		windowMenu.add(minimizeAllWindowsMenu);
-		windowMenu.add(closeAllWindowsMenu);		
-		
 		menubar.add(windowMenu);	    
 
 		setJMenuBar(menubar);
+		
+		// Add menu listeners
+		testMenu.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				listChildMenusInWindowTopMenu();
+			}
+		});	    
+
+		
 
 		// Add menu listeners
 		newTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -211,10 +210,10 @@ public class MDIFrame extends JFrame {
 		refreshMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
-					// ToDo!!! MDIChild recalc
-
-				} catch (Exception e1) {
-					e1.printStackTrace();
+					MDIChild mDIchild = (MDIChild) desktopPane.getSelectedFrame();
+					mDIchild.regenerateGoals();
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 			}
 		});	    
@@ -227,6 +226,7 @@ public class MDIFrame extends JFrame {
 				fileChooser.setCurrentDirectory(initialDir);
 				FileFilter filter = new FileNameExtensionFilter("Serialiserede objekter","ser");
 				fileChooser.addChoosableFileFilter(filter);
+				fileChooser.setAcceptAllFileFilterUsed(false);				
 				int result = fileChooser.showOpenDialog(null);
 				if (result == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
@@ -243,7 +243,7 @@ public class MDIFrame extends JFrame {
 				}
 			}
 		});
-
+		
 		saveSerializedTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -264,6 +264,10 @@ public class MDIFrame extends JFrame {
 							if (serializationResult==false) {
 								throw new Exception("Turnering blev ikke serialiseret.");
 							}
+							else {
+								JOptionPane.showMessageDialog(null, "Turneringen blev serialisert til filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt.",
+										"Serialisering", JOptionPane.INFORMATION_MESSAGE);
+							}
 						}
 
 					} catch (Exception ex) {
@@ -282,9 +286,8 @@ public class MDIFrame extends JFrame {
 				for (JInternalFrame mDIChild : frames) {
 					try {
 						mDIChild.setIcon(true);
-					} catch (PropertyVetoException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				}
 			}
@@ -302,10 +305,11 @@ public class MDIFrame extends JFrame {
 				}
 				//Reposition the next "first" window
 				childWindowNumber = 1;
+				// Update the window menu
+				listChildMenusInWindowTopMenu();
+			
 			}
 		});
-
-
 		
 		closeMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -313,6 +317,80 @@ public class MDIFrame extends JFrame {
 				System.exit(0);
 			}
 		});
+	}
+	
+	private void addMenuMneMonics(JMenu topMenu, JMenuItem jMenuItem, String menuTekst, int keyStroke) { 
+		jMenuItem.setText(menuTekst);
+		jMenuItem.setMnemonic(keyStroke);		
+		jMenuItem.setAccelerator(KeyStroke.getKeyStroke( keyStroke, KeyEvent.CTRL_DOWN_MASK));
+		topMenu.add(jMenuItem);
+	}
+	
+	private void listChildMenusInWindowTopMenu() {
+
+		// Remove all menu items corresponding to actual windows (the 2 first menu items is Close All, and Minimize All)
+		for (int i = windowMenu.getItemCount() -1; i > 1; i--) {
+			windowMenu.remove(2);
+		}
+		
+		// Get all MDI childwindows, which unfortunately comes back as JInternalFrames - consider to override getAllFrames() ?! 
+		JInternalFrame[] frames = desktopPane.getAllFrames();
+		
+		// need to cast, in order to access MDIChild attributes :-(
+		ArrayList<MDIChild> mDIChilds = new ArrayList<MDIChild>();
+		for (JInternalFrame jInternalFrame : frames) {
+			mDIChilds.add((MDIChild) jInternalFrame);
+		}
+		
+		// Sort in order to get Windows number 1 at top
+		mDIChilds.sort(null);
+		
+		for (MDIChild aChild : mDIChilds) {
+			try {
+				JMenuItem jMenuItem = new JMenuItem();
+				jMenuItem.setText(Integer.toString(aChild.getWindowNumber()) + ". " + aChild.getWindowName());
+				
+				jMenuItem.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(java.awt.event.ActionEvent e) {
+						try {
+							ActiveMDIChild(aChild.getWindowNumber());
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+
+				});				
+				
+				windowMenu.add(jMenuItem);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	private void ActiveMDIChild(int windowNumber) throws Exception {
+		JInternalFrame[] frames = desktopPane.getAllFrames();
+
+		// need to cast, in order to access MDIChild attributes :-(
+		ArrayList<MDIChild> mDIChilds = new ArrayList<MDIChild>();
+		for (JInternalFrame jInternalFrame : frames) {
+			mDIChilds.add((MDIChild) jInternalFrame);
+		}
+
+		for (MDIChild aChild : mDIChilds) {
+			if (aChild.getWindowNumber() == windowNumber) {
+				if (aChild.isIcon()) {
+					aChild.setIcon(false);
+				}	
+				aChild.moveToFront();
+				aChild.setSelected(true);
+				break;
+
+			}
+		}
 
 	}
 	

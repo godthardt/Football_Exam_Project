@@ -18,8 +18,6 @@ public class Team implements Comparable<Team>, Serializable {
 	public int getLevel() { return level; }
 	private boolean kicedkOut = false;
 	public boolean getkickedOut() { return kicedkOut; }
-	//public Team clone() 
-
 
 	// constructor
 	public Team (int id, String name, int level, ArrayList<Contract> contracts) {

@@ -8,6 +8,7 @@ import java.io.*;
 public class Turnament implements Serializable {
 	public Turnament(ArrayList<Team> turnamentTeams, ArrayList<Contract> turnamentContracts , String name, LocalDate startDate, LocalDate endDate) throws Exception {
 		this.name = name;
+		//this.number = number++;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.turnamentTeams = turnamentTeams;
@@ -17,8 +18,9 @@ public class Turnament implements Serializable {
 		listTeamsByPoint(false);
 	}
 
-	protected String name;
+	protected String name;  // In this case, is it not necessary to protect the attribute, since there is both a set and get method, but good style to demonstrate encapsulation 
 	public String getName() { return name; };
+	public void setName(String name) { this.name = name;}
 	protected LocalDate startDate;
 	public LocalDate GetStartDate() { return startDate; }
 	protected LocalDate endDate;
@@ -95,7 +97,7 @@ public class Turnament implements Serializable {
 
 	public void addGoal(int matchnumber, Goal.GoalType goaltype, int goalMinute, int goalSecond ) throws Exception {
 		Match m = matches.get(matchnumber -1);//-1 because first matchnumber is 1 and first element in ArrryList is 0
-		// Pick a random goalscorer
+		// Pick a random goal scorer
 		Player goalScorer;
 		if (goaltype == Goal.GoalType.Home) {
 			goalScorer = m.getHomeTeam().getRandomgoalScorer();
@@ -151,11 +153,10 @@ public class Turnament implements Serializable {
 			for (int i = 0; i < turnamentTeams.size(); i++) {
 				// If team not equals itself, set up a match
 				if (turnamentTeams.get(i).getId() != team.getId()) {
-					// Spread matches on a timeline
+					// Spread matches on a "pseudo" time line
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
 					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), matchDate);
-					m.endMatch(90);
 					addMatch(m);
 					generateRandomGoals(m);
 				}
@@ -172,7 +173,7 @@ public class Turnament implements Serializable {
 	}
 	
 	public void generateRandomGoals(Match match) throws Exception {
-		final int stdMachTimeMiutes = 90;
+		final int stdMatchTimeMiutes = 90;
 		Random r = new Random();
 		int minuteScored = 0;
 		int exstraTime = r.nextInt(Constants.maxExtraTimePrMatch);
@@ -181,7 +182,7 @@ public class Turnament implements Serializable {
 
 		for (int i = 0; i < numberOfGoalsToAdd; i++) {
 			int homeOrAway = r.nextInt(3);
-			int nextScoreMinute = r.nextInt(stdMachTimeMiutes - minuteScored);
+			int nextScoreMinute = r.nextInt(stdMatchTimeMiutes - minuteScored);
 			minuteScored = nextScoreMinute;
 			switch (homeOrAway) {
 			case 0: {
@@ -189,7 +190,7 @@ public class Turnament implements Serializable {
 				break;
 			}
 			case 1: {
-				addGoal(match.getMatchNo(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));
+				addGoal(match.getMatchNo(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));// Random seconds
 				break;						
 			}
 			case 2: {
@@ -198,7 +199,7 @@ public class Turnament implements Serializable {
 			}
 			}
 		}
-		match.endMatch(90 + exstraTime); // Add up to 9 extra minutes 
+		match.endMatch(stdMatchTimeMiutes + exstraTime); // Add up to 9 extra minutes 
 	}
 
 	public int getNumberOfTeams() {
