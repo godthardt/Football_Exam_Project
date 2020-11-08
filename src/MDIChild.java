@@ -53,8 +53,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
 
 	private final String matchIdColumn = "Kamp Id"; //"tagged" so I can search for column later
-	private String[] matchTableColumnNames = { "Nr.", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score"};
-	private Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};	
+	private String[] matchTableColumnNames = { "Nr.", "Runde", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score"};
+	private Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};	
 
 	private final String tidGoalColumn = "Tidspunkt";	 //"tagged" so I can search for column later
 	private final String goalScorerColumn = "Målscorer"; //"tagged" so I can search for column later
@@ -104,7 +104,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 
 		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams(), teamTableColumnNames.length);
 		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam, matchTableColumnNames.length);
-		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsOnePrMatch, goalTableColumnNames.length);
+		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsPrMatch, goalTableColumnNames.length);
 		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), playerTableColumnNames.length);
 
 		teamTableMetaData = new JTableColumnMetaData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, stdTableWidth, 13*modus), teamTableLabel);
@@ -148,6 +148,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 
 		loadTeamsIntoTable(teamTable);		
 
+		// listeners
 		teamTable.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -169,7 +170,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			}
 		});
 		
-		// listener
 		teamTable.getTableHeader().addMouseListener(new MouseAdapter() {
 		    @Override
 		    public void mouseClicked(MouseEvent e) {
@@ -210,7 +210,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			}
 		});
 		
-		System.out.println("MDIChild fully loaded");		
+		System.out.println("MDIChild number " + windowNumber + " loaded");		
 	}
 	
 	private int getSelectedMacthId()
@@ -291,6 +291,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	}
 	
 	private void listMatches(int teamId) {
+		clearTable(matchTable);
 		clearTable(goalTable);
 		int rowNumber = 0;
 		matchTableLabel.setText("Kampe for " + (turnament.GetTeam(teamId)).getName() + ":");
@@ -299,6 +300,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 
 			if ((m.getHomeTeam().getId() == teamId) || (m.getAwayTeam().getId() == teamId)) {
 				matchTable.setValueAt(rowNumber + 1, rowNumber, colNum++);
+				matchTable.setValueAt(m.getRoundNo(), rowNumber, colNum++);
 				matchTable.setValueAt(m.getMatchNo(), rowNumber, colNum++);
 				matchTable.setValueAt(m.getDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++); 			
 				matchTable.setValueAt(m.getHomeTeam().getName(), rowNumber, colNum++);

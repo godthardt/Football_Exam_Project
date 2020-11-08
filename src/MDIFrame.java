@@ -32,7 +32,8 @@ public class MDIFrame extends JFrame {
 	private JLayeredPane layeredPane;
 	private TurnamentManager turnamentManager;
 	private static int childWindowNumber = 1;
-	private JMenu windowMenu;   
+	private JMenu windowMenu;
+	private int numberOfWindowBaseMenuItems;
 	public Dimension dim;
 
 
@@ -155,14 +156,16 @@ public class MDIFrame extends JFrame {
 		addMenuMneMonics(fileMenu, newTurnamentMenu, "Ny superliga", KeyEvent.VK_N);		
 		addMenuMneMonics(fileMenu, newCupTurnamentMenu, "Ny pokalturnering", KeyEvent.VK_P);
 		addMenuMneMonics(fileMenu, loadSerializedTurnamentMenu, "Åbn serialiseret turnering fra fil", KeyEvent.VK_O);
-		addMenuMneMonics(fileMenu, saveSerializedTurnamentMenu, "Gem serialiseret turnering i fil", KeyEvent.VK_S);		
+		addMenuMneMonics(fileMenu, saveSerializedTurnamentMenu, "Gem serialiseret turnering i fil", KeyEvent.VK_S);
+		fileMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm		
 		addMenuMneMonics(fileMenu, closeMenu, "Afslut", KeyEvent.VK_A);
+		fileMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm
 		addMenuMneMonics(fileMenu, testMenu, "Test", KeyEvent.VK_T);
 		
-		
-		
 		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M);		
-		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle Vinduer", KeyEvent.VK_L);		
+		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle Vinduer", KeyEvent.VK_L);
+		windowMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm
+		numberOfWindowBaseMenuItems = windowMenu.getItemCount(); 
 		
 		menubar.add(fileMenu);
 		menubar.add(windowMenu);	    
@@ -328,34 +331,38 @@ public class MDIFrame extends JFrame {
 	
 	private void listChildMenusInWindowTopMenu() {
 
-		// Remove all menu items corresponding to actual windows (the 2 first menu items is Close All, and Minimize All)
-		for (int i = windowMenu.getItemCount() -1; i > 1; i--) {
-			windowMenu.remove(2);
+		// Easy household with MDI child windows. Strategy: Remove all, add known
+		// Remove all menu items corresponding to actual windows (the 2 first menu items is Close All, and Minimize All + separator)
+
+		// Remove all menuitems on "top" menu windowMenu
+		int numberOfMenuItemsToRemove = windowMenu.getItemCount() - numberOfWindowBaseMenuItems;  
+		for (int i = 0; i < numberOfMenuItemsToRemove; i++) {
+			windowMenu.remove(numberOfWindowBaseMenuItems);
 		}
 		
 		// Get all MDI childwindows, which unfortunately comes back as JInternalFrames - consider to override getAllFrames() ?! 
 		JInternalFrame[] frames = desktopPane.getAllFrames();
 		
-		// need to cast, in order to access MDIChild attributes :-(
+		// need to "cast" (add to another list), in order to access MDIChild attributes :-(
 		ArrayList<MDIChild> mDIChilds = new ArrayList<MDIChild>();
 		for (JInternalFrame jInternalFrame : frames) {
 			mDIChilds.add((MDIChild) jInternalFrame);
 		}
 		
-		// Sort in order to get Windows number 1 at top
-		mDIChilds.sort(null);
+		// Sort in order to get Window number 1 at top
+		mDIChilds.sort(null);  // implemented Comparable interface om MDIChild which sorts by windowNumber
 		
 		for (MDIChild aChild : mDIChilds) {
 			try {
 				JMenuItem jMenuItem = new JMenuItem();
 				jMenuItem.setText(Integer.toString(aChild.getWindowNumber()) + ". " + aChild.getWindowName());
 				
+				// Add a listener, so the menu item can activate the window via calling ActiveMDIChild(aChild.getWindowNumber() 
 				jMenuItem.addActionListener(new java.awt.event.ActionListener() {
 					public void actionPerformed(java.awt.event.ActionEvent e) {
 						try {
 							ActiveMDIChild(aChild.getWindowNumber());
 						} catch (Exception e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}

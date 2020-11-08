@@ -1,7 +1,7 @@
 
 
 public class Constants {
-	public final static int maxGoalsOnePrMatch = 10; //https://www.henvisningskode.net/superliga-rekorder-og-stats/
+	public final static int maxGoalsPrMatch = 10; //https://www.henvisningskode.net/superliga-rekorder-og-stats/
 	public final static int maxExtraTimePrMatch = 10;
 	public final static String dkDateFormat = "d. MMM YYYY";
 	public final static int mDIFrameWidth = 1000;

@@ -112,7 +112,7 @@ public class Turnament implements Serializable {
 		Collections.sort(turnamentTeams, new SortbyPoints());
 		if (doPrint) {
 			for (int i = 0; i < turnamentTeams.size(); i++) {
-				turnamentTeams.get(i).print();
+				//turnamentTeams.get(i).print();
 			}
 		}
 	}
@@ -145,7 +145,7 @@ public class Turnament implements Serializable {
 		}
 	}
 
-	public void generateMatchesAndGoals() throws Exception {
+	protected void generateMatchesAndGoals() throws Exception {
 		
 		long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 		Random r = new Random();
@@ -156,9 +156,10 @@ public class Turnament implements Serializable {
 					// Spread matches on a "pseudo" time line
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
-					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), matchDate);
+					int roundNo = 1;//turnamentTeams.size() % i + 1;
+					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), roundNo, matchDate);
 					addMatch(m);
-					generateRandomGoals(m);
+					generateRandomGoals(m, false);
 				}
 			}
 		}
@@ -172,34 +173,51 @@ public class Turnament implements Serializable {
 		return numberOfGoals;
 	}
 	
-	public void generateRandomGoals(Match match) throws Exception {
+	public void generateRandomGoals(Match match, boolean mustHaveWinner) throws Exception {
 		final int stdMatchTimeMiutes = 90;
 		Random r = new Random();
 		int minuteScored = 0;
 		int exstraTime = r.nextInt(Constants.maxExtraTimePrMatch);
 
-		int numberOfGoalsToAdd = r.nextInt(Constants.maxGoalsOnePrMatch);
+		int numberOfGoalsToAdd = r.nextInt(Constants.maxGoalsPrMatch);
+		
+		// if it is it cup match, I need to have an uneven number of goals
+		if (mustHaveWinner==true) {
+			if (numberOfGoalsToAdd==0) {
+				numberOfGoalsToAdd = 1;
+			}
+			else {
+				// Make number of goals uneven -> match gets a winner
+				if (numberOfGoalsToAdd % 2 == 0) {
+					numberOfGoalsToAdd--;
+				}
+			}
+		}
+		
+		//System.out.println("Number of goals to add " + numberOfGoalsToAdd);
+//		
+//if ((homeTeam.getMustLoose()== true) && (awayTeam.getMustLoose()== false)) {
+//	addGoal(match.getMatchNo(), Goal.GoalType.Away, r.nextInt(30), r.nextInt(59));// Random seconds
+//	addGoal(match.getMatchNo(), Goal.GoalType.Away, r.nextInt(30) + 30, r.nextInt(59));// Random seconds	
+//}
 
 		for (int i = 0; i < numberOfGoalsToAdd; i++) {
-			int homeOrAway = r.nextInt(3);
+			int homeOrAway = r.nextInt(2);
 			int nextScoreMinute = r.nextInt(stdMatchTimeMiutes - minuteScored);
 			minuteScored = nextScoreMinute;
 			switch (homeOrAway) {
 			case 0: {
-				// 0=no goal "pseudo random" ;-)
-				break;
-			}
-			case 1: {
 				addGoal(match.getMatchNo(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));// Random seconds
 				break;						
 			}
-			case 2: {
+			case 1: {
 				addGoal(match.getMatchNo(), Goal.GoalType.Away, nextScoreMinute, r.nextInt(59));
 				break;						
 			}
 			}
 		}
-		match.endMatch(stdMatchTimeMiutes + exstraTime); // Add up to 9 extra minutes 
+		
+		match.endMatch(stdMatchTimeMiutes + exstraTime); // Add extra minutes 
 	}
 
 	public int getNumberOfTeams() {
@@ -268,7 +286,11 @@ public class Turnament implements Serializable {
 	}
 
 	public void reGenerateGoals() throws Exception {
+		// Remove matches
 		matches.clear();
+		for (Team team : turnamentTeams) {
+			team.resetPoints();
+		}
 		nextMatchId = 1;
 		generateMatchesAndGoals();
 		listTeamsByPoint(false);

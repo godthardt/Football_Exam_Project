@@ -16,15 +16,23 @@ public class Team implements Comparable<Team>, Serializable {
 	public ArrayList<Contract> getTeamContracts() { return teamContracts; } 
 	private int level;  //eg. Superliga=0, 1.division=1, etc.
 	public int getLevel() { return level; }
-	private boolean kicedkOut = false;
-	public boolean getkickedOut() { return kicedkOut; }
+	private boolean kickedkOut = false;
+	public boolean getkickedOut() { return kickedkOut; }
+	private boolean mustLoose; // true if the team is a virtual Sit Out team (på dansk oversidderhold)
+	public boolean getMustLoose() { return mustLoose; }
+	
+	
+	public void kickOut() {
+		kickedkOut = true;
+	}
 
 	// constructor
-	public Team (int id, String name, int level, ArrayList<Contract> contracts) {
+	public Team (int id, String name, int level, ArrayList<Contract> contracts, boolean mustLoose) {
 		this.name = name;
 		this.id = id;
 		this.level = level;
 		this.teamContracts = contracts;
+		this.mustLoose = mustLoose;
 		try {
 			populatePlayersFromContractPeriods();
 		} catch (Exception e) {
@@ -54,7 +62,6 @@ public class Team implements Comparable<Team>, Serializable {
 			else
 				throw new Exception("Should not happen - wrong teamID in taems contracts");
 		}
-		
 	}
 
 	public int getId() {
@@ -96,12 +103,6 @@ public class Team implements Comparable<Team>, Serializable {
         return (id + " " + name + " " + "Points = " + points);
     }
 	
-	
-	public void print() {
-		System.out.println(id + "\t" + name + "\t\t\t" + "Points = " + points);
-	}
-
-
 	public Player getRandomgoalScorer() {
 		if (players.size() > 0) {
 			int randomNumber = (new Random().nextInt(players.size()));
@@ -123,8 +124,27 @@ class SortbyPoints implements Comparator<Team>
     		result = -1;
         if (a.getPoints() < b.getPoints())
         	result = 1;
-        if (a.getPoints() == b.getPoints())
-        	result = 0;
+// Burde implemeterer bedst målscore i forbindelse med pointlighed
+//        if (a..getGolsScored() > b.getPoints()) {
+//    		if (a.getcondition) {
+//				
+//			}
+//        }
+
         return result;
     } 
 } 
+
+class SortbyKickedOut implements Comparator<Team> 
+{ 
+    public int compare(Team a, Team b) 
+    { 
+        int result = 0;
+    	if ((a.getkickedOut() == false) && (b.getkickedOut() == true))
+    		result = -1;
+    	if ((a.getkickedOut() == true) && (b.getkickedOut() == false))
+        	result = 1;
+        return result;
+    } 
+} 
+
