@@ -21,7 +21,7 @@ public class CupTurnament extends Turnament implements Serializable {
 		long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 		Random r = new Random();
 
-		int numberOfRounds = Math.round(turnamentTeams.size() / 2); // there are half the number of teams rounds (halfed every round)
+		int numberOfRounds = 5;// Math.round(turnamentTeams.size() / 2); // there are half the number of teams rounds (halfed every round)
 		System.out.println("numberOfRounds = " + numberOfRounds);
 		
 
