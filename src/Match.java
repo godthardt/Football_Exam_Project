@@ -3,15 +3,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
-enum VictoryType { Home, Away, Draw}
-
 public class Match implements Serializable {
+	enum VictoryType { Home, Away, Draw}
+	enum 	MustLoooeType { RandomLoose, DeterminedToLoose } //, HomeTeamDeterminedToLoose, AwayTeamDeterminedToLoose} 
+	
 	public Match (Team homeTeam, Team awayTeam, int matchNo, int roundNo, LocalDate matchDate) {
 		this.matchNo = matchNo;
 		this.roundNo = roundNo;
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.date = matchDate;
+		// Is the home team an "out sitter" and must therefore loose
+		if (homeTeam.getMustLoose()==Match.MustLoooeType.DeterminedToLoose) {
+			this.mustWin = Match.MustLoooeType.DeterminedToLoose;			
+		// Is the away team an "out sitter" and must therefore loose
+		} else if (awayTeam.getMustLoose()==Match.MustLoooeType.DeterminedToLoose) {
+			this.mustWin = Match.MustLoooeType.DeterminedToLoose;			
+		// Normal procedure: random winnner
+		} else {
+			this.mustWin = Match.MustLoooeType.RandomLoose;
+		}
 		goals = new ArrayList<Goal>();
 	}
 	
@@ -26,9 +37,10 @@ public class Match implements Serializable {
 	public int getMatchNo() { return this.matchNo; }
 	private int roundNo;
 	public int getRoundNo() { return this.roundNo; }
-	
 	private LocalDate date;
 	public LocalDate getDate() { return this.date; }
+	private MustLoooeType mustWin;
+	public MustLoooeType	getMustWin() { return mustWin;} 
 	private int homeGoals = 0;
 	public int getHomeGoals() { return homeGoals; }
 	private int awayGoals = 0;

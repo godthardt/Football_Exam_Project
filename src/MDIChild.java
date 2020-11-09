@@ -48,7 +48,9 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 
 	// Column Names
 	private final String teamIdColumn = "Hold Id";
-	private String[] teamTableColumnNames =  { "Nr.", teamIdColumn, "Holdnavn", "Kampe", "Målscore", "Point"};
+	private final String pointColumn =  "Point";
+	private final String teamNameColumn =  "Holdnavn";	
+	private String[] teamTableColumnNames =  { "Nr.", teamIdColumn, teamNameColumn, "Kampe", "Målscore", pointColumn};
 	// Column widths
 	private Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
 
@@ -74,7 +76,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			this.windowNumber = windowNumber; 
 			this.title = Integer.toString(windowNumber++) + ". "  + turnament.getName();
 			windowName = turnament.getName();
-			//addInternalFrameListener(internalFramelistener);
 			initGraphics();
 		}
 		catch(Exception e) {
@@ -117,8 +118,10 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		matchTable = createJtable(matchTableMetaData);
 		goalTable = createJtable(goalTableMetaData);
 		playerTable = createJtable(playerTableMetaData);
+		playerTable.setAutoCreateRowSorter(true);
 		
 		goalTable.add(boringLabel);
+		goalTable.setAutoCreateRowSorter(true);
 
 
 		// Labels
@@ -179,6 +182,14 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 				TableColumnModel tcm = th.getColumnModel();
 				TableColumn tc = tcm.getColumn(col);
 				String name = tc.getHeaderValue().toString();
+				if (name==pointColumn) {
+					Collections.sort(turnament.getTeams(), new SortbyPoints());
+				}
+				if (name ==teamNameColumn) {
+					turnament.getTeams().sort(null);
+				}
+				
+				loadTeamsIntoTable(teamTable);
 		        System.out.println("Column index selected " + col + " " + name);
 		    }
 		});		
@@ -428,41 +439,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		return false;
 	}	
 
-//	// Create a listener, which "captures" InternalFrames "resizesing" events
-//	// inspired from http://www.java2s.com/Code/Java/Event/DemonstratingtheInternalFrameListener.htm
-//	InternalFrameListener internalFramelistener = new InternalFrameListener() {	
-//		public void internalFrameActivated(InternalFrameEvent e) {
-//			System.out.println("Activated");
-//		}
-//
-//		// I need to implement all methods from interface, in order to get the compiler to accept to code,
-//		// If not I receive the Error: The type new InternalFrameListener(){} must implement the inherited abstract method InternalFrameListener.internalFrameClosing(InternalFrameEvent)
-//		public void internalFrameClosed(InternalFrameEvent e) {
-//			System.out.println("Closed");
-//		}
-//
-//		public void internalFrameClosing(InternalFrameEvent e) {
-//			System.out.println("Closing");
-//		}
-//
-//		public void internalFrameDeactivated(InternalFrameEvent e) {
-//			System.out.println("Deactivated");
-//		}
-//
-//		public void internalFrameDeiconified(InternalFrameEvent e) {
-//			System.out.println("Deiconified");
-//		}
-//
-//		public void internalFrameIconified(InternalFrameEvent e) {
-//			System.out.println("Iconified");
-//		}
-//
-//		public void internalFrameOpened(InternalFrameEvent e) {
-//			System.out.println("Opened");
-//		}
-//
-//	};
-//
 	@Override
 	public int compareTo(MDIChild m) {
 		if (this.windowNumber > m.windowNumber) 
@@ -510,7 +486,7 @@ class TablePanel extends JPanel{
 
 	public TablePanel(JTableColumnMetaData jTableColumnMetaData){
 
-		setBackground(Color.GRAY); // Very usefull when I debugged, found that i looked nice afterwards
+		setBackground(Color.GRAY); // Very usefull when I debugged, found that it looked nice afterwards
 		
 		for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
 			// Set column widths
@@ -535,7 +511,7 @@ class TablePanel extends JPanel{
 		setSize(new Dimension(jTableColumnMetaData.rectangle.width , jTableColumnMetaData.rectangle.height));
 		jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width - 30, jTableColumnMetaData.rectangle.height - 30));
 		// Use predefined columnsorter, which sorts on strings "11" before "2" - could be improved
-		jTableColumnMetaData.jTable.setAutoCreateRowSorter(true); 
+		//jTableColumnMetaData.jTable.setAutoCreateRowSorter(true); 
 		setLocation(jTableColumnMetaData.rectangle.x, jTableColumnMetaData.rectangle.y);
 
 		JScrollPane jScrollPane=new JScrollPane(jTableColumnMetaData.jTable);

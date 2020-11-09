@@ -146,7 +146,7 @@ public class Turnament implements Serializable {
 	}
 
 	protected void generateMatchesAndGoals() throws Exception {
-		
+
 		long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 		Random r = new Random();
 		for (Team team : turnamentTeams) {
@@ -164,7 +164,7 @@ public class Turnament implements Serializable {
 			}
 		}
 	}
-	
+
 	public int getNumberOfGoals() {
 		int numberOfGoals = 0;
 		for (Match match : matches) {
@@ -172,15 +172,14 @@ public class Turnament implements Serializable {
 		}
 		return numberOfGoals;
 	}
-	
+
 	public void generateRandomGoals(Match match, boolean mustHaveWinner) throws Exception {
 		final int stdMatchTimeMiutes = 90;
 		Random r = new Random();
 		int minuteScored = 0;
 		int exstraTime = r.nextInt(Constants.maxExtraTimePrMatch);
-
 		int numberOfGoalsToAdd = r.nextInt(Constants.maxGoalsPrMatch);
-		
+
 		// if it is it cup match, I need to have an uneven number of goals
 		if (mustHaveWinner==true) {
 			if (numberOfGoalsToAdd==0) {
@@ -193,30 +192,33 @@ public class Turnament implements Serializable {
 				}
 			}
 		}
-		
-		//System.out.println("Number of goals to add " + numberOfGoalsToAdd);
-//		
-//if ((homeTeam.getMustLoose()== true) && (awayTeam.getMustLoose()== false)) {
-//	addGoal(match.getMatchNo(), Goal.GoalType.Away, r.nextInt(30), r.nextInt(59));// Random seconds
-//	addGoal(match.getMatchNo(), Goal.GoalType.Away, r.nextInt(30) + 30, r.nextInt(59));// Random seconds	
-//}
 
-		for (int i = 0; i < numberOfGoalsToAdd; i++) {
-			int homeOrAway = r.nextInt(2);
-			int nextScoreMinute = r.nextInt(stdMatchTimeMiutes - minuteScored);
-			minuteScored = nextScoreMinute;
-			switch (homeOrAway) {
-			case 0: {
-				addGoal(match.getMatchNo(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));// Random seconds
-				break;						
+		if (match.getHomeTeam().getMustLoose()==Match.MustLoooeType.DeterminedToLoose) {
+			// Home team looses 0-2
+			addGoal(match.getMatchNo(), Goal.GoalType.Away, r.nextInt(30), r.nextInt(59));// Random seconds
+			addGoal(match.getMatchNo(), Goal.GoalType.Away, r.nextInt(30) + 30, r.nextInt(59));// Random seconds	
+		} else if (match.getAwayTeam().getMustLoose()==Match.MustLoooeType.DeterminedToLoose) {
+			// Away team looses 2-0
+			addGoal(match.getMatchNo(), Goal.GoalType.Home, r.nextInt(30), r.nextInt(59));// Random seconds
+			addGoal(match.getMatchNo(), Goal.GoalType.Home, r.nextInt(30) + 30, r.nextInt(59));// Random seconds	
+		} else {
+			// Random victory
+			for (int i = 0; i < numberOfGoalsToAdd; i++) {
+				int homeOrAway = r.nextInt(2);
+				int nextScoreMinute = r.nextInt(stdMatchTimeMiutes - minuteScored);
+				minuteScored = nextScoreMinute;
+				switch (homeOrAway) {
+				case 0: {
+					addGoal(match.getMatchNo(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));// Random seconds
+					break;						
+				}
+				case 1: {
+					addGoal(match.getMatchNo(), Goal.GoalType.Away, nextScoreMinute, r.nextInt(59));
+					break;						
+				}
+				}
 			}
-			case 1: {
-				addGoal(match.getMatchNo(), Goal.GoalType.Away, nextScoreMinute, r.nextInt(59));
-				break;						
-			}
-			}
-		}
-		
+		}		
 		match.endMatch(stdMatchTimeMiutes + exstraTime); // Add extra minutes 
 	}
 

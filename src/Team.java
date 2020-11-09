@@ -18,16 +18,15 @@ public class Team implements Comparable<Team>, Serializable {
 	public int getLevel() { return level; }
 	private boolean kickedkOut = false;
 	public boolean getkickedOut() { return kickedkOut; }
-	private boolean mustLoose; // true if the team is a virtual Sit Out team (på dansk oversidderhold)
-	public boolean getMustLoose() { return mustLoose; }
-	
+	private Match.MustLoooeType mustLoose; // true if the team is a virtual Sit Out team (på dansk oversidderhold)
+	public Match.MustLoooeType getMustLoose() { return mustLoose; }
 	
 	public void kickOut() {
 		kickedkOut = true;
 	}
 
 	// constructor
-	public Team (int id, String name, int level, ArrayList<Contract> contracts, boolean mustLoose) {
+	public Team (int id, String name, int level, ArrayList<Contract> contracts, Match.MustLoooeType mustLoose) {
 		this.name = name;
 		this.id = id;
 		this.level = level;

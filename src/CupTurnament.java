@@ -21,98 +21,60 @@ public class CupTurnament extends Turnament implements Serializable {
 		long DaysBetweenStartAndEnd = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
 		Random r = new Random();
 
-		int numberOfRounds = 5;// Math.round(turnamentTeams.size() / 2); // there are half the number of teams rounds (halfed every round)
-		System.out.println("numberOfRounds = " + numberOfRounds);
-		
-
 		int numberOfTeamsNextPowerOf2 = nextPowerOf2(turnamentTeams.size());
 		
-		// Add a number of "Sitter Outs" (på dansk oversiddere) to match a power of two 
+		// Add a number of "Sitter Outs" (in danish: "oversiddere") to match a power of two 
 		for (int i = turnamentTeams.size(); i < numberOfTeamsNextPowerOf2; i++) {
-			turnamentTeams.add(new Team(i, "Oversidder " + (i + 1), 1, new ArrayList<Contract>(), true));			
+			turnamentTeams.add(new Team(i, "Oversidder " + (i + 1), 1, new ArrayList<Contract>(), Match.MustLoooeType.DeterminedToLoose));			
 		}
 		
-		System.out.println("new turnamentTeams.size = " + turnamentTeams.size());
+		int round = 0;
 		
-		for (int round = 0; round < numberOfRounds; round++) {
+		int numberOfRemaingTeams = 0;
+		numberOfRemaingTeams = getNumberOfRemainingTeams();		
+		
+		while(numberOfRemaingTeams > 2) {  // if 2 teams back, then it's the final	
+			round++;
 			
-			System.out.println("Roundno = " + round);
-			
-			// sort by kicked out
+			// sort by kicked out, so that I can pick remaining teams from start of the arrayList
 			Collections.sort(turnamentTeams, new SortbyKickedOut());
 			
 			// Count number of reaming teams
-			int numberOfRemaingTeams = 0;
-			for (Team team : turnamentTeams) {
-				if (team.getkickedOut()==false) {
-					numberOfRemaingTeams++;
-				}
-			}
+			numberOfRemaingTeams = getNumberOfRemainingTeams();
 			
-			System.out.println("numberOfRemaingTeams = " + numberOfRemaingTeams);
-
-			int counter = 0;
 			for (int i = 0; i < numberOfRemaingTeams; i+=2) {
-
-//				Team homeTeam = null;
-//				Team awayTeam = null;
-//				
-//				while ((homeTeam==null) && (counter < numberOfRemaingTeams)) {
-//					if (turnamentTeams.get(counter).getkickedOut() == false) {
-//						homeTeam = turnamentTeams.get(counter);
-//						System.out.println("Hometeam found: " + homeTeam.getName() + " Roundno = " + round + " i = ");
-//						counter++;
-//						break;
-//					}
-//					counter++;
-//				}
-//				
-//				while ((awayTeam==null) && (counter < numberOfRemaingTeams)) {
-//					if (turnamentTeams.get(counter).getkickedOut() == false) {
-//						awayTeam = turnamentTeams.get(counter);
-//						System.out.println("AwayTeam found: " + awayTeam.getName() + " Roundno = " + round + " i = ");						
-//						break;
-//					}
-//					counter++;
-//				}
-//				
-//				if (homeTeam==null) {
-//					homeTeam = new Team(-1, "Oversidder", 1, new ArrayList<Contract>(), true);
-//				} 
-//				
-//				if (awayTeam==null) {
-//					awayTeam = new Team(-1, "Oversidder", 1, new ArrayList<Contract>(), true);
-//				} 
-//				
-				// set team 1 up against 2; 3 against 4, etc
 				// Spread matches on a "pseudo" time line
 				int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 				LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
+				// set team 1 up against 2; 3 against 4, etc
 				Match m = new Match(turnamentTeams.get(i), turnamentTeams.get(i+1), getNextMatchId(), round+1, matchDate);
-				//Match m = new Match(homeTeam, awayTeam, getNextMatchId(), round+1, matchDate);
-				System.out.println("Round " + round + " Match : " + turnamentTeams.get(i).getName() + " - " + turnamentTeams.get(i+1).getName());
 				addMatch(m);
 				generateRandomGoals(m, true);
-				
 			}
-			
-			
 		}
-
-		System.out.println("Number of matches = " + matches.size());	
-
 	}
 	
-	private int nextPowerOf2(int a)  // plagiat: https://stackoverflow.com/questions/5242533/fast-way-to-find-exponent-of-nearest-superior-power-of-2 
-    {
-        int b = 1;
-        while (b < a)
-        {
-            b = b << 1;
-        }
-        System.out.println("a = " + a + " b = " +b );
-        return b;
-    }	
+	private int getNumberOfRemainingTeams() {
+		int count = 0;
+		// Count number of reaming teams
+		for (Team team : turnamentTeams) {
+			if (team.getkickedOut()==false) {
+				count++;
+			}
+		}
+		return count;
+	}
 	
-
+	// purpose: find the next power of 2, in order to continue to be able to divide turnament in half, and keeping whole number of teams
+	private int nextPowerOf2(int a) throws Exception 
+    {
+		if (a <=2) {
+			throw new Exception("Method nextPowerOf2 only Works with input parameters above 2");
+		}
+		int result = 1;
+		while (result <= a) {
+			result = 2 * result; 
+		}
+		return result;
+    }
 }

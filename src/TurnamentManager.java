@@ -108,7 +108,7 @@ public class TurnamentManager implements Serializable  {
 				try {
 					String[] arrOfStr = linje.split(",");
 					int teamID = Integer.parseInt(arrOfStr[0]);
-					teamsMasterList.add(new Team(teamID, arrOfStr[1], Integer.parseInt(arrOfStr[2]), getContractPeriodsOfTeam(teamID), false));
+					teamsMasterList.add(new Team(teamID, arrOfStr[1], Integer.parseInt(arrOfStr[2]), getContractPeriodsOfTeam(teamID), Match.MustLoooeType.RandomLoose));
 
 				} catch (Exception e) {
 					e.printStackTrace();
