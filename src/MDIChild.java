@@ -14,8 +14,27 @@ import java.time.format.DateTimeFormatter;
 public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private static final long serialVersionUID = 1;
 
-	private UUID guid = java.util.UUID.randomUUID(); // use GUID to identify the object - inspired from https://stackoverflow.com/questions/2982748/create-a-guid-in-java
-	public UUID getGuid() { return guid;}
+	private boolean teamPointColumnSortOrderAscending = false; // Should not be called directly
+	// Used to switch between ascending and descending sort order
+	public boolean getTeamPointColumnSortOrderAscending() {  
+		teamPointColumnSortOrderAscending = !teamPointColumnSortOrderAscending;
+		return teamPointColumnSortOrderAscending;
+	}
+	
+	private boolean teamGoalScoreColumnSortOrderAscending = false; // Should not be called directly
+	// Used to switch between ascending and descending sort order
+	public boolean getTeamGoalScoreColumnSortOrderAscending() {  
+		teamGoalScoreColumnSortOrderAscending = !teamGoalScoreColumnSortOrderAscending;
+		return teamGoalScoreColumnSortOrderAscending;
+	}
+	
+	private boolean teamNumberOfMatchesColumnSortOrderAscending = false; // Should not be called directly
+	// Used to switch between ascending and descending sort order
+	public boolean getTeamNumberOfMatchesColumnSortOrderAscending() {  
+		teamNumberOfMatchesColumnSortOrderAscending = !teamNumberOfMatchesColumnSortOrderAscending;
+		return teamNumberOfMatchesColumnSortOrderAscending;
+	}
+
 	private int windowNumber = 1;
 	public int getWindowNumber() { return windowNumber; }
 	private String windowName;
@@ -46,15 +65,19 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private int mediumColumnWidth = 60;
 	private int largeColimnWidth = 80;	
 
-	// Column Names
+	// Column Names (some "tagged" by "constants" (final strings) so I can search for column nanes later)
 	private final String teamIdColumn = "Hold Id";
-	private final String pointColumn =  "Point";
-	private final String teamNameColumn =  "Holdnavn";	
-	private String[] teamTableColumnNames =  { "Nr.", teamIdColumn, teamNameColumn, "Kampe", "Målscore", pointColumn};
+	private final String teamPointColumn = "Point";
+	private final String teamNameColumn = "Holdnavn";
+	private final String teamGoalScoreColumn = "Målscore";
+	private final String teamNumberOfMatchesColumn = "Kampe";	
+	
+	
+	private String[] teamTableColumnNames =  { "Nr.", teamIdColumn, teamNameColumn, teamNumberOfMatchesColumn, teamGoalScoreColumn, teamPointColumn};
 	// Column widths
 	private Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
 
-	private final String matchIdColumn = "Kamp Id"; //"tagged" so I can search for column later
+	private final String matchIdColumn = "Kamp Id"; 
 	private String[] matchTableColumnNames = { "Nr.", "Runde", matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score"};
 	private Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};	
 
@@ -172,26 +195,41 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 				}
 			}
 		});
-		
-		teamTable.getTableHeader().addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		        int col = teamTable.columnAtPoint(e.getPoint());
 
-		        JTableHeader th = teamTable.getTableHeader();
+		teamTable.getTableHeader().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int col = teamTable.columnAtPoint(e.getPoint());
+
+				boolean columnSorted = true;
+				JTableHeader th = teamTable.getTableHeader();
 				TableColumnModel tcm = th.getColumnModel();
 				TableColumn tc = tcm.getColumn(col);
-				String name = tc.getHeaderValue().toString();
-				if (name==pointColumn) {
-					Collections.sort(turnament.getTeams(), new SortbyPoints());
+				String columnName = tc.getHeaderValue().toString();
+
+				if (columnName==teamPointColumn) {
+					Collections.sort(turnament.getTeams(), new SortbyPoints(getTeamPointColumnSortOrderAscending()));
+				} 
+
+				else if (columnName==teamGoalScoreColumn) {
+					Collections.sort(turnament.getTeams(), new SortbyGoalScore(getTeamGoalScoreColumnSortOrderAscending()));
+				} 
+				else if (columnName==teamNumberOfMatchesColumn) {
+					Collections.sort(turnament.getTeams(), new SortbyNumberOfMatches(getTeamNumberOfMatchesColumnSortOrderAscending()));
+				} 
+				else if (columnName ==teamNameColumn) {
+					turnament.getTeams().sort(null);  // takes class' own compareTo
+				} else {
+					//System.out.println("Column index selected \"" + col + "\" " + name);
+					System.out.println("Column " + col + " \"" + columnName + "\" does not support sorting");
+					columnSorted = false;
 				}
-				if (name ==teamNameColumn) {
-					turnament.getTeams().sort(null);
+
+				if (columnSorted==true) {
+					loadTeamsIntoTable(teamTable);
+					teamTable.setRowSelectionInterval(0, 0);
 				}
-				
-				loadTeamsIntoTable(teamTable);
-		        System.out.println("Column index selected " + col + " " + name);
-		    }
+			}
 		});		
 
 		matchTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -254,22 +292,20 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			jTable.setValueAt(t.getId(), j, colNum++);
 			jTable.setValueAt(t.getName(), j, colNum++);
 			jTable.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
-			// Get goal score for team 
-			GoalResult goalResult = turnament.goalsScoredAndTakenForTeam(t);
-			jTable.setValueAt(goalResult.scored + " - " + goalResult.taken, j, colNum++);			
+			int goalDifference = t.getHomeGoals()-t.getAwayGoals();
+			String plusSign = "";
+			if (goalDifference > 0)
+				plusSign = "+";
+			jTable.setValueAt(t.getHomeGoals() + " - " + t.getAwayGoals() +" (" + plusSign + (t.getHomeGoals()-t.getAwayGoals())  + ")", j, colNum++);			
 			jTable.setValueAt(t.getPoints(), j, colNum++);    	
 			j++;
 		}
 		teamTable.setRowSelectionInterval(0, 0);
-		teamTableSelectionChanged(Constants.dummyGetItYourself);
+		teamTableSelectionChanged(Integer.parseInt(teamTable.getValueAt(0, Arrays.asList(teamTableColumnNames).indexOf(teamIdColumn)).toString()));
 	}
 	
 	private void teamTableSelectionChanged(int teamId)
 	{
-		// If it is an initial call on program startup
-		if (teamId==Constants.dummyGetItYourself) {
-			teamId = Integer.parseInt(teamTable.getValueAt(0, Arrays.asList(teamTableColumnNames).indexOf(teamIdColumn)).toString());	
-		}
 		listMatches(teamId);
 		listPlayers(teamId);
 	}
@@ -284,8 +320,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		try {
 			jTableColumnMetaData.jTable = new JTable(jTableColumnMetaData.modelTable);
 
-			// Place label 2 * modus above JTable
-			jTableColumnMetaData.tableLabel.setBounds(new Rectangle(jTableColumnMetaData.rectangle.x, jTableColumnMetaData.rectangle.y - 3 * modus, stdTableWidth, 5 * modus));
+			// Place label 2 * modus above JTable and indent a little modus / 2
+			jTableColumnMetaData.tableLabel.setBounds(new Rectangle(jTableColumnMetaData.rectangle.x + modus / 2, jTableColumnMetaData.rectangle.y - 3 * modus, stdTableWidth, 5 * modus));
 
 			// Set column"Header"Titles
 			for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
@@ -517,8 +553,6 @@ class TablePanel extends JPanel{
 		JScrollPane jScrollPane=new JScrollPane(jTableColumnMetaData.jTable);
 		jScrollPane.setVisible(true);
 		add(jScrollPane);
-
 	}
-
 
 }

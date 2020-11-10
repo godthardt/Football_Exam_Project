@@ -1,6 +1,7 @@
 
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.ScrollPane;
@@ -56,13 +57,11 @@ public class MDIFrame extends JFrame {
 		desktopPane.setDesktopManager(desktopManager);
 
 		layeredPane = getLayeredPane();
-		
-		//setSize(Constants.mDIFrameWidth, Constants.mDIFrameHigth);
 
 		addMenus();
 		centerJFrame();
 		setVisible(true);
-
+		
 		// Deserialize a Turnament object, in order to have something to look at
 		addNewTurnament("serializedTurnamentExample.ser");
 
@@ -91,9 +90,7 @@ public class MDIFrame extends JFrame {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
 		}
-
 	}
 
 	private void addNewTurnament(String fileName) {
@@ -101,7 +98,7 @@ public class MDIFrame extends JFrame {
 
 			Turnament deSerializedTurnamentObject = (Turnament) Serialize.load(fileName);
 			// Indicate to the GUI, that the turnament has been deserialized
-			String newTurnamentName = deSerializedTurnamentObject.getName() + " - deserialiseret d. " + LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString();
+			String newTurnamentName = deSerializedTurnamentObject.getName() + " - deserialiseret d. " + LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString() + " fra filen " + fileName;
 			deSerializedTurnamentObject.setName(newTurnamentName);
 			
 			addNewTurnament(deSerializedTurnamentObject);	    
@@ -152,15 +149,14 @@ public class MDIFrame extends JFrame {
 		JMenuItem testMenu  = new JMenuItem();
 		
 		// Set text and shortcuts on sub menu items, and attach submenu to top menu
-		addMenuMneMonics(fileMenu, refreshMenu, "Resimuler matchafvikling i valgt turnering", KeyEvent.VK_F5);		
+		addMenuMneMonics(fileMenu, refreshMenu, "Resimuler matchafvikling i valgt turnering", KeyEvent.VK_R);		
 		addMenuMneMonics(fileMenu, newTurnamentMenu, "Ny superliga", KeyEvent.VK_N);		
 		addMenuMneMonics(fileMenu, newCupTurnamentMenu, "Ny pokalturnering", KeyEvent.VK_P);
 		addMenuMneMonics(fileMenu, loadSerializedTurnamentMenu, "Åbn serialiseret turnering fra fil", KeyEvent.VK_O);
 		addMenuMneMonics(fileMenu, saveSerializedTurnamentMenu, "Gem serialiseret turnering i fil", KeyEvent.VK_S);
 		fileMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm		
 		addMenuMneMonics(fileMenu, closeMenu, "Afslut", KeyEvent.VK_A);
-		fileMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm
-		addMenuMneMonics(fileMenu, testMenu, "Test", KeyEvent.VK_T);
+		//addMenuMneMonics(fileMenu, testMenu, "Test", KeyEvent.VK_T);
 		
 		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M);		
 		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle Vinduer", KeyEvent.VK_L);
@@ -219,8 +215,8 @@ public class MDIFrame extends JFrame {
 					ex.printStackTrace();
 				}
 			}
-		});	    
-
+		});
+		
 		loadSerializedTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -229,8 +225,8 @@ public class MDIFrame extends JFrame {
 				fileChooser.setCurrentDirectory(initialDir);
 				FileFilter filter = new FileNameExtensionFilter("Serialiserede objekter","ser");
 				fileChooser.addChoosableFileFilter(filter);
-				fileChooser.setAcceptAllFileFilterUsed(false);				
-				int result = fileChooser.showOpenDialog(null);
+				fileChooser.setFileFilter(filter);
+				int result = fileChooser.showOpenDialog(getWindow());
 				if (result == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
 					System.out.println("Selected file: " + selectedFile.getAbsolutePath());
@@ -238,7 +234,7 @@ public class MDIFrame extends JFrame {
 						// de-serialize a Turnament object
 						addNewTurnament(selectedFile.getAbsolutePath());
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(null, "Kunne ikke deserialisere filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt!",
+						JOptionPane.showMessageDialog(getWindow(), "Kunne ikke deserialisere filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt!",
 								"Fejl ved deserialisering", JOptionPane.ERROR_MESSAGE);
 						System.err.println("Turnament object in " + selectedFile + " could not be de-serialized :-(");
 						ex.printStackTrace();
@@ -253,12 +249,15 @@ public class MDIFrame extends JFrame {
 				File initialDir = new File(System.getProperty("java.class.path"));
 				initialDir = initialDir.getParentFile();
 				fileChooser.setCurrentDirectory(initialDir);
+				fileChooser.setAcceptAllFileFilterUsed(false);				
 				FileFilter filter = new FileNameExtensionFilter("Serialiserede objekter (*.ser)","ser");
 				fileChooser.addChoosableFileFilter(filter);
-				fileChooser.setAcceptAllFileFilterUsed(false);
-				int result = fileChooser.showSaveDialog(null);
+				fileChooser.setFileFilter(filter);				
+				int result = fileChooser.showSaveDialog(getWindow());
 				if (result == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
+					// Try to enforce *.ser extension
+					// TODO File selectedFileWithExtension = selectedFile.getPath().replace(".", ".ser");
 					System.out.println("Selected file: " + selectedFile.getAbsolutePath());
 					try {
 						MDIChild child = (MDIChild) desktopPane.getSelectedFrame();
@@ -268,13 +267,13 @@ public class MDIFrame extends JFrame {
 								throw new Exception("Turnering blev ikke serialiseret.");
 							}
 							else {
-								JOptionPane.showMessageDialog(null, "Turneringen blev serialisert til filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt.",
+								JOptionPane.showMessageDialog(getWindow(), "Turneringen blev serialiseret til filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt.",
 										"Serialisering", JOptionPane.INFORMATION_MESSAGE);
 							}
 						}
 
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(null, "Kunne ikke deserialisere filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt!",
+						JOptionPane.showMessageDialog(getWindow(), "Kunne ikke deserialisere filen " + selectedFile.getAbsolutePath() + " som et Turnament objekt!",
 								"Fejl ved deserialisering", JOptionPane.ERROR_MESSAGE);
 						System.err.println("Turnament object in " + selectedFile + " could not be de-serialized :-(");
 						ex.printStackTrace();
@@ -322,6 +321,11 @@ public class MDIFrame extends JFrame {
 		});
 	}
 	
+	protected Component getWindow() {
+		// TODO Auto-generated method stub
+		return this.getContentPane();
+	}
+
 	private void addMenuMneMonics(JMenu topMenu, JMenuItem jMenuItem, String menuTekst, int keyStroke) { 
 		jMenuItem.setText(menuTekst);
 		jMenuItem.setMnemonic(keyStroke);		
@@ -404,5 +408,6 @@ public class MDIFrame extends JFrame {
 	public void addPanel(MDIChild panel) {
 		desktopPane.add(panel,JDesktopPane.DEFAULT_LAYER);
 	}
+
 
 }

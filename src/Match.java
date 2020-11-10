@@ -86,6 +86,12 @@ public class Match implements Serializable {
 	public void endMatch (int minutesPlayed) {
 		this.minutesPlayed = minutesPlayed;
 		hasFinished = true;
+		this.homeTeam.setHomeGoals(homeGoals);
+		this.homeTeam.setAwayGoals(awayGoals);
+		
+		this.awayTeam.setHomeGoals(awayGoals);
+		this.awayTeam.setAwayGoals(homeGoals);
+		
 		
 		if (homeGoals > awayGoals) {
 			victoryType = VictoryType.Home;

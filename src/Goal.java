@@ -22,6 +22,7 @@ public class Goal implements Comparable<Goal>, Serializable {
 			result = 1;
 		if (this.getMinute() < b.getMinute())
 			result = -1;
+		// If goals are scored in the same minute, then look at the seconds
 		if (this.getMinute() == b.getMinute())
 		{
 			if (this.getSecond() > b.getSecond())
@@ -42,9 +43,4 @@ public class Goal implements Comparable<Goal>, Serializable {
 		this.goalType = goalType;
 		this.goalScorer = goalScorer;
 	}
-}
-
-class GoalResult {
-	public int scored = 0;
-	public int taken = 0;
 }

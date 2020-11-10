@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 public class Team implements Comparable<Team>, Serializable {
-	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects	
+	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
 	private String name;
 	private int id;
 	private int points = 0;
@@ -16,10 +16,17 @@ public class Team implements Comparable<Team>, Serializable {
 	public ArrayList<Contract> getTeamContracts() { return teamContracts; } 
 	private int level;  //eg. Superliga=0, 1.division=1, etc.
 	public int getLevel() { return level; }
-	private boolean kickedkOut = false;
+	private boolean kickedkOut = false; // out of Cup turnament
 	public boolean getkickedOut() { return kickedkOut; }
-	private Match.MustLoooeType mustLoose; // true if the team is a virtual Sit Out team (på dansk oversidderhold)
+	private Match.MustLoooeType mustLoose; // true if the team is a virtual "Sit Out team" (in danish "oversidderhold")
 	public Match.MustLoooeType getMustLoose() { return mustLoose; }
+	private int homeGoals = 0;
+	public int getHomeGoals() { return homeGoals; }
+	public void setHomeGoals(int goals) { homeGoals += goals; }
+	private int awayGoals = 0;
+	public int getAwayGoals() { return awayGoals; }
+	public void setAwayGoals(int goals) { awayGoals += goals; }
+	public int goalDifference() { return homeGoals - awayGoals;}
 	
 	public void kickOut() {
 		kickedkOut = true;
@@ -71,8 +78,10 @@ public class Team implements Comparable<Team>, Serializable {
 		return players.size();
 	}
 	
-	public void resetPoints() {
-		points=0;
+	public void resetPointsAndGoals() {
+		points = 0;
+		homeGoals = 0;
+		awayGoals = 0;
 	}
 
 	public void addPoints(int newPoints) {
@@ -116,27 +125,108 @@ public class Team implements Comparable<Team>, Serializable {
 
 class SortbyPoints implements Comparator<Team> 
 { 
-    public int compare(Team a, Team b) 
+	private boolean sortAscending;
+	public SortbyPoints(boolean sortAscending) {
+		super();
+		this.sortAscending = sortAscending;
+	}
+	
+	public int compare(Team a, Team b) 
+	{ 
+		// pseudo: Most Points, Biggest goalDifference, most Homegoals 
+		int result = 0;
+		if (a.getPoints() > b.getPoints())
+			result = -1;
+		if (a.getPoints() < b.getPoints())
+			result = 1;
+		if (a.getPoints() == b.getPoints()) {
+			if (a.goalDifference() > b.goalDifference()) 
+				result = -1;
+			if (a.goalDifference() < b.goalDifference()) 
+				result = 1;
+			if (a.goalDifference() == b.goalDifference()) {
+				if(a.getHomeGoals() > b.getHomeGoals())
+					result = -1;
+				if(a.getHomeGoals() < b.getHomeGoals())
+					result = 1;
+			} // goaldifference ==
+		}  // if point==
+
+		if (sortAscending==true) 
+			return result * -1;
+		else
+			return result;
+		
+	}
+}	
+
+class SortbyNumberOfMatches implements Comparator<Team> 
+{ 
+	private boolean sortAscending;
+	public SortbyNumberOfMatches(boolean sortAscending) {
+		super();
+		this.sortAscending = sortAscending;
+	}
+
+	public int compare(Team a, Team b) 
     { 
         int result = 0;
-    	if (a.getPoints() > b.getPoints())
-    		result = -1;
-        if (a.getPoints() < b.getPoints())
-        	result = 1;
-// Burde implemeterer bedst målscore i forbindelse med pointlighed
-//        if (a..getGolsScored() > b.getPoints()) {
-//    		if (a.getcondition) {
-//				
-//			}
-//        }
+		if (a.goalDifference() > b.goalDifference()) 
+			result = -1;
+		if (a.goalDifference() < b.goalDifference()) 
+			result = 1;
+		// If goal difference is equal, then look at most home goals
+		if (a.goalDifference() == b.goalDifference()) {
+			if(a.getHomeGoals() > b.getHomeGoals())
+				result = -1;
+			if(a.getHomeGoals() < b.getHomeGoals())
+				result = 1;
+		} 
 
-        return result;
+		if (sortAscending==true) 
+			return result;
+		else
+			return result * -1;
+
+    } 
+} 
+
+
+class SortbyGoalScore implements Comparator<Team> 
+{ 
+	private boolean sortAscending;
+	public SortbyGoalScore(boolean sortAscending) {
+		super();
+		this.sortAscending = sortAscending;
+	}
+
+	public int compare(Team a, Team b) 
+    { 
+        int result = 0;
+		if (a.goalDifference() > b.goalDifference()) 
+			result = -1;
+		if (a.goalDifference() < b.goalDifference()) 
+			result = 1;
+		// If goal difference is equal, then look at most home goals
+		if (a.goalDifference() == b.goalDifference()) {
+			if(a.getHomeGoals() > b.getHomeGoals())
+				result = -1;
+			if(a.getHomeGoals() < b.getHomeGoals())
+				result = 1;
+		} 
+
+		if (sortAscending==true) 
+			return result;
+		else
+			return result * -1;
+
     } 
 } 
 
 class SortbyKickedOut implements Comparator<Team> 
 { 
-    public int compare(Team a, Team b) 
+
+	public int compare(Team a, Team b) 
     { 
         int result = 0;
     	if ((a.getkickedOut() == false) && (b.getkickedOut() == true))
@@ -146,4 +236,3 @@ class SortbyKickedOut implements Comparator<Team>
         return result;
     } 
 } 
-

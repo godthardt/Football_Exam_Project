@@ -109,7 +109,7 @@ public class Turnament implements Serializable {
 	}
 
 	public void listTeamsByPoint(Boolean doPrint) {
-		Collections.sort(turnamentTeams, new SortbyPoints());
+		Collections.sort(turnamentTeams, new SortbyPoints(false));
 		if (doPrint) {
 			for (int i = 0; i < turnamentTeams.size(); i++) {
 				//turnamentTeams.get(i).print();
@@ -236,25 +236,6 @@ public class Turnament implements Serializable {
 		return homeGoals;
 	}
 
-	
-	public GoalResult goalsScoredAndTakenForTeam(Team t) {
-		GoalResult gr = new GoalResult();
-		for (Match m : matches) {
-			if (m.teamInvolvedInMatch(t)==true) {
-				if (m.getHomeTeam().getId()==t.getId()) {
-					gr.scored += m.getHomeGoals();
-					gr.taken += m.getAwayGoals();
-				}
-				// the parameter team (t) is the awayteam, since it is involved, and not the home team
-				else {
-					gr.scored += m.getAwayGoals();
-					gr.taken += m.getHomeGoals();
-				}
-			}
-		}
-		return gr;		
-	}
-	
 	public int getAwayGoals(Team t) {
 		int awayGoals = 0;
 		for (Match m : matches) {
@@ -291,7 +272,7 @@ public class Turnament implements Serializable {
 		// Remove matches
 		matches.clear();
 		for (Team team : turnamentTeams) {
-			team.resetPoints();
+			team.resetPointsAndGoals();
 		}
 		nextMatchId = 1;
 		generateMatchesAndGoals();
