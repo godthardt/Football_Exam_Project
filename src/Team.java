@@ -28,9 +28,17 @@ public class Team implements Comparable<Team>, Serializable {
 	public void setAwayGoals(int goals) { awayGoals += goals; }
 	public int goalDifference() { return homeGoals - awayGoals;}
 	
+	// Called, when a team must leave a cupTurnament
 	public void kickOut() {
 		kickedkOut = true;
 	}
+	
+	// Part of reset procedure
+	public void kickin() {
+		kickedkOut = false;
+	}
+
+	
 
 	// constructor
 	public Team (int id, String name, int level, ArrayList<Contract> contracts, Match.MustLoooeType mustLoose) {
@@ -101,8 +109,8 @@ public class Team implements Comparable<Team>, Serializable {
 	}
 
 	public int compareTo(Team t) {
+		//Default sorter. Is beeing called, when somebody tries to .sort(null) a list containing Team objects 
 		return this.name.compareTo(t.name);
-
 	}
 
 	@Override

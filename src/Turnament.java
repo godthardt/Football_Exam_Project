@@ -15,7 +15,7 @@ public class Turnament implements Serializable {
 		this.players = new ArrayList<Player>();
 		matches = new ArrayList<Match>();
 		generateMatchesAndGoals();
-		listTeamsByPoint(false);
+		listTeamsByPoint();
 	}
 
 	protected String name;  // In this case, is it not necessary to protect the attribute, since there is both a set and get method, but good style to demonstrate encapsulation 
@@ -38,7 +38,9 @@ public class Turnament implements Serializable {
 	protected ArrayList<Player> players;
 	public ArrayList<Player> getPlayers(LocalDate matchDay, int teamID) { return players; } //TODO filter players
 	
+	
 	public int GetGoalsForPlayer(int playerId) {
+		// Purpose: Find aout how many goal a particular player has scored, in this turnament. Not optimized for efficiency
 		int numberOfGoals = 0;
 		for (Match match : matches) {
 			for (Goal goal : match.getGoals()) {
@@ -51,6 +53,7 @@ public class Turnament implements Serializable {
 	}
 	
 	public Team GetTeam(int teamId) {
+		// Purpose: Find a team from a teamId
 		Team returnTeam = null;
 		for (Team team : turnamentTeams) {
 			if(team.getId() == teamId) {
@@ -59,6 +62,7 @@ public class Turnament implements Serializable {
 			}
 		}
 		
+		// This condition should never be met
 		if (returnTeam== null) {
 			throw new NullPointerException("Team not found in method GetTeam(teamID="+ teamId +")");  
 		}
@@ -86,17 +90,19 @@ public class Turnament implements Serializable {
 		return returnString;
 	}
 	
-	public void listTeamsAlfabetecally(boolean doPrint) {
+	public void listTeamsAlfabetecally() {
+		// Purpose: Sort teams, using the Team Class compareTo() method, which look at the name of the team 
 		turnamentTeams.sort(null);
-		if (doPrint) {
-			for (Team team : turnamentTeams) {
-				System.out.println(team.getName());			
-			}
-		}		
 	}
 
 	public void addGoal(int matchnumber, Goal.GoalType goaltype, int goalMinute, int goalSecond ) throws Exception {
 		Match m = matches.get(matchnumber -1);//-1 because first matchnumber is 1 and first element in ArrryList is 0
+
+		// if the match has ended, it should not be allowed to add goals
+		if (m.getHasFinished() == true) {
+			throw new Exception("Alarm, nogen prøver at tilføje et mål til en afsluttet kamp !");
+		}
+		
 		// Pick a random goal scorer
 		Player goalScorer;
 		if (goaltype == Goal.GoalType.Home) {
@@ -108,13 +114,8 @@ public class Turnament implements Serializable {
 		m.addGoal(goaltype, goalMinute, goalSecond, goalScorer);
 	}
 
-	public void listTeamsByPoint(Boolean doPrint) {
+	public void listTeamsByPoint() {
 		Collections.sort(turnamentTeams, new SortbyPoints(false));
-		if (doPrint) {
-			for (int i = 0; i < turnamentTeams.size(); i++) {
-				//turnamentTeams.get(i).print();
-			}
-		}
 	}
 	
 	public void sortGoalsByTime()
@@ -156,15 +157,27 @@ public class Turnament implements Serializable {
 					// Spread matches on a "pseudo" time line
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
-					int roundNo = 1;//turnamentTeams.size() % i + 1;
+					int roundNo = 0;//getNextRoundNo(team.getId());//(matches.size() % (turnamentTeams.size()*2 - 2)) + 1;
+					System.out.println(team.getName() + " mod " + turnamentTeams.get(i).getName() + " runde " + roundNo);
 					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), roundNo, matchDate);
 					addMatch(m);
 					generateRandomGoals(m, false);
+					System.out.println("Round = " + roundNo);
 				}
 			}
 		}
 	}
 
+//	private int getNextRoundNo(int teamId) {
+//		int result = 1;
+//		for (Match match : matches) {
+//			if ((match.getHomeTeam().getId() == teamId) || match.getAwayTeam().getId() == teamId ) {
+//				result++;
+//			}
+//		}
+//		return result;
+//	}
+	
 	public int getNumberOfGoals() {
 		int numberOfGoals = 0;
 		for (Match match : matches) {
@@ -195,12 +208,12 @@ public class Turnament implements Serializable {
 
 		if (match.getHomeTeam().getMustLoose()==Match.MustLoooeType.DeterminedToLoose) {
 			// Home team looses 0-2
-			addGoal(match.getMatchNo(), Goal.GoalType.Away, r.nextInt(30), r.nextInt(59));// Random seconds
-			addGoal(match.getMatchNo(), Goal.GoalType.Away, r.nextInt(30) + 30, r.nextInt(59));// Random seconds	
+			addGoal(match.getMatchId(), Goal.GoalType.Away, r.nextInt(30), r.nextInt(59));// Random seconds
+			addGoal(match.getMatchId(), Goal.GoalType.Away, r.nextInt(30) + 30, r.nextInt(59));// Random seconds	
 		} else if (match.getAwayTeam().getMustLoose()==Match.MustLoooeType.DeterminedToLoose) {
 			// Away team looses 2-0
-			addGoal(match.getMatchNo(), Goal.GoalType.Home, r.nextInt(30), r.nextInt(59));// Random seconds
-			addGoal(match.getMatchNo(), Goal.GoalType.Home, r.nextInt(30) + 30, r.nextInt(59));// Random seconds	
+			addGoal(match.getMatchId(), Goal.GoalType.Home, r.nextInt(30), r.nextInt(59));// Random seconds
+			addGoal(match.getMatchId(), Goal.GoalType.Home, r.nextInt(30) + 30, r.nextInt(59));// Random seconds	
 		} else {
 			// Random victory
 			for (int i = 0; i < numberOfGoalsToAdd; i++) {
@@ -209,11 +222,11 @@ public class Turnament implements Serializable {
 				minuteScored = nextScoreMinute;
 				switch (homeOrAway) {
 				case 0: {
-					addGoal(match.getMatchNo(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));// Random seconds
+					addGoal(match.getMatchId(), Goal.GoalType.Home, nextScoreMinute, r.nextInt(59));// Random seconds
 					break;						
 				}
 				case 1: {
-					addGoal(match.getMatchNo(), Goal.GoalType.Away, nextScoreMinute, r.nextInt(59));
+					addGoal(match.getMatchId(), Goal.GoalType.Away, nextScoreMinute, r.nextInt(59));
 					break;						
 				}
 				}
@@ -257,6 +270,7 @@ public class Turnament implements Serializable {
 	}
 	
 	public int getHighestNumberOfPlayersInOneTeam() {
+		// Purpose: Find the team with the highest number of players. Used for securing sufficient number of rows in GUI
 		int highestNumber = 0;
 		
 		for (Team team : turnamentTeams) {
@@ -264,22 +278,28 @@ public class Turnament implements Serializable {
 				highestNumber = team.getNumberOfPlayersInTeam();
 			}
 		}
-		//System.out.println("highestNumber of player in one team " + highestNumber);
+
 		return highestNumber; 
 	}
 
 	public void reGenerateGoals() throws Exception {
-		// Remove matches
+		// Remove existing matches with "attached" goals
 		matches.clear();
+		
+		// Make sure new matches is "counted" from 1
+		nextMatchId = 1;		
+		
 		for (Team team : turnamentTeams) {
 			team.resetPointsAndGoals();
+			team.kickin();
 		}
-		nextMatchId = 1;
+
 		generateMatchesAndGoals();
-		listTeamsByPoint(false);
+		listTeamsByPoint();
 	}
 
 	public boolean serializeTurnament(String filename) {
+		// Purpose: save the current turnament into a filestream
 		try {
 			Serialize.save(this, filename);
 

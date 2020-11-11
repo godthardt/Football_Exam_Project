@@ -20,7 +20,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 // MDI (Multiple Document interface) is built in to C++, C# and Delphi, and a lot of functionality are build into classes like TMDIxxx classes -
-// but in Java this is not the case, but from Java 8 (check) JInternalFrame (as MDIchilds) (a lightweight JFrame is supplied to offer MDI functionality
+// but in Java this is not the case, but Java offers JInternalFrame (as MDIchilds) (a lightweight JFrame is supplied to offer MDI functionality
 // I have sought inspiration at:
 // http://www.java2s.com/Tutorials/Java/Java_Swing/1600__Java_Swing_MDI.htm 
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/friends/mdi-swing/mdi-swing.html
@@ -42,24 +42,36 @@ public class MDIFrame extends JFrame {
 		super(title);
 
 		try {
+			// The turnamentManager is not important, and a relatively late invention. Main purpose is to demonstrate polymorf traversion
 			turnamentManager = new TurnamentManager("Kan håndtere x turneringer, og har totallister over hold og spillere");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		// Add a
 		desktopPane = new JDesktopPane();
+		
+		// Make sure other component aren't visibel "below"
 		desktopPane.setOpaque(false);
 		
 		setMDIFrameSize();		
 		getContentPane().add(desktopPane,BorderLayout.CENTER);
 
+		// According to oracle documentation, a desktopmanager should be implemented. I have tried without, and the program still works as expected.
+		// Link to Oracle documentation: https://docs.oracle.com/javase/7/docs/api/javax/swing/DesktopManager.html
 		desktopManager = new DefaultDesktopManager();
 		desktopPane.setDesktopManager(desktopManager);
 
+		
+		// The Pane has 5 build in layers, which lives on top of each other, eg. a dragging layer at top. It's also posible to implement user defined layers (I don't use this feature)
 		layeredPane = getLayeredPane();
 
+		// Add menu "handling / initialization in sub method, in order to better readability constructor
 		addMenus();
+		
+		// Center main window (not tested with multiple screens)  
 		centerJFrame();
+		
 		setVisible(true);
 		
 		// Deserialize a Turnament object, in order to have something to look at
@@ -96,8 +108,10 @@ public class MDIFrame extends JFrame {
 	private void addNewTurnament(String fileName) {
 		try {
 
+			// Restore Turnament object from file
 			Turnament deSerializedTurnamentObject = (Turnament) Serialize.load(fileName);
-			// Indicate to the GUI, that the turnament has been deserialized
+
+			// Indicate to the GUI, that the turnament has been deserialized, by adding info to title line
 			String newTurnamentName = deSerializedTurnamentObject.getName() + " - deserialiseret d. " + LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString() + " fra filen " + fileName;
 			deSerializedTurnamentObject.setName(newTurnamentName);
 			
@@ -113,6 +127,8 @@ public class MDIFrame extends JFrame {
 
 	private void addNewTurnament(Turnament turnament) {
 		turnamentManager.addTurnament(turnament);
+		
+		// Create a new 
 		MDIChild mainPanel = new MDIChild(childWindowNumber, turnament);
 		Insets i = this.getInsets(); // Insets contains top (size of titlebar), left, etc. of the "JFrame", found on https://www.programcreek.com/java-api-examples/?class=java.awt.Container&method=getInsets
 		mainPanel.setLocation(childWindowNumber* i.top / 2, childWindowNumber * i.top / 2); //on my Pc i.top = 31
@@ -146,37 +162,29 @@ public class MDIFrame extends JFrame {
 		JMenuItem closeMenu  = new JMenuItem();
 		JMenuItem closeAllWindowsMenu  = new JMenuItem();
 		JMenuItem minimizeAllWindowsMenu  = new JMenuItem();
-		JMenuItem testMenu  = new JMenuItem();
 		
-		// Set text and shortcuts on sub menu items, and attach submenu to top menu
-		addMenuMneMonics(fileMenu, refreshMenu, "Resimuler matchafvikling i valgt turnering", KeyEvent.VK_R);		
-		addMenuMneMonics(fileMenu, newTurnamentMenu, "Ny superliga", KeyEvent.VK_N);		
-		addMenuMneMonics(fileMenu, newCupTurnamentMenu, "Ny pokalturnering", KeyEvent.VK_P);
-		addMenuMneMonics(fileMenu, loadSerializedTurnamentMenu, "Åbn serialiseret turnering fra fil", KeyEvent.VK_O);
-		addMenuMneMonics(fileMenu, saveSerializedTurnamentMenu, "Gem serialiseret turnering i fil", KeyEvent.VK_S);
+		// Set text and shortcuts on sub menu items, and attach submenu to top menu, 
+		// found inspiration on https://www.codejava.net/java-se/swing/setting-shortcut-key-and-hotkey-for-menu-item-and-button-in-swing
+		addMenuMneMonics(fileMenu, refreshMenu, "Resimuler matchafvikling i valgt turnering", KeyEvent.VK_F5, 0);		
+		addMenuMneMonics(fileMenu, newTurnamentMenu, "Ny superliga", KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK);		
+		addMenuMneMonics(fileMenu, newCupTurnamentMenu, "Ny pokalturnering", KeyEvent.VK_P, KeyEvent.CTRL_DOWN_MASK);
+		addMenuMneMonics(fileMenu, loadSerializedTurnamentMenu, "Åbn serialiseret turnering fra fil", KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK);
+		addMenuMneMonics(fileMenu, saveSerializedTurnamentMenu, "Gem serialiseret turnering i fil", KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
 		fileMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm		
-		addMenuMneMonics(fileMenu, closeMenu, "Afslut", KeyEvent.VK_A);
-		//addMenuMneMonics(fileMenu, testMenu, "Test", KeyEvent.VK_T);
+		addMenuMneMonics(fileMenu, closeMenu, "Afslut", KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK);
 		
-		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M);		
-		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle Vinduer", KeyEvent.VK_L);
+		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK);		
+		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle Vinduer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
 		windowMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm
 		numberOfWindowBaseMenuItems = windowMenu.getItemCount(); 
 		
+		// add top menus to menubar
 		menubar.add(fileMenu);
 		menubar.add(windowMenu);	    
 
+		// add menu to MDIFrame
 		setJMenuBar(menubar);
 		
-		// Add menu listeners
-		testMenu.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				listChildMenusInWindowTopMenu();
-			}
-		});	    
-
-		
-
 		// Add menu listeners
 		newTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -326,10 +334,10 @@ public class MDIFrame extends JFrame {
 		return this.getContentPane();
 	}
 
-	private void addMenuMneMonics(JMenu topMenu, JMenuItem jMenuItem, String menuTekst, int keyStroke) { 
+	private void addMenuMneMonics(JMenu topMenu, JMenuItem jMenuItem, String menuTekst, int keyStroke, int KeyEvent) { 
 		jMenuItem.setText(menuTekst);
 		jMenuItem.setMnemonic(keyStroke);		
-		jMenuItem.setAccelerator(KeyStroke.getKeyStroke( keyStroke, KeyEvent.CTRL_DOWN_MASK));
+		jMenuItem.setAccelerator(KeyStroke.getKeyStroke( keyStroke, KeyEvent));
 		topMenu.add(jMenuItem);
 	}
 	

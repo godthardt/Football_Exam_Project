@@ -7,8 +7,8 @@ public class Match implements Serializable {
 	enum VictoryType { Home, Away, Draw}
 	enum 	MustLoooeType { RandomLoose, DeterminedToLoose } //, HomeTeamDeterminedToLoose, AwayTeamDeterminedToLoose} 
 	
-	public Match (Team homeTeam, Team awayTeam, int matchNo, int roundNo, LocalDate matchDate) {
-		this.matchNo = matchNo;
+	public Match (Team homeTeam, Team awayTeam, int matchId, int roundNo, LocalDate matchDate) {
+		this.matchId = matchId;
 		this.roundNo = roundNo;
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
@@ -33,8 +33,8 @@ public class Match implements Serializable {
 	public Team getHomeTeam() {return homeTeam;}
 	private Team awayTeam;
 	public Team getAwayTeam() {return awayTeam;}	
-	private int matchNo;
-	public int getMatchNo() { return this.matchNo; }
+	private int matchId;
+	public int getMatchId() { return this.matchId; }
 	private int roundNo;
 	public int getRoundNo() { return this.roundNo; }
 	private LocalDate date;
