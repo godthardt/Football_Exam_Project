@@ -116,6 +116,11 @@ public class Turnament implements Serializable {
 
 	public void listTeamsByPoint() {
 		Collections.sort(turnamentTeams, new SortbyPoints(false));
+		int rank = 1;
+		for (Team team : turnamentTeams) {
+			team.setRankInTurnament(rank);
+			rank++;
+		}
 	}
 	
 	public void sortGoalsByTime()

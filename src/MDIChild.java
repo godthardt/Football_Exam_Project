@@ -157,6 +157,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		// Labels and tables
 		panel.add(teamTableLabel); // , BorderLayout.CENTER
 		panel.add(new TablePanel(teamTableMetaData)); //, BorderLayout.CENTER);
+		teamTable.getColumnModel().getColumn(0).setCellRenderer(new CustomRenderer());
 
 		panel.add(matchTableLabel);//, BorderLayout.CENTER);
 		panel.add(new TablePanel(matchTableMetaData)); //, BorderLayout.CENTER);
@@ -290,7 +291,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		for (Team t : turnament.getTeams()) {
 			int colNum = 0;
 			//System.out.println("J= " + j);
-			jTable.setValueAt(j+1, j, colNum++);
+			jTable.setValueAt(t.getRankInTurnament(), j, colNum++);
 			jTable.setValueAt(t.getId(), j, colNum++);
 			jTable.setValueAt(t.getName(), j, colNum++);
 			jTable.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
@@ -488,7 +489,44 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		else	
 			return -1;
 	}
+	
 }
+
+// Plagiat from: https://stackoverflow.com/questions/15071668/cell-renderer-for-jtable-coloured-rows 
+class CustomRenderer extends DefaultTableCellRenderer 
+{
+private static final long serialVersionUID = 6703872492730589499L;
+
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+    {
+        Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        
+        Color orgColor = cellComponent.getForeground();
+        
+        //cellComponent.get.re.getF
+
+
+        // Paint to
+        if(row == 0){
+        	cellComponent.setForeground(new Color(218,165,32));  // gold
+        } else if ( row == 1){
+            cellComponent.setForeground(Color.DARK_GRAY);  // "silver"
+        } else if ( row == 2){
+        	cellComponent.setForeground(new Color(205, 127, 50)); // bronze
+        } else if ( row == 10){
+        	cellComponent.setForeground(Color.RED); // bronze
+        } else if ( row == 11){
+        	cellComponent.setForeground(Color.RED); // bronze
+
+        } else {
+        	cellComponent.setForeground(Color.BLACK);
+        }
+        
+        
+        return cellComponent;
+    }
+}
+
 
 // Help class to organize data/component related to a JTable
 class JTableColumnMetaData {

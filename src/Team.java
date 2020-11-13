@@ -11,6 +11,7 @@ public class Team implements Comparable<Team>, Serializable {
 	private String name;
 	private int id;
 	private int points = 0;
+	private int rankInTurnament = 0;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private ArrayList<Contract> teamContracts;
 	public ArrayList<Contract> getTeamContracts() { return teamContracts; } 
@@ -128,6 +129,15 @@ public class Team implements Comparable<Team>, Serializable {
 		// TODO Ensure that all team has attached players
 		return new Player("Ukendt spiller");
 	}
+
+	public void setRankInTurnament(int rank) {
+		this.rankInTurnament = rank;
+	}
+	
+	public int getRankInTurnament() {
+		return this.rankInTurnament;
+	}
+	
 
 }
 
