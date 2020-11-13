@@ -141,6 +141,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		teamTable = createJtable(teamTableMetaData);
 		matchTable = createJtable(matchTableMetaData);
 		goalTable = createJtable(goalTableMetaData);
+		
 		playerTable = createJtable(playerTableMetaData);
 		playerTable.setAutoCreateRowSorter(true);
 		
@@ -148,27 +149,25 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		goalTable.setAutoCreateRowSorter(true);
 
 
-		// Labels
-		panel.add(teamTableLabel);
-		panel.add(matchTableLabel);
-		panel.add(goalTableLabel);		
-		panel.add(playerTabelLabel);		
+		// Tried with layoutmanagers (Flow and Border), which is the "Java way" but it doesn't look good in this app in my opinion
+		//panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		//panel.setLayout(new BorderLayout());
+		panel.setLayout(null);
+		
+		// Labels and tables
+		panel.add(teamTableLabel); // , BorderLayout.CENTER
+		panel.add(new TablePanel(teamTableMetaData)); //, BorderLayout.CENTER);
 
-		panel.add(new TablePanel(teamTableMetaData));
-		panel.add(new TablePanel(matchTableMetaData));
-		panel.add(new TablePanel(playerTableMetaData));
-		panel.add(new TablePanel(goalTableMetaData));		
+		panel.add(matchTableLabel);//, BorderLayout.CENTER);
+		panel.add(new TablePanel(matchTableMetaData)); //, BorderLayout.CENTER);
+
+		panel.add(goalTableLabel);//, BorderLayout.CENTER);
+		panel.add(new TablePanel(goalTableMetaData)); //, BorderLayout.CENTER);		
+		
+		panel.add(playerTabelLabel);//, BorderLayout.EAST);
+		panel.add(new TablePanel(playerTableMetaData)); //, BorderLayout.EAST);
 		
 		panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
-
-		
-		// Tried with a layoutmanager, which is the Java "way" but it doesn't look good in this app in my opinion
-		//FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT);
-		//panel.setLayout(flowLayout);
-		//panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		panel.setLayout(null);
-
-		
 		panel.setVisible(true);
 		
 		getContentPane().add(panel);
