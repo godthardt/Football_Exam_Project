@@ -501,10 +501,8 @@ private static final long serialVersionUID = 6703872492730589499L;
     {
         Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         
-        Color orgColor = cellComponent.getForeground();
+        //Color orgColor = cellComponent.getForeground();
         
-        //cellComponent.get.re.getF
-
 
         // Paint to
         if(row == 0){

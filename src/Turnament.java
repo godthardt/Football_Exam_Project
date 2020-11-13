@@ -15,7 +15,7 @@ public class Turnament implements Serializable {
 		this.players = new ArrayList<Player>();
 		matches = new ArrayList<Match>();
 		generateMatchesAndGoals();
-		listTeamsByPoint();
+		sortTeamsByPoint();
 	}
 
 	protected String name;  // In this case, is it not necessary to protect the attribute, since there is both a set and get method, but good style to demonstrate encapsulation 
@@ -90,7 +90,7 @@ public class Turnament implements Serializable {
 		return returnString;
 	}
 	
-	public void listTeamsAlfabetecally() {
+	public void sortTeamsAlfabetecally() {
 		// Purpose: Sort teams, using the Team Class compareTo() method, which look at the name of the team 
 		turnamentTeams.sort(null);
 	}
@@ -114,7 +114,7 @@ public class Turnament implements Serializable {
 		m.addGoal(goaltype, goalMinute, goalSecond, goalScorer);
 	}
 
-	public void listTeamsByPoint() {
+	public void sortTeamsByPoint() {
 		Collections.sort(turnamentTeams, new SortbyPoints(false));
 		int rank = 1;
 		for (Team team : turnamentTeams) {
@@ -300,7 +300,7 @@ public class Turnament implements Serializable {
 		}
 
 		generateMatchesAndGoals();
-		listTeamsByPoint();
+		sortTeamsByPoint();
 	}
 
 	public boolean serializeTurnament(String filename) {

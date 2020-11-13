@@ -27,9 +27,8 @@ public class Contract implements Comparable<Contract>, Serializable {
 		if (this.teamId < c.teamId)
 			result = -1;
 		if (this.teamId == c.teamId)
-		{
 			result = 0;
-		}
+
 		return result;
 	}
 	

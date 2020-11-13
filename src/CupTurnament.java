@@ -56,7 +56,7 @@ public class CupTurnament extends Turnament implements Serializable {
 	
 	private int getNumberOfRemainingTeams() {
 		int count = 0;
-		// Count number of reaming teams
+		// Count number of reaming teams, in order to plan next round of matches
 		for (Team team : turnamentTeams) {
 			if (team.getkickedOut()==false) {
 				count++;

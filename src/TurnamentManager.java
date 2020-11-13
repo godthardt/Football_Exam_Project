@@ -27,7 +27,6 @@ public class TurnamentManager implements Serializable  {
 		contractsMasterList = new ArrayList<Contract>();
 		loadPlayersFromTxtFile("players.txt");
 		loadTeamsFromTxtFile("teams.txt");
-		getHighestNumberOfPlayersInOneTeam();
 	}
 
 	public void addTurnament(Turnament turnament) {
@@ -83,18 +82,6 @@ public class TurnamentManager implements Serializable  {
 
 	}
 
-	public int getHighestNumberOfPlayersInOneTeam() {
-		int highestNumber = 0;
-
-		for (Team team : teamsMasterList) {
-			if (team.getNumberOfPlayersInTeam() > highestNumber) {
-				highestNumber = team.getNumberOfPlayersInTeam();
-			}
-		}
-
-		return highestNumber;
-	}
-
 	private boolean loadTeamsFromTxtFile(String filename) throws IOException {
 
 		FileReader fil = new FileReader(filename);
@@ -108,7 +95,7 @@ public class TurnamentManager implements Serializable  {
 				try {
 					String[] arrOfStr = linje.split(",");
 					int teamID = Integer.parseInt(arrOfStr[0]);
-					teamsMasterList.add(new Team(teamID, arrOfStr[1], Integer.parseInt(arrOfStr[2]), getContractPeriodsOfTeam(teamID), Match.MustLoooeType.RandomLoose));
+					teamsMasterList.add(new Team(teamID, arrOfStr[1], Integer.parseInt(arrOfStr[2]), getContractPeriods(teamID), Match.MustLoooeType.RandomLoose));
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -127,7 +114,7 @@ public class TurnamentManager implements Serializable  {
 		}
 	}
 
-	public Team findTeamFromTeamId(int teamId) {
+	public Team findTeam(int teamId) {
 		for (Team team : teamsMasterList) {
 			if (team.getId() == teamId) {
 				return team; 
@@ -153,7 +140,7 @@ public class TurnamentManager implements Serializable  {
 		return returnTeams;		
 	}
 
-	private ArrayList<Contract> getContractPeriodsOfTeam(int teamId) {
+	private ArrayList<Contract> getContractPeriods(int teamId) {
 		// construct an object to return to caller
 		ArrayList<Contract> returnContracts = new ArrayList<Contract>(); 
 		for (Contract contract : contractsMasterList) {
