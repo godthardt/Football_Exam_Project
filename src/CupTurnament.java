@@ -9,9 +9,9 @@ import java.util.Random;
 public class CupTurnament extends Turnament implements Serializable {
 
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
-	public CupTurnament(ArrayList<Team> turnamentTeams, ArrayList<Contract> turnamentContractPeriods , String name, LocalDate startDate, LocalDate endDate)
+	public CupTurnament(ArrayList<Team> turnamentTeams, String name, LocalDate startDate, LocalDate endDate)
 			throws Exception {
-		super(turnamentTeams, turnamentContractPeriods, name, startDate, endDate);
+		super(turnamentTeams, name, startDate, endDate);
 
 	}
 	
@@ -25,7 +25,7 @@ public class CupTurnament extends Turnament implements Serializable {
 		
 		// Add a number of "Sitter Outs" (in danish: "oversiddere") to match a power of two 
 		for (int i = turnamentTeams.size(); i < numberOfTeamsNextPowerOf2; i++) {
-			turnamentTeams.add(new Team(i, "Oversidder " + (i + 1), 1, new ArrayList<Contract>(), Match.MustLoooeType.DeterminedToLoose));			
+			turnamentTeams.add(new Team(i, "Oversidder " + (i + 1), 1, new ArrayList<Player>(), Match.MustLoooeType.DeterminedToLoose));			
 		}
 		
 		int round = 0;

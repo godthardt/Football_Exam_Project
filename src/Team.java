@@ -2,6 +2,7 @@
 
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
@@ -12,9 +13,8 @@ public class Team implements Comparable<Team>, Serializable {
 	private int id;
 	private int points = 0;
 	private int rankInTurnament = 0;
-	private ArrayList<Player> players = new ArrayList<Player>();
-	private ArrayList<Contract> teamContracts;
-	public ArrayList<Contract> getTeamContracts() { return teamContracts; } 
+	private ArrayList<Player> teamPlayers;
+	public ArrayList<Player> getTeamPlayers() { return teamPlayers; } 
 	private int level;  //eg. Superliga=0, 1.division=1, etc.
 	public int getLevel() { return level; }
 	private boolean kickedkOut = false; // out of Cup turnament
@@ -39,20 +39,13 @@ public class Team implements Comparable<Team>, Serializable {
 		kickedkOut = false;
 	}
 
-	
-
 	// constructor
-	public Team (int id, String name, int level, ArrayList<Contract> contracts, Match.MustLoooeType mustLoose) {
+	public Team (int id, String name, int level, ArrayList<Player> teamPlayers, Match.MustLoooeType mustLoose) {
 		this.name = name;
 		this.id = id;
 		this.level = level;
-		this.teamContracts = contracts;
+		this.teamPlayers = teamPlayers;
 		this.mustLoose = mustLoose;
-		try {
-			populatePlayersFromContractPeriods();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	// another constructor to support deep copy
@@ -61,30 +54,15 @@ public class Team implements Comparable<Team>, Serializable {
 		this.id = team.id;
 		this.level = team.level;
 		// no need for deep copy of contracts, since they are never changed
-		this.teamContracts = team.teamContracts;
-		try {
-			populatePlayersFromContractPeriods();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.teamPlayers = team.teamPlayers;
     }
-
-	private void populatePlayersFromContractPeriods() throws Exception {
-		for (Contract contract : teamContracts) {
-			if (contract.getTeamId() == id) {
-				players.add(new Player(contract.getPlayerId(), contract.getPlayerName()));
-			}
-			else
-				throw new Exception("Should not happen - wrong teamID in taems contracts");
-		}
-	}
 
 	public int getId() {
 		return this.id;
 	}
 
 	public int getNumberOfPlayersInTeam () {
-		return players.size();
+		return teamPlayers.size();
 	}
 	
 	public void resetPointsAndGoals() {
@@ -98,7 +76,7 @@ public class Team implements Comparable<Team>, Serializable {
 	}
 
 	public void addPlayer(Player player) {
-		players.add(player);
+		teamPlayers.add(player);
 	}
 
 	public int getPoints() {
@@ -121,13 +99,13 @@ public class Team implements Comparable<Team>, Serializable {
     }
 	
 	public Player getRandomgoalScorer() {
-		if (players.size() > 0) {
-			int randomNumber = (new Random().nextInt(players.size()));
-			return players.get(randomNumber);
+		if (teamPlayers.size() > 0) {
+			int randomNumber = (new Random().nextInt(teamPlayers.size()));
+			return teamPlayers.get(randomNumber);
 		}
 		// Return an object, in order not to get an exception
 		// TODO Ensure that all team has attached players
-		return new Player("Ukendt spiller");
+		return new Player("Ukendt spiller", getId(), LocalDate.now());
 	}
 
 	public void setRankInTurnament(int rank) {

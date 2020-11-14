@@ -189,7 +189,7 @@ public class MDIFrame extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
 					ArrayList<Team> test = turnamentManager.getTeamsOfLevel(0);
-					Turnament turnament = new Turnament(test, turnamentManager.getContractPeriods(), "Superliga", LocalDate.of(2020, Month.AUGUST, 15), LocalDate.of(2021, Month.MAY, 14));
+					Turnament turnament = new Turnament(test, "Superliga", LocalDate.of(2020, Month.AUGUST, 15), LocalDate.of(2021, Month.MAY, 14));
 					addNewTurnament(turnament);
 
 				} catch (Exception e1) {
@@ -204,7 +204,7 @@ public class MDIFrame extends JFrame {
 					ArrayList<Team> teamsAtBothLevels = (turnamentManager.getTeamsOfLevel(0));
 					teamsAtBothLevels.addAll(turnamentManager.getTeamsOfLevel(1));
 
-					Turnament cupTurnament = new CupTurnament(teamsAtBothLevels, turnamentManager.getContractPeriods(), "Pokalturnering " + childWindowNumber, LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
+					Turnament cupTurnament = new CupTurnament(teamsAtBothLevels, "Pokalturnering " + childWindowNumber, LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
 					addNewTurnament(cupTurnament);	        		
 
 				} catch (Exception e1) {

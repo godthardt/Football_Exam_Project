@@ -131,6 +131,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam, matchTableColumnNames.length);
 		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsPrMatch, goalTableColumnNames.length);
 		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), playerTableColumnNames.length);
+		//DefaultTableModel playerTableModel = new DefaultTableModel(40, playerTableColumnNames.length);		
 
 		teamTableMetaData = new JTableColumnMetaData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, stdTableWidth, 13*modus), teamTableLabel);
 		matchTableMetaData = new JTableColumnMetaData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 17*modus, stdTableWidth, 14*modus), matchTableLabel);
@@ -432,14 +433,14 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		int rowNumber = 0;
 		Team team = turnament.GetTeam(teamId);
 		playerTabelLabel.setText("Kontraktspillere i " + team.getName());
-		for (Contract contract : team.getTeamContracts()) {
+		for (Player player : team.getTeamPlayers()) {
 				int colNum = 0;
 				playerTable.setValueAt(rowNumber+1, rowNumber, colNum++);
-				playerTable.setValueAt(contract.getPlayerName(), rowNumber, colNum++);
-				playerTable.setValueAt(contract.getEndDatee().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);
-				int goalsForPlayer = turnament.GetGoalsForPlayer(contract.getPlayerId());
+				playerTable.setValueAt(player.getName(), rowNumber, colNum++);
+				playerTable.setValueAt(player.getContractEndDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);
+				int goalsForPlayer = turnament.GetGoalsForPlayer(player.getId());
 				if (goalsForPlayer > 0) {
-					playerTable.setValueAt(turnament.GetGoalsForPlayer(contract.getPlayerId()), rowNumber, colNum++);					
+					playerTable.setValueAt(goalsForPlayer, rowNumber, colNum++);					
 				} 
 				rowNumber++;
 		}

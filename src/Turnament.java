@@ -6,7 +6,7 @@ import java.util.*;
 import java.io.*;
 
 public class Turnament implements Serializable {
-	public Turnament(ArrayList<Team> turnamentTeams, ArrayList<Contract> turnamentContracts , String name, LocalDate startDate, LocalDate endDate) throws Exception {
+	public Turnament(ArrayList<Team> turnamentTeams, String name, LocalDate startDate, LocalDate endDate) throws Exception {
 		this.name = name;
 		//this.number = number++;
 		this.startDate = startDate;
