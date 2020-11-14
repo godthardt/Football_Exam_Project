@@ -8,11 +8,9 @@ import java.io.*;
 public class Turnament implements Serializable {
 	public Turnament(ArrayList<Team> turnamentTeams, String name, LocalDate startDate, LocalDate endDate) throws Exception {
 		this.name = name;
-		//this.number = number++;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.turnamentTeams = turnamentTeams;
-		this.players = new ArrayList<Player>();
 		matches = new ArrayList<Match>();
 		generateMatchesAndGoals();
 		sortTeamsByPoint();
@@ -26,21 +24,16 @@ public class Turnament implements Serializable {
 	protected LocalDate endDate;
 	public LocalDate GetEndDate() { return endDate; }	
 	protected int nextMatchId = 1;
-	public int getNextMatchId() {
-		return nextMatchId++;
-	}
+	public int getNextMatchId() { return nextMatchId++; }
 
 	protected int roundNumber = 1;
 	protected static final long serialVersionUID = 3;  //Helps class control version of serialized objects
 	protected ArrayList<Team> turnamentTeams;
 	protected ArrayList<Match> matches;
 	public  ArrayList<Match> getMatches() { return matches; }
-	protected ArrayList<Player> players;
-	public ArrayList<Player> getPlayers(LocalDate matchDay, int teamID) { return players; } //TODO filter players
-	
 	
 	public int GetGoalsForPlayer(int playerId) {
-		// Purpose: Find aout how many goal a particular player has scored, in this turnament. Not optimized for efficiency
+		// Purpose: Find out how many goal a particular player has scored, in this turnament. Not optimized for efficiency
 		int numberOfGoals = 0;
 		for (Match match : matches) {
 			for (Goal goal : match.getGoals()) {
@@ -100,7 +93,7 @@ public class Turnament implements Serializable {
 
 		// if the match has ended, it should not be allowed to add goals
 		if (m.getHasFinished() == true) {
-			throw new Exception("Alarm, nogen prøver at tilføje et mål til en afsluttet kamp !");
+			throw new Exception("Alarm, nogen prøver at tilføje et mål til en afsluttet kamp - kontakt spilletilsynet! (eller måske bare programmøren :-)");
 		}
 		
 		// Pick a random goal scorer
@@ -159,7 +152,7 @@ public class Turnament implements Serializable {
 			for (int i = 0; i < turnamentTeams.size(); i++) {
 				// If team not equals itself, set up a match
 				if (turnamentTeams.get(i).getId() != team.getId()) {
-					// Spread matches on a "pseudo" time line
+					// Spread matches on a "pseudo" time line - not chronological order
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
 					int roundNo = 0;//getNextRoundNo(team.getId());//(matches.size() % (turnamentTeams.size()*2 - 2)) + 1;
@@ -291,7 +284,7 @@ public class Turnament implements Serializable {
 		// Remove existing matches with "attached" goals
 		matches.clear();
 		
-		// Make sure new matches is "counted" from 1
+		// Make sure new matches is "renumbered" from 1
 		nextMatchId = 1;		
 		
 		for (Team team : turnamentTeams) {

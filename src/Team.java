@@ -119,6 +119,26 @@ public class Team implements Comparable<Team>, Serializable {
 
 }
 
+class SortbyName implements Comparator<Team> 
+{
+	private boolean sortAscending;
+	public SortbyName(boolean sortAscending) {
+		super();
+		this.sortAscending = sortAscending;
+	}
+
+	public int compare(Team a, Team b) 
+    { 
+        int result = 0;
+        result = a.compareTo(b); // use default sorter
+
+		if (sortAscending==true) 
+			return result;
+		else
+			return result * -1;
+    } 
+}
+
 class SortbyPoints implements Comparator<Team> 
 { 
 	private boolean sortAscending;
@@ -219,6 +239,29 @@ class SortbyGoalScore implements Comparator<Team>
     } 
 } 
 
+class SortbyRanking implements Comparator<Team> 
+{
+	private boolean sortAscending;
+	public SortbyRanking(boolean sortAscending) {
+		super();
+		this.sortAscending = sortAscending;
+	}
+
+	public int compare(Team a, Team b) 
+    { 
+        int result = 0;
+		if (a.getRankInTurnament() > b.getRankInTurnament()) 
+			result = -1;
+		if (a.getRankInTurnament() < b.getRankInTurnament()) 
+			result = 1;
+
+		if (sortAscending==true) 
+			return result;
+		else
+			return result * -1;
+    } 
+}
+
 class SortbyKickedOut implements Comparator<Team> 
 { 
 
@@ -232,3 +275,6 @@ class SortbyKickedOut implements Comparator<Team>
         return result;
     } 
 } 
+
+
+

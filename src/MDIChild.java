@@ -14,6 +14,20 @@ import java.time.format.DateTimeFormatter;
 public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private static final long serialVersionUID = 1;
 
+	private boolean teamRankColumnSortOrderAscending = false; // Should not be called directly
+	// Used to switch between ascending and descending sort order
+	public boolean getTeamRankColumnSortOrderAscending() {  
+		teamRankColumnSortOrderAscending = !teamRankColumnSortOrderAscending;
+		return teamRankColumnSortOrderAscending;
+	}
+	
+	private boolean teamNameColumnSortOrderAscending = false; // Should not be called directly
+	// Used to switch between ascending and descending sort order
+	public boolean getTeamNamekColumnSortOrderAscending() {  
+		teamNameColumnSortOrderAscending = !teamNameColumnSortOrderAscending;
+		return teamNameColumnSortOrderAscending;
+	}
+
 	private boolean teamPointColumnSortOrderAscending = false; // Should not be called directly
 	// Used to switch between ascending and descending sort order
 	public boolean getTeamPointColumnSortOrderAscending() {  
@@ -66,14 +80,14 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private int largeColimnWidth = 80;	
 
 	// Column Names (some "tagged" by "constants" (final strings) so I can search for column nanes later)
+	private final String teamRankingColumn = "Placering";
 	private final String teamIdColumn = "Hold Id";
 	private final String teamNameColumn = "Holdnavn";
 	private final String teamNumberOfMatchesColumn = "Kampe";	
 	private final String teamGoalScoreColumn = "Målscore";
 	private final String teamPointColumn = "Point";
 	
-	
-	private String[] teamTableColumnNames =  { "Nr.", teamIdColumn, teamNameColumn, teamNumberOfMatchesColumn, teamGoalScoreColumn, teamPointColumn};
+	private String[] teamTableColumnNames =  { teamRankingColumn, teamIdColumn, teamNameColumn, teamNumberOfMatchesColumn, teamGoalScoreColumn, teamPointColumn};
 	// Column widths
 	private Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
 
@@ -216,11 +230,15 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 				else if (columnName==teamGoalScoreColumn) {
 					Collections.sort(turnament.getTeams(), new SortbyGoalScore(getTeamGoalScoreColumnSortOrderAscending()));
 				} 
+				else if (columnName==teamRankingColumn) {
+					Collections.sort(turnament.getTeams(), new SortbyRanking(getTeamRankColumnSortOrderAscending()));
+				} 
+
 				else if (columnName==teamNumberOfMatchesColumn) {
 					Collections.sort(turnament.getTeams(), new SortbyNumberOfMatches(getTeamNumberOfMatchesColumnSortOrderAscending()));
 				} 
 				else if (columnName ==teamNameColumn) {
-					turnament.getTeams().sort(null);  // takes class' own compareTo
+					Collections.sort(turnament.getTeams(), new SortbyName(getTeamNamekColumnSortOrderAscending()));					
 				} else {
 					//System.out.println("Column index selected \"" + col + "\" " + name);
 					System.out.println("Column " + col + " \"" + columnName + "\" does not support sorting");
