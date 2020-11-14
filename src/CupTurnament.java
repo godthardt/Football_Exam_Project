@@ -50,6 +50,7 @@ public class CupTurnament extends Turnament implements Serializable {
 				Match m = new Match(turnamentTeams.get(i), turnamentTeams.get(i+1), getNextMatchId(), round, matchDate);
 				addMatch(m);
 				generateRandomGoals(m, true);
+				sortGoalsByTime();
 			}
 		}
 	}

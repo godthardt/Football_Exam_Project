@@ -116,7 +116,7 @@ public class Turnament implements Serializable {
 		}
 	}
 	
-	public void sortGoalsByTime()
+	protected void sortGoalsByTime()
 	{
 		for (Match match : matches) {
 			Collections.sort(match.getGoals());			
@@ -164,6 +164,7 @@ public class Turnament implements Serializable {
 				}
 			}
 		}
+		sortGoalsByTime();
 	}
 
 //	private int getNextRoundNo(int teamId) {
@@ -294,6 +295,7 @@ public class Turnament implements Serializable {
 
 		generateMatchesAndGoals();
 		sortTeamsByPoint();
+		
 	}
 
 	public boolean serializeTurnament(String filename) {

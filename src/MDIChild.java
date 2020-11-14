@@ -136,17 +136,21 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		goalTableLabel.setText("Mål:");
 		playerTabelLabel.setText("Kontraktspillere:");
 
-        loadImage("boring.jpg");
+        // Special label i goalTable
+		loadImage("boring.jpg");
         boringLabel.setIcon(imageIcon);
+		boringLabel.setBounds(modus, modus, 19* modus, 6 * modus);
+        boringLabel.setLocation(8 * modus, 1);
 		
 		int numberOfMatchesPrTeam = (turnament.getNumberOfTeams() - 1) * 2;
 
+		// construct 4 DefaultTableModel objects, to be used with the 4 JTables 
 		DefaultTableModel teamTableModel = new DefaultTableModel(turnament.getNumberOfTeams(), teamTableColumnNames.length);
 		DefaultTableModel matchTableModel = new DefaultTableModel(numberOfMatchesPrTeam, matchTableColumnNames.length);
 		DefaultTableModel goalTableModel = new DefaultTableModel(Constants.maxGoalsPrMatch, goalTableColumnNames.length);
 		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), playerTableColumnNames.length);
-		//DefaultTableModel playerTableModel = new DefaultTableModel(40, playerTableColumnNames.length);		
 
+		// Create the JTable
 		teamTableMetaData = new JTableColumnMetaData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, stdTableWidth, 13*modus), teamTableLabel);
 		matchTableMetaData = new JTableColumnMetaData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 17*modus, stdTableWidth, 14*modus), matchTableLabel);
 		goalTableMetaData = new JTableColumnMetaData(goalTable, goalTableModel, goalTableColumnNames, goalTableColumnWidths, new Rectangle(modus, 33*modus, stdTableWidth, 9*modus), goalTableLabel);
@@ -156,41 +160,44 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		teamTable = createJtable(teamTableMetaData);
 		matchTable = createJtable(matchTableMetaData);
 		goalTable = createJtable(goalTableMetaData);
-		
 		playerTable = createJtable(playerTableMetaData);
+
+		// Put prebuild "string"-sorter on playerTable 
 		playerTable.setAutoCreateRowSorter(true);
 		
-		goalTable.add(boringLabel);
-		goalTable.setAutoCreateRowSorter(true);
-
+		goalTable.add(boringLabel); // add easter egg
+		goalTable.setAutoCreateRowSorter(true); // Put prebuild "string"-sorter on playerTable
 
 		// Tried with layoutmanagers (Flow and Border), which is the "Java way" but it doesn't look good in this app in my opinion
 		//panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		//panel.setLayout(new BorderLayout());
+		//panel.setLayout(new BorderLayout()); // remembered to add components to BorderLayout.CENTER and BorderLayout.EAST
 		panel.setLayout(null);
 		
 		// Labels and tables
-		panel.add(teamTableLabel); // , BorderLayout.CENTER
-		panel.add(new TablePanel(teamTableMetaData)); //, BorderLayout.CENTER);
+		panel.add(teamTableLabel);
+		panel.add(new TablePanel(teamTableMetaData));
 		teamTable.getColumnModel().getColumn(0).setCellRenderer(new CustomRenderer());
 
-		panel.add(matchTableLabel);//, BorderLayout.CENTER);
-		panel.add(new TablePanel(matchTableMetaData)); //, BorderLayout.CENTER);
+		panel.add(matchTableLabel);
+		panel.add(new TablePanel(matchTableMetaData));
 
-		panel.add(goalTableLabel);//, BorderLayout.CENTER);
-		panel.add(new TablePanel(goalTableMetaData)); //, BorderLayout.CENTER);		
+		panel.add(goalTableLabel);
+		panel.add(new TablePanel(goalTableMetaData));		
 		
-		panel.add(playerTabelLabel);//, BorderLayout.EAST);
-		panel.add(new TablePanel(playerTableMetaData)); //, BorderLayout.EAST);
+		panel.add(playerTabelLabel);
+		panel.add(new TablePanel(playerTableMetaData));
 		
 		panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
 		panel.setVisible(true);
 		
 		getContentPane().add(panel);
 
+		// Load some data into the teamTable
 		loadTeamsIntoTable(teamTable);		
 
-		// listeners
+		// attach a number of listeners to teamTable and matchTable
+		
+		// Respond to the mouse, being click on the teamTable
 		teamTable.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -202,6 +209,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			}
 		});
 		
+		// Respond to row selection change - typically by the arrow keys
 		teamTable.getSelectionModel().addListSelectionListener((ListSelectionListener) new ListSelectionListener(){ //https://stackoverflow.com/questions/10128064/jtable-selected-row-click-event
 		    @Override
 			public void valueChanged(ListSelectionEvent event) {
@@ -212,36 +220,36 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			}
 		});
 
+		// Respond to the mouse, being click on the HEADER of the teamTable
 		teamTable.getTableHeader().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int col = teamTable.columnAtPoint(e.getPoint());
-
+				int clickedColumn = teamTable.columnAtPoint(e.getPoint());
 				boolean columnSorted = true;
+				
+				// Get the column header text of the column in which the user clicked 
 				JTableHeader th = teamTable.getTableHeader();
 				TableColumnModel tcm = th.getColumnModel();
-				TableColumn tc = tcm.getColumn(col);
+				TableColumn tc = tcm.getColumn(clickedColumn);
 				String columnName = tc.getHeaderValue().toString();
 
+				// Sort columns acsending or descending according to what have been clicked on
 				if (columnName==teamPointColumn) {
 					Collections.sort(turnament.getTeams(), new SortbyPoints(getTeamPointColumnSortOrderAscending()));
 				} 
-
 				else if (columnName==teamGoalScoreColumn) {
 					Collections.sort(turnament.getTeams(), new SortbyGoalScore(getTeamGoalScoreColumnSortOrderAscending()));
 				} 
 				else if (columnName==teamRankingColumn) {
 					Collections.sort(turnament.getTeams(), new SortbyRanking(getTeamRankColumnSortOrderAscending()));
 				} 
-
 				else if (columnName==teamNumberOfMatchesColumn) {
 					Collections.sort(turnament.getTeams(), new SortbyNumberOfMatches(getTeamNumberOfMatchesColumnSortOrderAscending()));
 				} 
 				else if (columnName ==teamNameColumn) {
 					Collections.sort(turnament.getTeams(), new SortbyName(getTeamNamekColumnSortOrderAscending()));					
 				} else {
-					//System.out.println("Column index selected \"" + col + "\" " + name);
-					System.out.println("Column " + col + " \"" + columnName + "\" does not support sorting");
+					System.out.println("Column " + clickedColumn + " \"" + columnName + "\" does not support sorting");
 					columnSorted = false;
 				}
 
@@ -252,6 +260,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			}
 		});		
 
+		// Respond to the mouse, being click on the matchTable  
 		matchTable.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -271,7 +280,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			}
 		});
 
-		// Respond to change in selected row (eg. use arrow up / down)
+		// Respond to change in selected row in the  (eg. use arrow up / down)
 		matchTable.getSelectionModel().addListSelectionListener((ListSelectionListener) new ListSelectionListener(){ //https://stackoverflow.com/questions/10128064/jtable-selected-row-click-event
 		    @Override			
 			public void valueChanged(ListSelectionEvent event) {
@@ -282,6 +291,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		System.out.println("MDIChild number " + windowNumber + " loaded");		
 	}
 	
+	// return the MatchId of the row which is selected in the matchTable
 	private int getSelectedMacthId()
 	{
 		int currentmatchId = -1;
@@ -397,12 +407,10 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		}
 	}
 	
+	// Show relevant goal, belonging to the match, which is selected is the matchTable
 	private void listGoals(int matchId) {
 
 		clearTable(goalTable);
-		
-		
-		turnament.sortGoalsByTime();
 		
 		int rowNumber = 0;
 		boolean noGoals = true;
@@ -435,13 +443,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 				}
 				break;
 			}
-
 		}
-
-        boringLabel.setBounds(modus, modus, 19* modus, 6 * modus);
-        boringLabel.setLocation(8 * modus, 1);
 		boringLabel.setVisible(noGoals);  // show a "stamp" in 0-0 matches
-		boringLabel.repaint();
 	}
 	
 	private void listPlayers(int teamId)
@@ -488,7 +491,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			e.printStackTrace();
 		}
 		return false;
-
 	}
 	
 	private boolean loadImage(String filename) {
@@ -508,7 +510,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		else	
 			return -1;
 	}
-	
 }
 
 // Plagiat from: https://stackoverflow.com/questions/15071668/cell-renderer-for-jtable-coloured-rows 
@@ -522,7 +523,7 @@ private static final long serialVersionUID = 6703872492730589499L;
         
         //Color orgColor = cellComponent.getForeground();
         
-
+        
         // Paint to
         if(row == 0){
         	cellComponent.setForeground(new Color(218,165,32));  // gold
@@ -539,13 +540,11 @@ private static final long serialVersionUID = 6703872492730589499L;
         	cellComponent.setForeground(Color.BLACK);
         }
         
-        
         return cellComponent;
     }
 }
 
-
-// Help class to organize data/component related to a JTable
+// Help class to organize data/components related to a JTable
 class JTableColumnMetaData {
 	// Purpose: To organize data relating to the same JTable
 	private ArrayList<String> columnHeaderTitles;
@@ -572,10 +571,9 @@ class JTableColumnMetaData {
 	public int getColumnWidth(int index) {
 		return columnHeaderWidths.get(index).intValue();
 	}
-	
 }
 
-// In order for JScrollPane to work with JTable on JInternalFrames, the JTalbe (and JSCrollPane) must be
+// In order for JScrollPane to work with JTable on JInternalFrames, the JTable (and JSCrollPane) must be
 // placed on their own panels - used 2 full days to make this work :-( maybe I have missed something ?!
 class TablePanel extends JPanel{
 
@@ -583,7 +581,7 @@ class TablePanel extends JPanel{
 
 	public TablePanel(JTableColumnMetaData jTableColumnMetaData){
 
-		setBackground(Color.GRAY); // Very usefull when I debugged, found that it looked nice afterwards
+		setBackground(Color.LIGHT_GRAY); // Very useful when I debugged, found that it looked nice afterwards
 		
 		for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
 			// Set column widths
@@ -604,16 +602,13 @@ class TablePanel extends JPanel{
 			e.printStackTrace();
 		}
 
-		// Define the size of the panel on which the JTable is placed
+		// Define the size of the panel on which the JTable (JScrollPane) is placed
 		setSize(new Dimension(jTableColumnMetaData.rectangle.width , jTableColumnMetaData.rectangle.height));
 		jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width - 30, jTableColumnMetaData.rectangle.height - 30));
-		// Use predefined columnsorter, which sorts on strings "11" before "2" - could be improved
-		//jTableColumnMetaData.jTable.setAutoCreateRowSorter(true); 
 		setLocation(jTableColumnMetaData.rectangle.x, jTableColumnMetaData.rectangle.y);
 
 		JScrollPane jScrollPane=new JScrollPane(jTableColumnMetaData.jTable);
 		jScrollPane.setVisible(true);
 		add(jScrollPane);
 	}
-
 }

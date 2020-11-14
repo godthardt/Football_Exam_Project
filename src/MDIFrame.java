@@ -110,7 +110,7 @@ public class MDIFrame extends JFrame {
 			// Restore Turnament object from file
 			Turnament deSerializedTurnamentObject = (Turnament) Serialize.load(fileName);
 
-			// Indicate to the GUI, that the turnament has been deserialized, by adding info to title line
+			// Indicate to the user, that the turnament has been deserialized, by adding info to title line
 			String newTurnamentName = deSerializedTurnamentObject.getName() + " - deserialiseret d. " + LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString() + " fra filen " + fileName;
 			deSerializedTurnamentObject.setName(newTurnamentName);
 			
