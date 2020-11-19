@@ -7,9 +7,9 @@ public class Goal implements Comparable<Goal>, Serializable {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
 	
 	public static enum GoalType { Home, Away}
-	private int minute;
+	private int minute;  // The minute in which the goal was scored
 	public int getMinute() { return minute;}
-	private int sec;
+	private int sec; // The second in which the goal was scored
 	public int getSecond() { return sec;}	
 	private GoalType goalType;
 	public GoalType getGoalType() { return goalType; }

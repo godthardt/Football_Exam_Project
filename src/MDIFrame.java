@@ -27,7 +27,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 // MDI (Multiple Document interface) is built in to C++, C# and Delphi, and a lot of functionality are build into classes like TMDIxxx classes -
-// but in Java this is not the case, but Java offers JInternalFrame (as MDIchilds) (a lightweight JFrame is supplied to offer MDI functionality
+// but in Java this is not the case, but Java offers JInternalFrame (as MDIchilds) (a "lightweight" JFrame is supplied to offer MDI functionality
 // I have sought inspiration at:
 // http://www.java2s.com/Tutorials/Java/Java_Swing/1600__Java_Swing_MDI.htm 
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/friends/mdi-swing/mdi-swing.html
@@ -50,13 +50,13 @@ public class MDIFrame extends JFrame {
 		super(title);
 
 		try {
-			// The turnamentManager is not important, and a relatively late invention. Main purpose is to demonstrate polymorf traversion
+			// The turnamentManager is not important, and a relatively late invention. Main purpose is to demonstrate polymorf iteration
 			turnamentManager = new TurnamentManager("Kan håndtere x turneringer, og har totallister over hold og spillere");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		// Add a
+		// Create a desktopPane  
 		desktopPane = new JDesktopPane();
 		
 		// Make sure other component aren't visibel "below"
@@ -110,7 +110,7 @@ public class MDIFrame extends JFrame {
 			dim = Toolkit.getDefaultToolkit().getScreenSize();
 			setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2); //source https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			setExtendedState(MDIFrame.NORMAL); //.NORMAL or MAXIMIZED_BOTH
+			setExtendedState(MDIFrame.NORMAL);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,7 +144,7 @@ public class MDIFrame extends JFrame {
 		MDIChild mainPanel = new MDIChild(childWindowNumber, turnament);
 		Insets i = this.getInsets(); // Insets contains top (size of titlebar), left, etc. of the "JFrame", found on https://www.programcreek.com/java-api-examples/?class=java.awt.Container&method=getInsets
 
-		// try to prevent childwindow to be located outside JFrame using modulus
+		// try to prevent MDIchildwindows to be located outside JFrame i do some modulus on the position
 		int modulusChildWindowNumber = childWindowNumber % Constants.modus;  
 		
 		int x = modulusChildWindowNumber * i.top / 2; //on my Pc i.top = 31
@@ -155,7 +155,11 @@ public class MDIFrame extends JFrame {
 		desktopPane.add(mainPanel);	    
 		mainPanel.setVisible(true);
 		layeredPane.moveToFront(mainPanel);
-		statusBar.setText("MDIChild vindue nr. " + childWindowNumber + " åbnet - " + desktopPane.getAllFrames().length + " MDIChild vindue(r) i alt");
+		String pluralisR = "r";
+		
+		if(desktopPane.getAllFrames().length == 1) pluralisR = "";
+		
+		statusBar.setText("MDIChild vindue nr. " + childWindowNumber + " åbnet - " + desktopPane.getAllFrames().length + " MDIChild vindue"+ pluralisR + " i alt");
 		childWindowNumber++;		
 	}
 
