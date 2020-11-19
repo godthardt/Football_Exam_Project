@@ -1,11 +1,14 @@
 
 
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 public class TurnamentManager implements Serializable  {
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
@@ -154,18 +157,14 @@ public class TurnamentManager implements Serializable  {
 		return returnTeams;		
 	}
 
-//	private ArrayList<Contract> getContractPeriods(int teamId) {
-//		// construct an object to return to caller
-//		ArrayList<Contract> returnContracts = new ArrayList<Contract>(); 
-//		for (Contract contract : contractsMasterList) {
-//			// correct level ?
-//			if (contract.getTeamId() == teamId) {
-//				// add contractperiod for this team(id)
-//				returnContracts.add(contract);
-//			}
-//		}
-//
-//		return returnContracts;		
-//	}
+	public void iterateTurnaments(Component parent) {
+		String info = "";
+		for (Turnament turnament : turnaments) {
+			info = info + "Navn: " + turnament.getName() + " Antal hold: " + turnament.getNumberOfTeams() + " Antal kampe: " + turnament.getMatches().size() + "\n";
+		}
+		JOptionPane.showMessageDialog(parent, "Info om åbnede turneringer\n" + info, "Turneringer", JOptionPane.INFORMATION_MESSAGE);
+		
+	}
 
+	
 }

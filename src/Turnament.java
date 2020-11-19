@@ -156,11 +156,11 @@ public class Turnament implements Serializable {
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
 					int roundNo = 0;//getNextRoundNo(team.getId());//(matches.size() % (turnamentTeams.size()*2 - 2)) + 1;
-					System.out.println(team.getName() + " mod " + turnamentTeams.get(i).getName() + " runde " + roundNo);
+					//System.out.println(team.getName() + " mod " + turnamentTeams.get(i).getName() + " runde " + roundNo);
 					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), roundNo, matchDate);
 					addMatch(m);
 					generateRandomGoals(m, false);
-					System.out.println("Round = " + roundNo);
+					//System.out.println("Round = " + roundNo);
 				}
 			}
 		}

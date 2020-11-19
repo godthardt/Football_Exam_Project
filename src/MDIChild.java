@@ -73,7 +73,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private JTableColumnMetaData playerTableMetaData;	
 	
 	Turnament turnament;
-	private int modus = 16; // Predefined modus for margin space etc.
+	private int modus = Constants.modus; // Predefined modus for margin space etc. Use local variable to shorten code line lengths
 	int stdTableWidth = 34 * modus;	
 	private int slimColumnWidth = modus;
 	private int mediumColumnWidth = 60;
@@ -288,7 +288,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			}
 		});
 		
-		System.out.println("MDIChild number " + windowNumber + " loaded");		
 	}
 	
 	// return the MatchId of the row which is selected in the matchTable

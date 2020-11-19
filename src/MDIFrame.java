@@ -1,8 +1,10 @@
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -15,6 +17,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -35,6 +43,7 @@ public class MDIFrame extends JFrame {
 	private JMenu windowMenu;
 	private int numberOfWindowBaseMenuItems;
 	public Dimension dim;
+	private StatusBar statusBar;
 
 
 	public MDIFrame(String title) {
@@ -67,6 +76,10 @@ public class MDIFrame extends JFrame {
 
 		// Add menu "handling / initialization in sub method, in order to better readability constructor
 		addMenus();
+		
+		// Status bar
+		statusBar = new StatusBar(dim.width, 16);
+		getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
 		
 		// Center main window (not tested with multiple screens)  
 		centerJFrame();
@@ -130,14 +143,20 @@ public class MDIFrame extends JFrame {
 		// Create a new 
 		MDIChild mainPanel = new MDIChild(childWindowNumber, turnament);
 		Insets i = this.getInsets(); // Insets contains top (size of titlebar), left, etc. of the "JFrame", found on https://www.programcreek.com/java-api-examples/?class=java.awt.Container&method=getInsets
-		mainPanel.setLocation(childWindowNumber* i.top / 2, childWindowNumber * i.top / 2); //on my Pc i.top = 31
-		childWindowNumber++;
+
+		// try to prevent childwindow to be located outside JFrame using modulus
+		int modulusChildWindowNumber = childWindowNumber % Constants.modus;  
+		
+		int x = modulusChildWindowNumber * i.top / 2; //on my Pc i.top = 31
+		int y = modulusChildWindowNumber * i.top / 2;
+		mainPanel.setLocation(x, y); 
+
 		mainPanel.setSize(Constants.mDIChildWidth + i.left, Constants.mDIChildHigth + i.left); //on my Pc i.left = 8		
 		desktopPane.add(mainPanel);	    
 		mainPanel.setVisible(true);
 		layeredPane.moveToFront(mainPanel);
-		repaint();
-		listChildMenusInWindowTopMenu();
+		statusBar.setText("MDIChild vindue nr. " + childWindowNumber + " åbnet - " + desktopPane.getAllFrames().length + " MDIChild vindue(r) i alt");
+		childWindowNumber++;		
 	}
 
 	private void addMenus() {
@@ -148,6 +167,7 @@ public class MDIFrame extends JFrame {
 		JMenu     fileMenu   = new JMenu();
 		fileMenu.setText("Fil");
 		fileMenu.setMnemonic(KeyEvent.VK_F);
+
 		windowMenu   = new JMenu();
 		windowMenu.setText("Vindue");
 		windowMenu.setMnemonic(KeyEvent.VK_V);		
@@ -157,7 +177,8 @@ public class MDIFrame extends JFrame {
 		JMenuItem newTurnamentMenu   = new JMenuItem();
 		JMenuItem newCupTurnamentMenu   = new JMenuItem();	    
 		JMenuItem loadSerializedTurnamentMenu = new JMenuItem();
-		JMenuItem saveSerializedTurnamentMenu = new JMenuItem();	    
+		JMenuItem saveSerializedTurnamentMenu = new JMenuItem();
+		JMenuItem listAllTurnamentsMenu = new JMenuItem();		
 		JMenuItem closeMenu  = new JMenuItem();
 		JMenuItem closeAllWindowsMenu  = new JMenuItem();
 		JMenuItem minimizeAllWindowsMenu  = new JMenuItem();
@@ -169,6 +190,7 @@ public class MDIFrame extends JFrame {
 		addMenuMneMonics(fileMenu, newCupTurnamentMenu, "Ny pokalturnering", KeyEvent.VK_P, KeyEvent.CTRL_DOWN_MASK);
 		addMenuMneMonics(fileMenu, loadSerializedTurnamentMenu, "Åbn serialiseret turnering fra fil", KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK);
 		addMenuMneMonics(fileMenu, saveSerializedTurnamentMenu, "Gem serialiseret turnering i fil", KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
+		addMenuMneMonics(fileMenu, listAllTurnamentsMenu, "Vis info om alle turneringer", KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK);		
 		fileMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm		
 		addMenuMneMonics(fileMenu, closeMenu, "Afslut", KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK);
 		
@@ -185,6 +207,32 @@ public class MDIFrame extends JFrame {
 		setJMenuBar(menubar);
 		
 		// Add menu listeners
+
+		// JMenus require MenuListener
+		windowMenu.addMenuListener(new MenuListener() {
+	        // Make sure the Window menu contains the relevant windows 
+			public void menuSelected(MenuEvent e) { listChildMenusInWindowTopMenu(); }
+	        public void menuCanceled(MenuEvent e) { } // Must implement this abstract method to use addMenuListener  
+	        public void menuDeselected(MenuEvent e) { }  // Must implement this abstract method to use addMenuListener
+	        // A JInternalFramelistener could also have done the job, but requires implementing 7 abstracts methods
+	        // Found at: https://docs.oracle.com/javase/tutorial/uiswing/events/internalframelistener.html
+	      });		
+
+		listAllTurnamentsMenu.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				try {
+					iterateTurnaments();
+
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});	    
+
+
+		
+		
+		// JMenuItem(s) require ActionListener(s)
 		newTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
@@ -314,9 +362,6 @@ public class MDIFrame extends JFrame {
 				}
 				//Reposition the next "first" window
 				childWindowNumber = 1;
-				// Update the window menu
-				listChildMenusInWindowTopMenu();
-			
 			}
 		});
 		
@@ -414,7 +459,30 @@ public class MDIFrame extends JFrame {
 	
 	public void addPanel(MDIChild panel) {
 		desktopPane.add(panel,JDesktopPane.DEFAULT_LAYER);
+		
 	}
 
+	public void iterateTurnaments() {
+		turnamentManager.iterateTurnaments(this);
+	}
+	
 
+
+}
+
+class StatusBar extends JLabel {  // plagiat from https://www.java-tips.org/java-se-tips-100019/15-javax-swing/39-creating-a-status-bar.html
+    
+    /** Creates a new instance of StatusBar */
+    public StatusBar(int width, int hieght) {
+        super();
+        super.setPreferredSize(new Dimension(width, hieght));
+        // plagiat from https://www.tutorialspoint.com/swingexamples/add_border_to_label.htm
+        Border line = BorderFactory.createLineBorder(Color.DARK_GRAY);
+        setBorder(line);
+        setMessage("Ready");
+    }
+     
+    public void setMessage(String message) {
+        setText(" "+message);        
+    }        
 }
