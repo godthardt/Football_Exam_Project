@@ -226,6 +226,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			public void mouseClicked(MouseEvent e) {
 				int clickedColumn = teamTable.columnAtPoint(e.getPoint());
 				boolean columnSorted = true;
+				boolean ascOrDescSorted = true;
 				
 				// Get the column header text of the column in which the user clicked 
 				JTableHeader th = teamTable.getTableHeader();
@@ -235,19 +236,24 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 
 				// Sort columns acsending or descending according to what have been clicked on
 				if (columnName==teamPointColumn) {
-					Collections.sort(turnament.getTeams(), new SortbyPoints(getTeamPointColumnSortOrderAscending()));
+					ascOrDescSorted = getTeamPointColumnSortOrderAscending();
+					Collections.sort(turnament.getTeams(), new SortbyPoints(ascOrDescSorted));
 				} 
 				else if (columnName==teamGoalScoreColumn) {
-					Collections.sort(turnament.getTeams(), new SortbyGoalScore(getTeamGoalScoreColumnSortOrderAscending()));
+					ascOrDescSorted = getTeamGoalScoreColumnSortOrderAscending();					
+					Collections.sort(turnament.getTeams(), new SortbyGoalScore(ascOrDescSorted));
 				} 
 				else if (columnName==teamRankingColumn) {
-					Collections.sort(turnament.getTeams(), new SortbyRanking(getTeamRankColumnSortOrderAscending()));
+					ascOrDescSorted = getTeamRankColumnSortOrderAscending();					
+					Collections.sort(turnament.getTeams(), new SortbyRanking(ascOrDescSorted));
 				} 
 				else if (columnName==teamNumberOfMatchesColumn) {
-					Collections.sort(turnament.getTeams(), new SortbyNumberOfMatches(getTeamNumberOfMatchesColumnSortOrderAscending()));
+					ascOrDescSorted = getTeamNumberOfMatchesColumnSortOrderAscending();					
+					Collections.sort(turnament.getTeams(), new SortbyNumberOfMatches(ascOrDescSorted));
 				} 
 				else if (columnName ==teamNameColumn) {
-					Collections.sort(turnament.getTeams(), new SortbyName(getTeamNamekColumnSortOrderAscending()));					
+					ascOrDescSorted = getTeamNamekColumnSortOrderAscending();					
+					Collections.sort(turnament.getTeams(), new SortbyName(ascOrDescSorted));
 				} else {
 					System.out.println("Column " + clickedColumn + " \"" + columnName + "\" does not support sorting");
 					columnSorted = false;
@@ -256,7 +262,15 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 				if (columnSorted==true) {
 					loadTeamsIntoTable(teamTable);
 					teamTable.setRowSelectionInterval(0, 0);
+					teamTableLabel.setText("Stilling: (sorteret " + ascOrDesc(ascOrDescSorted) + " efter " + columnName + ")"  );					
 				}
+			}
+
+			private String ascOrDesc(boolean ascOrDescSorted) {
+				if (ascOrDescSorted == false) 
+					return "stigende";
+				else
+					return "faldende";
 			}
 		});		
 

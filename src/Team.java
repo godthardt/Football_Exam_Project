@@ -132,7 +132,7 @@ class SortbyName implements Comparator<Team>
         int result = 0;
         result = a.compareTo(b); // use default sorter
 
-		if (sortAscending==true) 
+		if (sortAscending==false) 
 			return result;
 		else
 			return result * -1;

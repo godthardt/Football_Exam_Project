@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -15,12 +14,10 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileFilter;
@@ -33,7 +30,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/friends/mdi-swing/mdi-swing.html
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/archive/tech_topics_arch/frames_panes/frames_panes.html
 
-public class MDIFrame extends JFrame {
+public class MDIFrame extends JFrame implements InternalFrameListener {
 	private static final long serialVersionUID = 2;  //Helps class control version of serialized objects
 	public JDesktopPane desktopPane = new JDesktopPane();
 	public DesktopManager desktopManager;
@@ -43,6 +40,7 @@ public class MDIFrame extends JFrame {
 	private JMenu windowMenu;
 	private int numberOfWindowBaseMenuItems;
 	public Dimension dim;
+	private InternalFrameListener internalFrameListener;
 	private StatusBar statusBar;
 
 
@@ -81,7 +79,7 @@ public class MDIFrame extends JFrame {
 		statusBar = new StatusBar(dim.width, 16);
 		getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
 		
-		// Center main window (not tested with multiple screens)  
+		// Center main window (not tested with multiple screens)
 		centerJFrame();
 		
 		setVisible(true);
@@ -91,6 +89,11 @@ public class MDIFrame extends JFrame {
 
 	}
 	
+	private void addInternalFrameListener(MDIFrame mdiFrame) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void setMDIFrameSize() {
 		dim = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -141,7 +144,9 @@ public class MDIFrame extends JFrame {
 		turnamentManager.addTurnament(turnament);
 		
 		// Create a new 
-		MDIChild mainPanel = new MDIChild(childWindowNumber, turnament);
+		MDIChild mDIChild = new MDIChild(childWindowNumber, turnament);
+		
+		mDIChild.addInternalFrameListener(this);
 		Insets i = this.getInsets(); // Insets contains top (size of titlebar), left, etc. of the "JFrame", found on https://www.programcreek.com/java-api-examples/?class=java.awt.Container&method=getInsets
 
 		// try to prevent MDIchildwindows to be located outside JFrame i do some modulus on the position
@@ -149,12 +154,12 @@ public class MDIFrame extends JFrame {
 		
 		int x = modulusChildWindowNumber * i.top / 2; //on my Pc i.top = 31
 		int y = modulusChildWindowNumber * i.top / 2;
-		mainPanel.setLocation(x, y); 
+		mDIChild.setLocation(x, y); 
 
-		mainPanel.setSize(Constants.mDIChildWidth + i.left, Constants.mDIChildHigth + i.left); //on my Pc i.left = 8		
-		desktopPane.add(mainPanel);	    
-		mainPanel.setVisible(true);
-		layeredPane.moveToFront(mainPanel);
+		mDIChild.setSize(Constants.mDIChildWidth + i.left, Constants.mDIChildHigth + i.left); //on my Pc i.left = 8		
+		desktopPane.add(mDIChild);	    
+		mDIChild.setVisible(true);
+		layeredPane.moveToFront(mDIChild);
 		String pluralisR = "r";
 		
 		if(desktopPane.getAllFrames().length == 1) pluralisR = "";
@@ -461,6 +466,7 @@ public class MDIFrame extends JFrame {
 
 	}
 	
+
 	public void addPanel(MDIChild panel) {
 		desktopPane.add(panel,JDesktopPane.DEFAULT_LAYER);
 		
@@ -469,12 +475,27 @@ public class MDIFrame extends JFrame {
 	public void iterateTurnaments() {
 		turnamentManager.iterateTurnaments(this);
 	}
-	
 
+	// JInternalFrameListeners methods - could also have been done using Class InternalFrameAdapter
+	// https://docs.oracle.com/javase/tutorial/uiswing/events/internalframelistener.html
+	public void internalFrameClosing(InternalFrameEvent e) {
+		// TODO Auto-generated method stub
+		MDIChild closingChildFrame = (MDIChild) e.getInternalFrame();
+		closingChildFrame.turnament.setInActive();
+	}
 
+	// 	Additional InternalFrameListeners methods must be implemented in order to "satisfy" interface
+	public void internalFrameOpened(InternalFrameEvent e) {}
+	public void internalFrameClosed(InternalFrameEvent e) {}
+	public void internalFrameIconified(InternalFrameEvent e) {}
+	public void internalFrameDeiconified(InternalFrameEvent e) {}
+	public void internalFrameActivated(InternalFrameEvent e) {}
+	public void internalFrameDeactivated(InternalFrameEvent e) {}
 }
 
-class StatusBar extends JLabel {  // plagiat from https://www.java-tips.org/java-se-tips-100019/15-javax-swing/39-creating-a-status-bar.html
+//plagiat from https://www.java-tips.org/java-se-tips-100019/15-javax-swing/39-creating-a-status-bar.html
+class StatusBar extends JLabel {  
+	private static final long serialVersionUID = 1;
     
     /** Creates a new instance of StatusBar */
     public StatusBar(int width, int hieght) {
@@ -483,7 +504,7 @@ class StatusBar extends JLabel {  // plagiat from https://www.java-tips.org/java
         // plagiat from https://www.tutorialspoint.com/swingexamples/add_border_to_label.htm
         Border line = BorderFactory.createLineBorder(Color.DARK_GRAY);
         setBorder(line);
-        setMessage("Ready");
+        setMessage("");
     }
      
     public void setMessage(String message) {

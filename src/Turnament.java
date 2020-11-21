@@ -25,12 +25,16 @@ public class Turnament implements Serializable {
 	public LocalDate GetEndDate() { return endDate; }	
 	protected int nextMatchId = 1;
 	public int getNextMatchId() { return nextMatchId++; }
+	private boolean inActive = false;
+	public boolean getInActive() { return inActive;}
+	public void setInActive() { inActive = true;}	
 
 	protected int roundNumber = 1;
 	protected static final long serialVersionUID = 3;  //Helps class control version of serialized objects
 	protected ArrayList<Team> turnamentTeams;
 	protected ArrayList<Match> matches;
 	public  ArrayList<Match> getMatches() { return matches; }
+
 	
 	public int GetGoalsForPlayer(int playerId) {
 		// Purpose: Find out how many goal a particular player has scored, in this turnament. Not optimized for efficiency

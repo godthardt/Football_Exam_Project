@@ -160,10 +160,15 @@ public class TurnamentManager implements Serializable  {
 	public void iterateTurnaments(Component parent) {
 		String info = "";
 		for (Turnament turnament : turnaments) {
-			info = info + "Navn: " + turnament.getName() + " Antal hold: " + turnament.getNumberOfTeams() + " Antal kampe: " + turnament.getMatches().size() + "\n";
+			if (turnament.getInActive() == true) {
+				turnaments.remove(turnament);
+			} else {
+				info = info + "Navn: " + turnament.getName() + " Antal hold: " + turnament.getNumberOfTeams() + " Antal kampe: " + turnament.getMatches().size() + "\n";				
+			}
+
 		}
 		JOptionPane.showMessageDialog(parent, "Info om åbnede turneringer\n" + info, "Turneringer", JOptionPane.INFORMATION_MESSAGE);
-		
+
 	}
 
 	
