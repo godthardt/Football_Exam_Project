@@ -42,6 +42,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 	public Dimension dim;
 	private InternalFrameListener internalFrameListener;
 	private StatusBar statusBar;
+	private MDIChildTurnamentInfo mDIChildTurnamentInfo;
 
 
 	public MDIFrame(String title) {
@@ -81,11 +82,21 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		
 		// Center main window (not tested with multiple screens)
 		centerJFrame();
+
+		mDIChildTurnamentInfo = new MDIChildTurnamentInfo(turnamentManager);
+//
+		mDIChildTurnamentInfo.setLocation(5, 5); 
+
+		mDIChildTurnamentInfo.setSize(Constants.mDIChildWidth + 16, Constants.mDIChildHigth + 16); //on my Pc i.left = 8		
+		desktopPane.add(mDIChildTurnamentInfo);	    
+		mDIChildTurnamentInfo.setVisible(true);
+		layeredPane.moveToFront(mDIChildTurnamentInfo);
 		
 		setVisible(true);
 		
+		
 		// Deserialize a Turnament object, in order to have something to look at
-		addNewTurnament("serializedTurnamentExample.ser");
+		//addNewTurnament("serializedTurnamentExample.ser");
 
 	}
 	
@@ -231,6 +242,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
 					iterateTurnaments();
+					//!!!
 
 				} catch (Exception e1) {
 					e1.printStackTrace();

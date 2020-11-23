@@ -67,20 +67,20 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private JTable goalTable;
 	private JTable playerTable;
 	
-	private JTableColumnMetaData teamTableMetaData;
-	private JTableColumnMetaData matchTableMetaData;
-	private JTableColumnMetaData goalTableMetaData;
-	private JTableColumnMetaData playerTableMetaData;	
+	private JTableData teamTableMetaData;
+	private JTableData matchTableMetaData;
+	private JTableData goalTableMetaData;
+	private JTableData playerTableMetaData;	
 	
 	Turnament turnament;
 	private int modus = Constants.modus; // Predefined modus for margin space etc. Use local variable to shorten code line lengths
-	int stdTableWidth = 34 * modus;	
+	int stdTableWidth = Constants.stdTableWidth;	
 	private int slimColumnWidth = modus;
 	private int mediumColumnWidth = 60;
 	private int largeColimnWidth = 80;
 	private int dontShow = 0;
 
-	// Column Names (some "tagged" by "constants" (final strings) so I can search for column nanes later)
+	// Column Names (some "tagged" by "constants" (final strings) so I can search for column names later)
 	private final String teamRankingColumn = "Placering";
 	private final String teamIdColumn = "Hold Id";
 	private final String teamNameColumn = "Holdnavn";
@@ -95,7 +95,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 
 	private final String matchIdColumn = "Kamp Id"; 
 	private final String matchRoundNo = "Runde";	
-	private String[] matchTableColumnNames = {matchRoundNo, matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score"};
+	private String[] matchTableColumnNames = {matchRoundNo, matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Resultat"};
 	private Integer[] matchTableColumnWidths = { slimColumnWidth, dontShow, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};
 
 
@@ -105,8 +105,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private String[] goalTableColumnNames =  { "Nr.", "Stilling", tidGoalColumn, goalScorerColumn};
 	private Integer[] goalTableColumnWidths = { slimColumnWidth, mediumColumnWidth, slimColumnWidth, largeColimnWidth};
 	
-	private String[] playerTableColumnNames =  { "Nr.", "Navn", "Kontraktudløb", "Mål"};
-	private Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};
+	private String[] playerTableColumnNames =  { "Nr.", "Navn", "Mål", "Kontraktudløb"};
+	private Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth};
 	
 	ImageIcon imageIcon;
 		
@@ -155,16 +155,16 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), playerTableColumnNames.length);
 
 		// Create the JTable
-		teamTableMetaData = new JTableColumnMetaData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, stdTableWidth, 13*modus), teamTableLabel);
-		matchTableMetaData = new JTableColumnMetaData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 17*modus, stdTableWidth, 14*modus), matchTableLabel);
-		goalTableMetaData = new JTableColumnMetaData(goalTable, goalTableModel, goalTableColumnNames, goalTableColumnWidths, new Rectangle(modus, 33*modus, stdTableWidth, 9*modus), goalTableLabel);
-		playerTableMetaData = new JTableColumnMetaData(playerTable, playerTableModel, playerTableColumnNames, playerTableColumnWidths, new Rectangle(stdTableWidth + 3* modus, 2*modus, stdTableWidth / 2, 40*modus), playerTabelLabel);	
+		teamTableMetaData = new JTableData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, stdTableWidth, 13*modus), teamTableLabel);
+		matchTableMetaData = new JTableData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 17*modus, stdTableWidth, 14*modus), matchTableLabel);
+		goalTableMetaData = new JTableData(goalTable, goalTableModel, goalTableColumnNames, goalTableColumnWidths, new Rectangle(modus, 33*modus, stdTableWidth, 9*modus), goalTableLabel);
+		playerTableMetaData = new JTableData(playerTable, playerTableModel, playerTableColumnNames, playerTableColumnWidths, new Rectangle(stdTableWidth + 2 * modus, 2*modus, 20*modus, 40*modus), playerTabelLabel);	
 		
 		// Set column Names and column widths
-		teamTable = createJtable(teamTableMetaData);
-		matchTable = createJtable(matchTableMetaData);
-		goalTable = createJtable(goalTableMetaData);
-		playerTable = createJtable(playerTableMetaData);
+		teamTable = teamTableMetaData.createJtable();
+		matchTable = matchTableMetaData.createJtable();
+		goalTable = goalTableMetaData.createJtable();
+		playerTable = playerTableMetaData.createJtable();
 
 		// Put prebuild "string"-sorter on playerTable 
 		playerTable.setAutoCreateRowSorter(true);
@@ -180,7 +180,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		// Labels and tables
 		panel.add(teamTableLabel);
 		panel.add(new TablePanel(teamTableMetaData));
-		
 		
 		for (int i = 0; i < teamTableAlignments.length; i++) {
 			DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
@@ -370,33 +369,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		listGoals(matchId);
 	}
 	
-	private JTable createJtable(JTableColumnMetaData jTableColumnMetaData)
-	{
-		try {
-			jTableColumnMetaData.jTable = new JTable(jTableColumnMetaData.modelTable);
-
-			// Place label 2 * modus above JTable and indent a little modus / 2
-			jTableColumnMetaData.tableLabel.setBounds(new Rectangle(jTableColumnMetaData.rectangle.x + modus / 2, jTableColumnMetaData.rectangle.y - 3 * modus, stdTableWidth, 5 * modus));
-
-			// Set column"Header"Titles
-			for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
-				
-				int width = jTableColumnMetaData.getColumnWidth(i);
-				jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setPreferredWidth(width);
-				// Hide columns, if oreferred width is set to 0 (user for "lookup" coloumn TeamId and MatchId
-				if (width==0) {
-					jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setMinWidth(width);
-					jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setMaxWidth(width);					
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return jTableColumnMetaData.jTable;
-	}
-	
 	private void listMatches(int teamId) {
 		clearTable(matchTable);
 		clearTable(goalTable);
@@ -486,11 +458,13 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 				int colNum = 0;
 				playerTable.setValueAt(rowNumber+1, rowNumber, colNum++);
 				playerTable.setValueAt(player.getName(), rowNumber, colNum++);
-				playerTable.setValueAt(player.getContractEndDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);
 				int goalsForPlayer = turnament.GetGoalsForPlayer(player.getId());
-				if (goalsForPlayer > 0) {
+				if (goalsForPlayer > 0) 
 					playerTable.setValueAt(goalsForPlayer, rowNumber, colNum++);					
-				} 
+				else
+					colNum++;
+				
+				playerTable.setValueAt(player.getContractEndDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);				
 				rowNumber++;
 		}
 	}
@@ -573,7 +547,7 @@ private static final long serialVersionUID = 6703872492730589499L;
 }
 
 // Help class to organize data/components related to a JTable
-class JTableColumnMetaData {
+class JTableData {
 	// Purpose: To organize data relating to the same JTable
 	private ArrayList<String> columnHeaderTitles;
 	private ArrayList<Integer> columnHeaderWidths;
@@ -583,7 +557,7 @@ class JTableColumnMetaData {
 	DefaultTableModel modelTable;
 	Rectangle rectangle;
 
-	JTableColumnMetaData(JTable jTable, DefaultTableModel modelTable, String[] headerTitlesArray, Integer[] HeaderWidthsArray, Rectangle rectangle, JLabel tableLabel) {
+	JTableData(JTable jTable, DefaultTableModel modelTable, String[] headerTitlesArray, Integer[] HeaderWidthsArray, Rectangle rectangle, JLabel tableLabel) {
 		columnHeaderTitles = new ArrayList<String>(Arrays.asList(headerTitlesArray));
 		columnHeaderWidths = new ArrayList<Integer>(Arrays.asList(HeaderWidthsArray));
 		this.jTable = jTable;
@@ -599,6 +573,39 @@ class JTableColumnMetaData {
 	public int getColumnWidth(int index) {
 		return columnHeaderWidths.get(index).intValue();
 	}
+	
+	public JTable createJtable()
+	{
+		try {
+			jTable = new JTable(modelTable);
+			
+			// make sure only 1 row at a time can be selected, found at https://stackoverflow.com/questions/28128035/how-to-add-table-header-and-scrollbar-in-jtable-java
+			jTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);  
+
+			// Place label 2 * modus above JTable and indent a little modus / 2
+			tableLabel.setBounds(new Rectangle(rectangle.x + Constants.modus / 2, rectangle.y - 3 * Constants.modus, Constants.stdTableWidth, 5 * Constants.modus));
+
+			// Set column size and preferred width
+			for (int i = 0; i < getColumnHeaderTitles().size(); i++) {
+				
+				int width = getColumnWidth(i);
+				jTable.getColumnModel().getColumn(i).setPreferredWidth(width);
+				// Hide columns, if preferred width is set to 0 (used for "lookup" columns TeamId and MatchId
+				if (width==0) {
+					jTable.getColumnModel().getColumn(i).setMinWidth(width);
+					jTable.getColumnModel().getColumn(i).setMaxWidth(width);					
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return jTable;
+	}
+	
+	
+	
 }
 
 // In order for JScrollPane to work with JTable on JInternalFrames, the JTable (and JSCrollPane) must be
@@ -607,7 +614,7 @@ class TablePanel extends JPanel{
 
 	private static final long serialVersionUID = 1;
 
-	public TablePanel(JTableColumnMetaData jTableColumnMetaData){
+	public TablePanel(JTableData jTableColumnMetaData){
 
 		setBackground(Color.LIGHT_GRAY); // Very useful when I debugged, found that it looked nice afterwards
 		
