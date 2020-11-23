@@ -77,7 +77,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	int stdTableWidth = 34 * modus;	
 	private int slimColumnWidth = modus;
 	private int mediumColumnWidth = 60;
-	private int largeColimnWidth = 80;	
+	private int largeColimnWidth = 80;
+	private int dontShow = 0;
 
 	// Column Names (some "tagged" by "constants" (final strings) so I can search for column nanes later)
 	private final String teamRankingColumn = "Placering";
@@ -89,12 +90,15 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	
 	private String[] teamTableColumnNames =  { teamRankingColumn, teamIdColumn, teamNameColumn, teamNumberOfMatchesColumn, teamGoalScoreColumn, teamPointColumn};
 	// Column widths
-	private Integer[] teamTableColumnWidths = { slimColumnWidth, slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
+	private Integer[] teamTableColumnWidths = { slimColumnWidth, dontShow, largeColimnWidth, slimColumnWidth, mediumColumnWidth, slimColumnWidth};
+	private Integer[] teamTableAlignments = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER};
 
 	private final String matchIdColumn = "Kamp Id"; 
 	private final String matchRoundNo = "Runde";	
 	private String[] matchTableColumnNames = {matchRoundNo, matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Score"};
-	private Integer[] matchTableColumnWidths = { slimColumnWidth, slimColumnWidth, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};	
+	private Integer[] matchTableColumnWidths = { slimColumnWidth, dontShow, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};
+
+
 
 	private final String tidGoalColumn = "Tidspunkt";	 //"tagged" so I can search for column later
 	private final String goalScorerColumn = "Målscorer"; //"tagged" so I can search for column later
@@ -176,7 +180,13 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		// Labels and tables
 		panel.add(teamTableLabel);
 		panel.add(new TablePanel(teamTableMetaData));
-		teamTable.getColumnModel().getColumn(0).setCellRenderer(new CustomRenderer());
+		
+		
+		for (int i = 0; i < teamTableAlignments.length; i++) {
+			DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+			cellRenderer.setHorizontalAlignment(teamTableAlignments[i]);
+			teamTable.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);			
+		}
 
 		panel.add(matchTableLabel);
 		panel.add(new TablePanel(matchTableMetaData));
@@ -192,7 +202,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		
 		getContentPane().add(panel);
 
-		// Load some data into the teamTable
+		// Load some initial data into the teamTable
 		loadTeamsIntoTable(teamTable);		
 
 		// attach a number of listeners to teamTable and matchTable
@@ -333,7 +343,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		for (Team t : turnament.getTeams()) {
 			int colNum = 0;
 			//System.out.println("J= " + j);
-			jTable.setValueAt(t.getRankInTurnament(), j, colNum++);
+			jTable.setValueAt(t.getRankInTurnament()+".", j, colNum++);
 			jTable.setValueAt(t.getId(), j, colNum++);
 			jTable.setValueAt(t.getName(), j, colNum++);
 			jTable.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
@@ -373,6 +383,11 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 				
 				int width = jTableColumnMetaData.getColumnWidth(i);
 				jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setPreferredWidth(width);
+				// Hide columns, if oreferred width is set to 0 (user for "lookup" coloumn TeamId and MatchId
+				if (width==0) {
+					jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setMinWidth(width);
+					jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setMaxWidth(width);					
+				}
 			}
 
 		} catch (Exception e) {
@@ -587,7 +602,7 @@ class JTableColumnMetaData {
 }
 
 // In order for JScrollPane to work with JTable on JInternalFrames, the JTable (and JSCrollPane) must be
-// placed on their own panels - used 2 full days to make this work :-( maybe I have missed something ?!
+// placed on their own panels - used 2 full days to make this work :-( I probably have missed something ?!
 class TablePanel extends JPanel{
 
 	private static final long serialVersionUID = 1;

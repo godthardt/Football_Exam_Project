@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class Match implements Serializable {
 	enum VictoryType { Home, Away, Draw}
-	enum 	MustLoooeType { RandomLoose, DeterminedToLoose } //, HomeTeamDeterminedToLoose, AwayTeamDeterminedToLoose} 
+	enum 	MustLoooeType { RandomLoose, DeterminedToLoose } 
 	
 	public Match (Team homeTeam, Team awayTeam, int matchId, int roundNo, LocalDate matchDate) {
 		this.matchId = matchId;
@@ -13,13 +13,13 @@ public class Match implements Serializable {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.date = matchDate;
-		// Is the home team an "out sitter" and must therefore loose
+		// Is the home team an "out sitter" and therefore must loose
 		if (homeTeam.getMustLoose()==Match.MustLoooeType.DeterminedToLoose) {
 			this.mustWin = Match.MustLoooeType.DeterminedToLoose;			
-		// Is the away team an "out sitter" and must therefore loose
+		// Is the away team an "out sitter" and therefore must loose
 		} else if (awayTeam.getMustLoose()==Match.MustLoooeType.DeterminedToLoose) {
 			this.mustWin = Match.MustLoooeType.DeterminedToLoose;			
-		// Normal procedure: random winnner
+		// Normal procedure: random winner
 		} else {
 			this.mustWin = Match.MustLoooeType.RandomLoose;
 		}
@@ -69,18 +69,12 @@ public class Match implements Serializable {
 	}
 
 	public void addGoal(Goal.GoalType goaltype, int scoreMinute, int scoreSecond, Player goalScorer) {
-		// TODO Auto-generated method stub
 		if (goaltype==Goal.GoalType.Home)
-		{
 			homeGoals++;
-		}
 		else 
-		{
 			awayGoals++;
-						
-		}
+
 		goals.add(new Goal(goaltype, scoreMinute, scoreSecond, goalScorer));
-			
 	}
 
 	public void endMatch (int minutesPlayed) {

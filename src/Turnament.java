@@ -171,16 +171,6 @@ public class Turnament implements Serializable {
 		sortGoalsByTime();
 	}
 
-//	private int getNextRoundNo(int teamId) {
-//		int result = 1;
-//		for (Match match : matches) {
-//			if ((match.getHomeTeam().getId() == teamId) || match.getAwayTeam().getId() == teamId ) {
-//				result++;
-//			}
-//		}
-//		return result;
-//	}
-	
 	public int getNumberOfGoals() {
 		int numberOfGoals = 0;
 		for (Match match : matches) {
