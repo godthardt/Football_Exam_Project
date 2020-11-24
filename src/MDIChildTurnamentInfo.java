@@ -1,11 +1,10 @@
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Rectangle;
-
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -18,32 +17,27 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 	private JLabel infoTableLabel = new JLabel();
 	private JTable infoTable;
 	DefaultTableModel infoTableModel;
-	private String[] infoTableColumnNames =  { "Name", "Antal hold", "Antal kampe", "Antal mål"};
-	private Integer[] infoTableColumnWidths = { Constants.modus, Constants.modus, Constants.modus, Constants.modus};	
-	private JTableData infoTableMetaData;	
+	private String[] infoTableColumnNames =  { "Nr.", "Name", "Antal hold", "Antal kampe", "Antal mål", "Vinder"};
+	private Integer[] infoTableColumnWidths = { Constants.modus, Constants.modus * 2, Constants.modus, Constants.modus, Constants.modus, Constants.modus * 2};	
+	private JTableData infoTableMetaData;
+	private TurnamentManager turnamentManager;
 
+	// Constructor
 	MDIChildTurnamentInfo(TurnamentManager turnamentManager) {
 
-		infoTableModel = new DefaultTableModel(12, infoTableColumnNames.length);
+		// Call constructor of JInternalFrame, in order to get resize, close, maximize, minimize icons and proper initialization
+		super("Information om åbne turneringer", true, false, true, true);
+		this.turnamentManager = turnamentManager;
 
-		infoTableMetaData = new JTableData(infoTable, infoTableModel, infoTableColumnNames, infoTableColumnWidths, new Rectangle(Constants.modus, 2*Constants.modus, Constants.stdTableWidth, 13*Constants.modus), infoTableLabel);
+		infoTableModel = new DefaultTableModel(0, infoTableColumnNames.length);
+		infoTableMetaData = new JTableData(infoTable, infoTableModel, infoTableColumnNames, infoTableColumnWidths, new Rectangle(Constants.modus, 2*Constants.modus, Constants.stdTableWidth, Constants.stdTableWidth), infoTableLabel);
 		infoTable = infoTableMetaData.createJtable(); 
 		
 		try {
-			for (int i = 0; i < infoTableColumnNames.length; i++) {
-
-				// Set column Headers (Title of column)
-				JTableHeader th = infoTable.getTableHeader();
-				TableColumnModel tcm = th.getColumnModel();
-				TableColumn tc = tcm.getColumn(i);
-				tc.setHeaderValue(infoTableColumnNames[i]);
-				infoTable.getColumnModel().getColumn(i).setPreferredWidth(Constants.modus);
-			}
-
 			panel.add(infoTableLabel);
 			panel.add(new TablePanel(infoTableMetaData));
 			
-			panel.setBackground(Color.YELLOW);
+			panel.setBackground(Color.LIGHT_GRAY);
 			panel.setLayout(null);
 
 			panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
@@ -55,8 +49,53 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 
 			e.printStackTrace();
 		}
-
-
 	}
+	
+	public void paintComponent(Graphics g)
+	{
+		if (iconable==false) {
+			super.paintComponent(g); // call super to ensure basic drawing			
+		}
+	}
+	
+	public void refreshInfoTable() {
+
+		// Clear existing content of JTable
+		for (int i = 0; i < infoTable.getRowCount(); i++) {
+			for (int j = 0; j < infoTable.getColumnCount(); j++) {
+				infoTable.setValueAt("", i, j);
+			}
+		}
+		
+		int requiredRows = turnamentManager.getTurnaments().size() - infoTableModel.getRowCount() +1;
+		// Add rows to infoTable, if required
+		for (int count = 1; count < requiredRows; count++) {
+			infoTableModel.addRow(new Object[]{ "", "", "", "", "", ""});
+		}
+		
+//		if (requiredRows < 0) {
+//			for (int i = requiredRows; i <= 0; i++) {
+//				infoTableModel.removeRow(0);
+//
+//			}
+//		}
+		
+		infoTableLabel.setText(turnamentManager.getTurnaments().size() + " åbne turneringer");
+		int rowNumber = 0;		
+		for (Turnament turnament : turnamentManager.getTurnaments()) {
+
+			int colNum = 0;
+			infoTable.setValueAt(turnament.getId(), rowNumber, colNum++);
+			infoTable.setValueAt(turnament.getName(), rowNumber, colNum++);
+			infoTable.setValueAt(turnament.getNumberOfTeams(), rowNumber, colNum++);					
+			infoTable.setValueAt(turnament.getNumberOfMatches(), rowNumber, colNum++);					
+			infoTable.setValueAt(turnament.getNumberOfGoals(), rowNumber, colNum++);
+			infoTable.setValueAt(turnament.getWinner().getName(), rowNumber, colNum++);			
+			//System.out.println("Row " + rowNumber + " " + turnament.getName() + " " + turnament.getNumberOfTeams() );
+			rowNumber++;
+		}
+	}
+	
+	
 
 }

@@ -6,7 +6,8 @@ import java.util.*;
 import java.io.*;
 
 public class Turnament implements Serializable {
-	public Turnament(ArrayList<Team> turnamentTeams, String name, LocalDate startDate, LocalDate endDate) throws Exception {
+	public Turnament(int id, ArrayList<Team> turnamentTeams, String name, LocalDate startDate, LocalDate endDate) throws Exception {
+		this.id = id + 1; // + 1 To match ChildWindow number - not important
 		this.name = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -15,6 +16,9 @@ public class Turnament implements Serializable {
 		generateMatchesAndGoals();
 		sortTeamsByPoint();
 	}
+
+	protected int id;
+	public int getId() { return id; }
 
 	protected String name;  // In this case, is it not necessary to protect the attribute, since there is both a set and get method, but good style to demonstrate encapsulation 
 	public String getName() { return name; };
@@ -34,6 +38,11 @@ public class Turnament implements Serializable {
 	protected ArrayList<Team> turnamentTeams;
 	protected ArrayList<Match> matches;
 	public  ArrayList<Match> getMatches() { return matches; }
+	
+	public Team getWinner() {
+		Collections.sort(turnamentTeams, new SortbyPoints(false));
+		return turnamentTeams.get(0);
+	}
 
 	
 	public int GetGoalsForPlayer(int playerId) {
@@ -303,5 +312,5 @@ public class Turnament implements Serializable {
 		}
 		return true;
 	}
-	
+
 }

@@ -595,7 +595,24 @@ class JTableData {
 					jTable.getColumnModel().getColumn(i).setMinWidth(width);
 					jTable.getColumnModel().getColumn(i).setMaxWidth(width);					
 				}
+				
+				// Set column Headers (Title of column)
+				JTableHeader th = jTable.getTableHeader();
+				TableColumnModel tcm = th.getColumnModel();
+				TableColumn tc = tcm.getColumn(i);
+				tc.setHeaderValue(getColumnHeader(i));
 			}
+			
+			try {
+				// Try to set header in bold font
+				jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));	
+			} catch (Exception e) {
+				// Bold font could not be set - not very important
+				e.printStackTrace();
+			}
+
+			
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -618,25 +635,6 @@ class TablePanel extends JPanel{
 
 		setBackground(Color.LIGHT_GRAY); // Very useful when I debugged, found that it looked nice afterwards
 		
-		for (int i = 0; i < jTableColumnMetaData.getColumnHeaderTitles().size(); i++) {
-			// Set column widths
-			jTableColumnMetaData.jTable.getColumnModel().getColumn(i).setPreferredWidth(jTableColumnMetaData.getColumnWidth(i));
-		
-			// Set column Headers (Title of column)
-			JTableHeader th = jTableColumnMetaData.jTable.getTableHeader();
-			TableColumnModel tcm = th.getColumnModel();
-			TableColumn tc = tcm.getColumn(i);
-			tc.setHeaderValue(jTableColumnMetaData.getColumnHeader(i));
-		}
-
-		try {
-			// Try to set header in bold font
-			jTableColumnMetaData.jTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));	
-		} catch (Exception e) {
-			// Bold font could not be set - not very important
-			e.printStackTrace();
-		}
-
 		// Define the size of the panel on which the JTable (JScrollPane) is placed
 		setSize(new Dimension(jTableColumnMetaData.rectangle.width , jTableColumnMetaData.rectangle.height));
 		jTableColumnMetaData.jTable.setPreferredScrollableViewportSize(new Dimension(jTableColumnMetaData.rectangle.width - 30, jTableColumnMetaData.rectangle.height - 30));

@@ -1,6 +1,3 @@
-
-
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -40,7 +37,6 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 	private JMenu windowMenu;
 	private int numberOfWindowBaseMenuItems;
 	public Dimension dim;
-	private InternalFrameListener internalFrameListener;
 	private StatusBar statusBar;
 	private MDIChildTurnamentInfo mDIChildTurnamentInfo;
 
@@ -58,11 +54,11 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		// Create a desktopPane  
 		desktopPane = new JDesktopPane();
 		
-		// Make sure other component aren't visibel "below"
+		// Make sure other component aren't visible "below"
 		desktopPane.setOpaque(false);
 		
 		setMDIFrameSize();		
-		getContentPane().add(desktopPane,BorderLayout.CENTER);
+		getContentPane().add(desktopPane);
 
 		// According to oracle documentation, a desktopmanager should be implemented. I have tried without, and the program still works as expected.
 		// Link to Oracle documentation: https://docs.oracle.com/javase/7/docs/api/javax/swing/DesktopManager.html
@@ -70,7 +66,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		desktopPane.setDesktopManager(desktopManager);
 
 		
-		// The Pane has 5 build in layers, which lives on top of each other, eg. a dragging layer at top. It's also posible to implement user defined layers (I don't use this feature)
+		// The Pane has 5 build in layers, which lives on top of each other, eg. a dragging layer at top. It's also possible to implement user defined layers (I don't use this feature)
 		layeredPane = getLayeredPane();
 
 		// Add menu "handling / initialization in sub method, in order to better readability constructor
@@ -84,27 +80,21 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		centerJFrame();
 
 		mDIChildTurnamentInfo = new MDIChildTurnamentInfo(turnamentManager);
-//
-		mDIChildTurnamentInfo.setLocation(5, 5); 
 
-		mDIChildTurnamentInfo.setSize(Constants.mDIChildWidth + 16, Constants.mDIChildHigth + 16); //on my Pc i.left = 8		
+		mDIChildTurnamentInfo.setLocation(0, 0); 
+
+		mDIChildTurnamentInfo.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);		
 		desktopPane.add(mDIChildTurnamentInfo);	    
 		mDIChildTurnamentInfo.setVisible(true);
 		layeredPane.moveToFront(mDIChildTurnamentInfo);
 		
 		setVisible(true);
 		
-		
 		// Deserialize a Turnament object, in order to have something to look at
-		//addNewTurnament("serializedTurnamentExample.ser");
+		addNewTurnament("serializedTurnamentExample.ser");
 
 	}
 	
-	private void addInternalFrameListener(MDIFrame mdiFrame) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	private void setMDIFrameSize() {
 		dim = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -170,6 +160,8 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		mDIChild.setSize(Constants.mDIChildWidth + i.left, Constants.mDIChildHigth + i.left); //on my Pc i.left = 8		
 		desktopPane.add(mDIChild);	    
 		mDIChild.setVisible(true);
+		// Make sure the "status window is "notified"
+		mDIChildTurnamentInfo.refreshInfoTable();		
 		layeredPane.moveToFront(mDIChild);
 		String pluralisR = "r";
 		
@@ -203,6 +195,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		JMenuItem closeAllWindowsMenu  = new JMenuItem();
 		JMenuItem minimizeAllWindowsMenu  = new JMenuItem();
 		
+		
 		// Set text and shortcuts on sub menu items, and attach submenu to top menu, 
 		// found inspiration on https://www.codejava.net/java-se/swing/setting-shortcut-key-and-hotkey-for-menu-item-and-button-in-swing
 		addMenuMneMonics(fileMenu, refreshMenu, "Resimuler matchafvikling i valgt turnering", KeyEvent.VK_F5, 0);		
@@ -216,7 +209,9 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		
 		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK);		
 		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle Vinduer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
-		windowMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm
+		windowMenu.add(new JSeparator());		
+		addMenuMneMonics(windowMenu, listAllTurnamentsMenu, "Vis info om alle turneringer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);		
+		windowMenu.add(new JSeparator());
 		numberOfWindowBaseMenuItems = windowMenu.getItemCount(); 
 		
 		// add top menus to menubar
@@ -234,31 +229,25 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 			public void menuSelected(MenuEvent e) { listChildMenusInWindowTopMenu(); }
 	        public void menuCanceled(MenuEvent e) { } // Must implement this abstract method to use addMenuListener  
 	        public void menuDeselected(MenuEvent e) { }  // Must implement this abstract method to use addMenuListener
-	        // A JInternalFramelistener could also have done the job, but requires implementing 7 abstracts methods
-	        // Found at: https://docs.oracle.com/javase/tutorial/uiswing/events/internalframelistener.html
 	      });		
 
 		listAllTurnamentsMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
-					iterateTurnaments();
-					//!!!
-
+					mDIChildTurnamentInfo.refreshInfoTable();
+					activateChild(mDIChildTurnamentInfo);		
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
 		});	    
-
-
-		
 		
 		// JMenuItem(s) require ActionListener(s)
 		newTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
 					ArrayList<Team> test = turnamentManager.getTeamsOfLevel(0);
-					Turnament turnament = new Turnament(test, "Superliga", LocalDate.of(2020, Month.AUGUST, 15), LocalDate.of(2021, Month.MAY, 14));
+					Turnament turnament = new Turnament(childWindowNumber, test, "Superliga", LocalDate.of(2020, Month.AUGUST, 15), LocalDate.of(2021, Month.MAY, 14));
 					addNewTurnament(turnament);
 
 				} catch (Exception e1) {
@@ -273,7 +262,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 					ArrayList<Team> teamsAtBothLevels = (turnamentManager.getTeamsOfLevel(0));
 					teamsAtBothLevels.addAll(turnamentManager.getTeamsOfLevel(1));
 
-					Turnament cupTurnament = new CupTurnament(teamsAtBothLevels, "Pokalturnering " + childWindowNumber, LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
+					Turnament cupTurnament = new CupTurnament(childWindowNumber, teamsAtBothLevels, "Pokalturnering " + childWindowNumber, LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
 					addNewTurnament(cupTurnament);	        		
 
 				} catch (Exception e1) {
@@ -388,10 +377,10 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		
 		closeMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				System.out.println("Farvel og tak til Jacob Nordfalk for kapitel 11 i OOP 6. udgave :-)");
 				System.exit(0);
 			}
 		});
+		
 	}
 	
 	protected Component getWindow() {
@@ -423,11 +412,17 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		// need to "cast" (add to another list), in order to access MDIChild attributes :-(
 		ArrayList<MDIChild> mDIChilds = new ArrayList<MDIChild>();
 		for (JInternalFrame jInternalFrame : frames) {
-			mDIChilds.add((MDIChild) jInternalFrame);
+			try {
+				mDIChilds.add((MDIChild) jInternalFrame);				
+			} catch (ClassCastException e) {
+				//e.printStackTrace();
+				// Don't want to see stacktrace in console that MDIChildTurnamentInfo can't be casted as MDIChild
+			}
+
 		}
 		
 		// Sort in order to get Window number 1 at top
-		mDIChilds.sort(null);  // implemented Comparable interface om MDIChild which sorts by windowNumber
+		mDIChilds.sort(null);  // implemented Comparable interface on MDIChild which sorts by windowNumber
 		
 		for (MDIChild aChild : mDIChilds) {
 			try {
@@ -461,39 +456,38 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		// need to cast, in order to access MDIChild attributes :-(
 		ArrayList<MDIChild> mDIChilds = new ArrayList<MDIChild>();
 		for (JInternalFrame jInternalFrame : frames) {
-			mDIChilds.add((MDIChild) jInternalFrame);
+			try {
+				mDIChilds.add((MDIChild) jInternalFrame);				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 
 		for (MDIChild aChild : mDIChilds) {
 			if (aChild.getWindowNumber() == windowNumber) {
-				if (aChild.isIcon()) {
-					aChild.setIcon(false);
-				}	
-				aChild.moveToFront();
-				aChild.setSelected(true);
+				activateChild(aChild);				
 				break;
-
 			}
 		}
 
 	}
 	
-
-	public void addPanel(MDIChild panel) {
-		desktopPane.add(panel,JDesktopPane.DEFAULT_LAYER);
-		
-	}
-
-	public void iterateTurnaments() {
-		turnamentManager.iterateTurnaments(this);
+	private void activateChild(JInternalFrame child) throws Exception {
+		if (child.isIcon()) {
+			child.setIcon(false);
+		}	
+		child.moveToFront();
+		child.setSelected(true);
 	}
 
 	// JInternalFrameListeners methods - could also have been done using Class InternalFrameAdapter
 	// https://docs.oracle.com/javase/tutorial/uiswing/events/internalframelistener.html
 	public void internalFrameClosing(InternalFrameEvent e) {
-		// TODO Auto-generated method stub
 		MDIChild closingChildFrame = (MDIChild) e.getInternalFrame();
 		closingChildFrame.turnament.setInActive();
+		turnamentManager.removeInactiveTurnaments();		
+		mDIChildTurnamentInfo.refreshInfoTable();
 	}
 
 	// 	Additional InternalFrameListeners methods must be implemented in order to "satisfy" interface
