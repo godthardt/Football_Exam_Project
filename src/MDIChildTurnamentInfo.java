@@ -17,7 +17,7 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 	private JLabel infoTableLabel = new JLabel();
 	private JTable infoTable;
 	DefaultTableModel infoTableModel;
-	private String[] infoTableColumnNames =  { "Nr.", "Name", "Antal hold", "Antal kampe", "Antal mål", "Vinder"};
+	private String[] infoTableColumnNames =  { "", "Name", "Antal hold", "Antal kampe", "Antal mål", "Vinder"};
 	private Integer[] infoTableColumnWidths = { Constants.modus, Constants.modus * 2, Constants.modus, Constants.modus, Constants.modus, Constants.modus * 2};	
 	private JTableData infoTableMetaData;
 	private TurnamentManager turnamentManager;
@@ -30,7 +30,7 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 		this.turnamentManager = turnamentManager;
 
 		infoTableModel = new DefaultTableModel(0, infoTableColumnNames.length);
-		infoTableMetaData = new JTableData(infoTable, infoTableModel, infoTableColumnNames, infoTableColumnWidths, new Rectangle(Constants.modus, 2*Constants.modus, Constants.stdTableWidth, Constants.stdTableWidth), infoTableLabel);
+		infoTableMetaData = new JTableData(infoTable, infoTableModel, infoTableColumnNames, infoTableColumnWidths, new Rectangle(Constants.modus, Constants.modus, Constants.stdTableWidth + 8 * Constants.modus, Constants.stdTableWidth), infoTableLabel);
 		infoTable = infoTableMetaData.createJtable(); 
 		
 		try {
@@ -85,7 +85,7 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 		for (Turnament turnament : turnamentManager.getTurnaments()) {
 
 			int colNum = 0;
-			infoTable.setValueAt(turnament.getId(), rowNumber, colNum++);
+			infoTable.setValueAt("", rowNumber, colNum++);			
 			infoTable.setValueAt(turnament.getName(), rowNumber, colNum++);
 			infoTable.setValueAt(turnament.getNumberOfTeams(), rowNumber, colNum++);					
 			infoTable.setValueAt(turnament.getNumberOfMatches(), rowNumber, colNum++);					

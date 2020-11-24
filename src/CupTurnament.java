@@ -9,9 +9,9 @@ import java.util.Random;
 public class CupTurnament extends Turnament implements Serializable {
 
 	private static final long serialVersionUID = 1;  //Helps class control version of serialized objects
-	public CupTurnament(int id, ArrayList<Team> turnamentTeams, String name, LocalDate startDate, LocalDate endDate)
+	public CupTurnament(ArrayList<Team> turnamentTeams, String name, LocalDate startDate, LocalDate endDate)
 			throws Exception {
-		super(id, turnamentTeams, name, startDate, endDate);
+		super(turnamentTeams, name, startDate, endDate);
 
 	}
 	

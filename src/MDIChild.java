@@ -116,7 +116,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		try {
 			this.turnament = turnament;
 			this.windowNumber = windowNumber; 
-			this.title = Integer.toString(windowNumber++) + ". "  + turnament.getName();
+			this.title = turnament.getName();
 			windowName = turnament.getName();
 			initGraphics();
 		}
@@ -155,8 +155,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		DefaultTableModel playerTableModel = new DefaultTableModel(turnament.getHighestNumberOfPlayersInOneTeam(), playerTableColumnNames.length);
 
 		// Create the JTable
-		teamTableMetaData = new JTableData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, stdTableWidth, 13*modus), teamTableLabel);
-		matchTableMetaData = new JTableData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 17*modus, stdTableWidth, 14*modus), matchTableLabel);
+		teamTableMetaData = new JTableData(teamTable, teamTableModel, teamTableColumnNames, teamTableColumnWidths, new Rectangle(modus, 2*modus, stdTableWidth, 14*modus), teamTableLabel);
+		matchTableMetaData = new JTableData(matchTable, matchTableModel, matchTableColumnNames, matchTableColumnWidths, new Rectangle(modus, 18*modus, stdTableWidth, 13*modus), matchTableLabel);
 		goalTableMetaData = new JTableData(goalTable, goalTableModel, goalTableColumnNames, goalTableColumnWidths, new Rectangle(modus, 33*modus, stdTableWidth, 9*modus), goalTableLabel);
 		playerTableMetaData = new JTableData(playerTable, playerTableModel, playerTableColumnNames, playerTableColumnWidths, new Rectangle(stdTableWidth + 2 * modus, 2*modus, 20*modus, 40*modus), playerTabelLabel);	
 		

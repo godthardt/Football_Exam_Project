@@ -6,8 +6,7 @@ import java.util.*;
 import java.io.*;
 
 public class Turnament implements Serializable {
-	public Turnament(int id, ArrayList<Team> turnamentTeams, String name, LocalDate startDate, LocalDate endDate) throws Exception {
-		this.id = id + 1; // + 1 To match ChildWindow number - not important
+	public Turnament(ArrayList<Team> turnamentTeams, String name, LocalDate startDate, LocalDate endDate) throws Exception {
 		this.name = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -16,9 +15,6 @@ public class Turnament implements Serializable {
 		generateMatchesAndGoals();
 		sortTeamsByPoint();
 	}
-
-	protected int id;
-	public int getId() { return id; }
 
 	protected String name;  // In this case, is it not necessary to protect the attribute, since there is both a set and get method, but good style to demonstrate encapsulation 
 	public String getName() { return name; };
@@ -168,12 +164,9 @@ public class Turnament implements Serializable {
 					// Spread matches on a "pseudo" time line - not chronological order
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
-					int roundNo = 0;//getNextRoundNo(team.getId());//(matches.size() % (turnamentTeams.size()*2 - 2)) + 1;
-					//System.out.println(team.getName() + " mod " + turnamentTeams.get(i).getName() + " runde " + roundNo);
-					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), roundNo, matchDate);
+					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), 0, matchDate);
 					addMatch(m);
 					generateRandomGoals(m, false);
-					//System.out.println("Round = " + roundNo);
 				}
 			}
 		}
@@ -231,9 +224,9 @@ public class Turnament implements Serializable {
 					addGoal(match.getMatchId(), Goal.GoalType.Away, nextScoreMinute, r.nextInt(59));
 					break;						
 				}
-				}
-			}
-		}		
+				}// switch
+			}//for
+		}//else		
 		match.endMatch(stdMatchTimeMiutes + exstraTime); // Add extra minutes 
 	}
 

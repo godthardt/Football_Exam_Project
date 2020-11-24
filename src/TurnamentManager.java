@@ -22,7 +22,7 @@ public class TurnamentManager implements Serializable  {
 		playersMasterList = new ArrayList<Player>();
 		loadPlayersFromTxtFile("players.txt");
 		//System.out.println("playersMasterList.size efter loadPlayersFromTxtFile " + playersMasterList.size());
-		
+
 		loadTeamsFromTxtFile("teams.txt");
 	}
 
@@ -67,7 +67,7 @@ public class TurnamentManager implements Serializable  {
 				lineNo++;			
 			}
 			ind.close();
-			
+
 			//contractPeriods.sort(null);			
 			return true;
 		} 
@@ -134,7 +134,7 @@ public class TurnamentManager implements Serializable  {
 		}
 		throw new NullPointerException("Team not Found");
 	}
-	
+
 	public ArrayList<Team> getTeamsOfLevel(int level) {
 		// construct an object to return to caller
 		ArrayList<Team> returnTeams = new ArrayList<Team>();
@@ -142,23 +142,22 @@ public class TurnamentManager implements Serializable  {
 		for (Team team : teamsMasterList) {
 			// correct level ?
 			if (team.getLevel() == level) {
-				// add team as deep copy in order not to have side effect
+				// add team as deep copy in order not to have side effect ()
 				returnTeams.add(new Team(team));
+				// Using "copy" constructor inspired from
+				// https://www.generacodice.com/en/articolo/201023/How-to-clone-ArrayList-and-also-clone-its-contents
 			}
 		}
-		// Using "copy" constructor inspired from 
-		// https://www.generacodice.com/en/articolo/201023/How-to-clone-ArrayList-and-also-clone-its-contents
-		
+
 		return returnTeams;		
 	}
 
 	public void removeInactiveTurnaments() {
-		for (Turnament turnament : turnaments) {
-			if (turnament.getInActive() == true) {
-				turnaments.remove(turnament);
+		for (int i = turnaments.size() - 1; i >= 0; i--) {
+			if (turnaments.get(i).getInActive()==true) {
+				turnaments.remove(i);
 			}
 		}
 	}
-
 
 }

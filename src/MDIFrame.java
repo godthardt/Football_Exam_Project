@@ -73,7 +73,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		addMenus();
 		
 		// Status bar
-		statusBar = new StatusBar(dim.width, 16);
+		statusBar = new StatusBar(dim.width, Constants.modus);
 		getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
 		
 		// Center main window (not tested with multiple screens)
@@ -81,7 +81,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 
 		mDIChildTurnamentInfo = new MDIChildTurnamentInfo(turnamentManager);
 
-		mDIChildTurnamentInfo.setLocation(0, 0); 
+		mDIChildTurnamentInfo.setLocation(Constants.modus, Constants.modus); 
 
 		mDIChildTurnamentInfo.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);		
 		desktopPane.add(mDIChildTurnamentInfo);	    
@@ -153,8 +153,8 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		// try to prevent MDIchildwindows to be located outside JFrame i do some modulus on the position
 		int modulusChildWindowNumber = childWindowNumber % Constants.modus;  
 		
-		int x = modulusChildWindowNumber * i.top / 2; //on my Pc i.top = 31
-		int y = modulusChildWindowNumber * i.top / 2;
+		int x = modulusChildWindowNumber * i.top / 2 + 2* Constants.modus; //on my Pc i.top = 31
+		int y = modulusChildWindowNumber * i.top / 2  + 2* Constants.modus;
 		mDIChild.setLocation(x, y); 
 
 		mDIChild.setSize(Constants.mDIChildWidth + i.left, Constants.mDIChildHigth + i.left); //on my Pc i.left = 8		
@@ -208,9 +208,9 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		addMenuMneMonics(fileMenu, closeMenu, "Afslut", KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK);
 		
 		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK);		
-		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle Vinduer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
+		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle turneringsvinduer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
 		windowMenu.add(new JSeparator());		
-		addMenuMneMonics(windowMenu, listAllTurnamentsMenu, "Vis info om alle turneringer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);		
+		addMenuMneMonics(windowMenu, listAllTurnamentsMenu, "Vis info om alle åbne turneringer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);		
 		windowMenu.add(new JSeparator());
 		numberOfWindowBaseMenuItems = windowMenu.getItemCount(); 
 		
@@ -246,8 +246,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		newTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
-					ArrayList<Team> test = turnamentManager.getTeamsOfLevel(0);
-					Turnament turnament = new Turnament(childWindowNumber, test, "Superliga", LocalDate.of(2020, Month.AUGUST, 15), LocalDate.of(2021, Month.MAY, 14));
+					Turnament turnament = new Turnament(turnamentManager.getTeamsOfLevel(0), "Superliga " + childWindowNumber, LocalDate.of(2020, Month.AUGUST, 15), LocalDate.of(2021, Month.MAY, 14));
 					addNewTurnament(turnament);
 
 				} catch (Exception e1) {
@@ -262,7 +261,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 					ArrayList<Team> teamsAtBothLevels = (turnamentManager.getTeamsOfLevel(0));
 					teamsAtBothLevels.addAll(turnamentManager.getTeamsOfLevel(1));
 
-					Turnament cupTurnament = new CupTurnament(childWindowNumber, teamsAtBothLevels, "Pokalturnering " + childWindowNumber, LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
+					Turnament cupTurnament = new CupTurnament(teamsAtBothLevels, "Pokalturnering " + childWindowNumber, LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
 					addNewTurnament(cupTurnament);	        		
 
 				} catch (Exception e1) {
@@ -365,7 +364,11 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 				JInternalFrame[] frames   = desktopPane.getAllFrames();
 				for (JInternalFrame mDIChild : frames) {
 					try {
-						mDIChild.setClosed(true);
+						// test if object is a MDIChild (I want to skip the MDIChildTurnamentInfo child 
+						if (mDIChild instanceof MDIChild ) {
+							mDIChild.setClosed(true);
+						}
+
 					} catch (PropertyVetoException e1) {
 						e1.printStackTrace();
 					}
