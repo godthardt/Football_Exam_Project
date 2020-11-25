@@ -30,7 +30,7 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 		this.turnamentManager = turnamentManager;
 
 		infoTableModel = new DefaultTableModel(0, infoTableColumnNames.length);
-		infoTableMetaData = new JTableData(infoTable, infoTableModel, infoTableColumnNames, infoTableColumnWidths, new Rectangle(Constants.modus, Constants.modus, Constants.stdTableWidth + 8 * Constants.modus, Constants.stdTableWidth), infoTableLabel);
+		infoTableMetaData = new JTableData(infoTable, infoTableModel, infoTableColumnNames, infoTableColumnWidths, new Rectangle(Constants.modus, Constants.modus, 2 * Constants.stdTableWidth, Constants.stdTableWidth), infoTableLabel);
 		infoTable = infoTableMetaData.createJtable(); 
 		
 		try {

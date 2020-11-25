@@ -167,7 +167,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		
 		if(desktopPane.getAllFrames().length == 1) pluralisR = "";
 		
-		statusBar.setText("MDIChild vindue nr. " + childWindowNumber + " åbnet - " + desktopPane.getAllFrames().length + " MDIChild vindue"+ pluralisR + " i alt");
+		statusBar.setText("MDIChild vindue nr. " + childWindowNumber + " åbnet - " + (desktopPane.getAllFrames().length -1) + " turneringsvindue"+ pluralisR + " i alt");
 		childWindowNumber++;		
 	}
 
