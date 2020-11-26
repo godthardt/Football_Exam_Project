@@ -6,9 +6,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 public class MDIChildTurnamentInfo extends JInternalFrame  {
 
@@ -18,7 +15,7 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 	private JTable infoTable;
 	DefaultTableModel infoTableModel;
 	private String[] infoTableColumnNames =  { "", "Name", "Antal hold", "Antal kampe", "Antal mål", "Vinder"};
-	private Integer[] infoTableColumnWidths = { Constants.modus, Constants.modus * 2, Constants.modus, Constants.modus, Constants.modus, Constants.modus * 2};	
+	private Integer[] infoTableColumnWidths = { Constants.getModus(), Constants.getModus() * 2, Constants.getModus(), Constants.getModus(), Constants.getModus(), Constants.getModus() * 2};	
 	private JTableData infoTableMetaData;
 	private TurnamentManager turnamentManager;
 
@@ -30,7 +27,7 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 		this.turnamentManager = turnamentManager;
 
 		infoTableModel = new DefaultTableModel(0, infoTableColumnNames.length);
-		infoTableMetaData = new JTableData(infoTable, infoTableModel, infoTableColumnNames, infoTableColumnWidths, new Rectangle(Constants.modus, Constants.modus, 2 * Constants.stdTableWidth, Constants.stdTableWidth), infoTableLabel);
+		infoTableMetaData = new JTableData(infoTable, infoTableModel, infoTableColumnNames, infoTableColumnWidths, new Rectangle(Constants.getModus(), Constants.getModus(), 2 * Constants.getStdTableWidth(), Constants.getStdTableWidth()), infoTableLabel);
 		infoTable = infoTableMetaData.createJtable(); 
 		
 		try {
@@ -40,7 +37,7 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 			panel.setBackground(Color.LIGHT_GRAY);
 			panel.setLayout(null);
 
-			panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
+			panel.setSize(Constants.getMDIChildWidth(), Constants.getMDIChildHigth());
 			panel.setVisible(true);
 			
 			getContentPane().add(panel);

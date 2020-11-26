@@ -73,8 +73,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private JTableData playerTableMetaData;	
 	
 	Turnament turnament;
-	private int modus = Constants.modus; // Predefined modus for margin space etc. Use local variable to shorten code line lengths
-	int stdTableWidth = Constants.stdTableWidth;	
+	private int modus = Constants.getModus(); // Predefined modus for margin space etc. Use local variable to shorten code line lengths
+	int stdTableWidth = Constants.getStdTableWidth();	
 	private int slimColumnWidth = modus;
 	private int mediumColumnWidth = 60;
 	private int largeColimnWidth = 80;
@@ -196,7 +196,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		panel.add(playerTabelLabel);
 		panel.add(new TablePanel(playerTableMetaData));
 		
-		panel.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);
+		panel.setSize(Constants.getMDIChildWidth(), Constants.getMDIChildHigth());
 		panel.setVisible(true);
 		
 		getContentPane().add(panel);
@@ -583,7 +583,7 @@ class JTableData {
 			jTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);  
 
 			// Place label 2 * modus above JTable and indent a little modus / 2
-			tableLabel.setBounds(new Rectangle(rectangle.x + Constants.modus / 2, rectangle.y - 3 * Constants.modus, Constants.stdTableWidth, 5 * Constants.modus));
+			tableLabel.setBounds(new Rectangle(rectangle.x + Constants.getModus() / 2, rectangle.y - 3 * Constants.getModus(), Constants.getStdTableWidth(), 5 * Constants.getModus()));
 
 			// Set column size and preferred width
 			for (int i = 0; i < getColumnHeaderTitles().size(); i++) {

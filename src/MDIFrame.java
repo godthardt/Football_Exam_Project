@@ -73,7 +73,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		addMenus();
 		
 		// Status bar
-		statusBar = new StatusBar(dim.width, Constants.modus);
+		statusBar = new StatusBar(dim.width, Constants.getModus());
 		getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
 		
 		// Center main window (not tested with multiple screens)
@@ -81,9 +81,9 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 
 		mDIChildTurnamentInfo = new MDIChildTurnamentInfo(turnamentManager);
 
-		mDIChildTurnamentInfo.setLocation(Constants.modus, Constants.modus); 
+		mDIChildTurnamentInfo.setLocation(Constants.getModus(), Constants.getModus()); 
 
-		mDIChildTurnamentInfo.setSize(Constants.mDIChildWidth, Constants.mDIChildHigth);		
+		mDIChildTurnamentInfo.setSize(Constants.getMDIChildWidth(), Constants.getMDIChildHigth());		
 		desktopPane.add(mDIChildTurnamentInfo);	    
 		mDIChildTurnamentInfo.setVisible(true);
 		layeredPane.moveToFront(mDIChildTurnamentInfo);
@@ -98,15 +98,21 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 	private void setMDIFrameSize() {
 		dim = Toolkit.getDefaultToolkit().getScreenSize();
 
-		// Make sure there is space for the mainwindow on my old laptop ;-)
-		if ((dim.width < Constants.mDIFrameWidth) || (dim.height < Constants.mDIFrameHigth)) {
-			setSize(dim.width, dim.height -50);
-			JOptionPane.showMessageDialog(this, "Den aktuelle skærmopløsning giver ikke plads til den ønskede vinduesstørrelse - nogle ting kan se forkerte ud",
-					"Skærmopløsning", JOptionPane.WARNING_MESSAGE);			
+		// Make sure there is space for the mainwindow on my old laptop ;-) - warn the user, if dimensions must be downscaled
+		if ((dim.width < Constants.getMDIFrameWidth()) || (dim.height < Constants.getMDIFrameHigth())) {
+			int lessergModus = Constants.getModus();
+			int orgMDIFrameHigth = Constants.getMDIFrameHigth();
+			int orgMDIFrameWidth = Constants.getMDIFrameWidth();
+			while ((dim.height < Constants.getMDIFrameHigth()) )  {
+				lessergModus--;
+				Constants.recalcDimensions(lessergModus);
+			}
+			JOptionPane.showMessageDialog(this, "Den aktuelle skærmopløsning giver ikke plads til den ønskede vinduesstørrelse" + 
+					" - nogle ting kan se lidt forkerte ud. Programmet kører bedst med minimum " + orgMDIFrameHigth + " x " +  orgMDIFrameWidth,
+					"Skærmopløsning " + dim.height + " x " + dim.width, JOptionPane.INFORMATION_MESSAGE);			
 		}
-		else {
-			setSize(Constants.mDIFrameWidth, Constants.mDIFrameHigth);
-		}
+		setSize(Constants.getMDIFrameWidth(), Constants.getMDIFrameHigth());
+
 	}
 
 	private void centerJFrame() {
@@ -151,13 +157,13 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		Insets i = this.getInsets(); // Insets contains top (size of titlebar), left, etc. of the "JFrame", found on https://www.programcreek.com/java-api-examples/?class=java.awt.Container&method=getInsets
 
 		// try to prevent MDIchildwindows to be located outside JFrame i do some modulus on the position
-		int modulusChildWindowNumber = childWindowNumber % Constants.modus;  
+		int modulusChildWindowNumber = childWindowNumber % Constants.getModus();  
 		
-		int x = modulusChildWindowNumber * i.top / 2 + 2* Constants.modus; //on my Pc i.top = 31
-		int y = modulusChildWindowNumber * i.top / 2  + 2* Constants.modus;
+		int x = modulusChildWindowNumber * i.top / 2 + 2* Constants.getModus(); //on my Pc i.top = 31
+		int y = modulusChildWindowNumber * i.top / 2  + 2* Constants.getModus();
 		mDIChild.setLocation(x, y); 
 
-		mDIChild.setSize(Constants.mDIChildWidth + i.left, Constants.mDIChildHigth + i.left); //on my Pc i.left = 8		
+		mDIChild.setSize(Constants.getMDIChildWidth() + i.left, Constants.getMDIChildHigth() + i.left); //on my Pc i.left = 8		
 		desktopPane.add(mDIChild);	    
 		mDIChild.setVisible(true);
 		// Make sure the "status window is "notified"
