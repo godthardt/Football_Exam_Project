@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import javax.swing.JInternalFrame;
@@ -14,8 +13,8 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 	private JLabel infoTableLabel = new JLabel();
 	private JTable infoTable;
 	DefaultTableModel infoTableModel;
-	private String[] infoTableColumnNames =  { "", "Name", "Antal hold", "Antal kampe", "Antal mål", "Vinder"};
-	private Integer[] infoTableColumnWidths = { Constants.getModus(), Constants.getModus() * 2, Constants.getModus(), Constants.getModus(), Constants.getModus(), Constants.getModus() * 2};	
+	private String[] infoTableColumnNames =  { "Name", "Antal hold", "Antal kampe", "Antal mål", "Vinder"};
+	private Integer[] infoTableColumnWidths = { Constants.getModus() * 10, Constants.getModus(), Constants.getModus(), Constants.getModus(), Constants.getModus() * 2};	
 	private JTableData infoTableMetaData;
 	private TurnamentManager turnamentManager;
 
@@ -34,7 +33,6 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 			panel.add(infoTableLabel);
 			panel.add(new TablePanel(infoTableMetaData));
 			
-			panel.setBackground(Color.LIGHT_GRAY);
 			panel.setLayout(null);
 
 			panel.setSize(Constants.getMDIChildWidth(), Constants.getMDIChildHigth());
@@ -67,12 +65,13 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 		int requiredRows = turnamentManager.getTurnaments().size() - infoTableModel.getRowCount() +1;
 		// Add rows to infoTable, if required
 		for (int count = 1; count < requiredRows; count++) {
-			infoTableModel.addRow(new Object[]{ "", "", "", "", "", ""});
+			infoTableModel.addRow(new Object[]{ "", "", "", "", ""});
 		}
 		
 //		if (requiredRows < 0) {
-//			for (int i = requiredRows; i <= 0; i++) {
-//				infoTableModel.removeRow(0);
+//			for (int i = requiredRows; i < 1; i++) {
+//				
+//				infoTableModel.removeRow(infoTableModel.getRowCount() - 1);
 //
 //			}
 //		}
@@ -82,7 +81,7 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 		for (Turnament turnament : turnamentManager.getTurnaments()) {
 
 			int colNum = 0;
-			infoTable.setValueAt("", rowNumber, colNum++);			
+			//infoTable.setValueAt("", rowNumber, colNum++);			
 			infoTable.setValueAt(turnament.getName(), rowNumber, colNum++);
 			infoTable.setValueAt(turnament.getNumberOfTeams(), rowNumber, colNum++);					
 			infoTable.setValueAt(turnament.getNumberOfMatches(), rowNumber, colNum++);					

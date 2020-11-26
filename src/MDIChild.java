@@ -514,38 +514,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	}
 }
 
-// Plagiat from: https://stackoverflow.com/questions/15071668/cell-renderer-for-jtable-coloured-rows 
-class CustomRenderer extends DefaultTableCellRenderer 
-{
-private static final long serialVersionUID = 6703872492730589499L;
-
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-    {
-        Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        
-        //Color orgColor = cellComponent.getForeground();
-        
-        
-        // Paint to
-        if(row == 0){
-        	cellComponent.setForeground(new Color(218,165,32));  // gold
-        } else if ( row == 1){
-            cellComponent.setForeground(Color.DARK_GRAY);  // "silver"
-        } else if ( row == 2){
-        	cellComponent.setForeground(new Color(205, 127, 50)); // bronze
-        } else if ( row == 10){
-        	cellComponent.setForeground(Color.RED); // bronze
-        } else if ( row == 11){
-        	cellComponent.setForeground(Color.RED); // bronze
-
-        } else {
-        	cellComponent.setForeground(Color.BLACK);
-        }
-        
-        return cellComponent;
-    }
-}
-
 // Help class to organize data/components related to a JTable
 class JTableData {
 	// Purpose: To organize data relating to the same JTable

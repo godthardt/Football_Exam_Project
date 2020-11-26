@@ -83,7 +83,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 
 		mDIChildTurnamentInfo.setLocation(Constants.getModus(), Constants.getModus()); 
 
-		mDIChildTurnamentInfo.setSize(Constants.getMDIChildWidth(), Constants.getMDIChildHigth());		
+		mDIChildTurnamentInfo.setSize(Constants.getMDIChildWidth() + Constants.getMDIChildWidth() / 5, Constants.getMDIChildHigth() - Constants.getMDIChildHigth() / 5 );		
 		desktopPane.add(mDIChildTurnamentInfo);	    
 		mDIChildTurnamentInfo.setVisible(true);
 		layeredPane.moveToFront(mDIChildTurnamentInfo);
