@@ -67,14 +67,13 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 		for (int count = 1; count < requiredRows; count++) {
 			infoTableModel.addRow(new Object[]{ "", "", "", "", ""});
 		}
+
+		// Remove unnecessary row
+		int lastRowToRemain = turnamentManager.getTurnaments().size();
+		for (int i = turnamentManager.getTurnaments().size(); i < infoTableModel.getRowCount(); i++) {
+			infoTableModel.removeRow(lastRowToRemain);
+		}
 		
-//		if (requiredRows < 0) {
-//			for (int i = requiredRows; i < 1; i++) {
-//				
-//				infoTableModel.removeRow(infoTableModel.getRowCount() - 1);
-//
-//			}
-//		}
 		
 		infoTableLabel.setText(turnamentManager.getTurnaments().size() + " åbne turneringer");
 		int rowNumber = 0;		

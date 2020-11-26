@@ -169,11 +169,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		// Make sure the "status window is "notified"
 		mDIChildTurnamentInfo.refreshInfoTable();		
 		layeredPane.moveToFront(mDIChild);
-		String pluralisR = "r";
-		
-		if(desktopPane.getAllFrames().length == 1) pluralisR = "";
-		
-		statusBar.setText("MDIChild vindue nr. " + childWindowNumber + " åbnet - " + (desktopPane.getAllFrames().length -1) + " turneringsvindue"+ pluralisR + " i alt");
+		statusBar.setText("MDIChild vindue nr. " + childWindowNumber + " åbnet");
 		childWindowNumber++;		
 	}
 
