@@ -1,3 +1,7 @@
+1,Paris Saint-Germain F.C.,-1
+2,Real Madrid,-1
+3,Club Brugge,-1
+4,Calatasaray,-1
 11906,Randers FC,0
 8838,AGF,0
 1399,OB,0

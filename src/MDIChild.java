@@ -95,8 +95,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 
 	private final String matchIdColumn = "Kamp Id"; 
 	private final String matchRoundNo = "Runde";	
-	private String[] matchTableColumnNames = {matchRoundNo, matchIdColumn, "Dato", "Hjemmehold", "Udehold", "Resultat"};
-	private Integer[] matchTableColumnWidths = { slimColumnWidth, dontShow, mediumColumnWidth, largeColimnWidth, mediumColumnWidth, slimColumnWidth};
+	private String[] matchTableColumnNames = {matchRoundNo, matchIdColumn, "Art", "Dato", "Hjemmehold", "Udehold", "Resultat"};
+	private Integer[] matchTableColumnWidths = { slimColumnWidth, dontShow, largeColimnWidth, mediumColumnWidth, largeColimnWidth, largeColimnWidth, slimColumnWidth};
 
 
 
@@ -385,6 +385,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 					matchTable.setValueAt(m.getRoundNo(), rowNumber, colNum++);
 				
 				matchTable.setValueAt(m.getMatchId(), rowNumber, colNum++);
+				matchTable.setValueAt(m.getMatchType(), rowNumber, colNum++);				
 				matchTable.setValueAt(m.getDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++); 			
 				matchTable.setValueAt(m.getHomeTeam().getName(), rowNumber, colNum++);
 				matchTable.setValueAt(m.getAwayTeam().getName(), rowNumber, colNum++);
@@ -476,9 +477,9 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		clearTable(playerTable);					
 	}
 	
-	public void regenerateGoals() {
+	public void reGenerateMatchesAndGoals() {
 		try {
-			turnament.reGenerateGoals();
+			turnament.reGenerateMatchesAndGoals();
 			loadTeamsIntoTable(teamTable);
 		} catch (Exception e) {
 			e.printStackTrace();

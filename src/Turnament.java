@@ -164,7 +164,7 @@ public class Turnament implements Serializable {
 					// Spread matches on a "pseudo" time line - not chronological order
 					int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 					LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
-					Match m = new Match(team, turnamentTeams.get(i), getNextMatchId(), 0, matchDate);
+					Match m = new Match("Turneringskamp", team, turnamentTeams.get(i), getNextMatchId(), 0, matchDate);
 					addMatch(m);
 					generateRandomGoals(m, false);
 				}
@@ -277,7 +277,7 @@ public class Turnament implements Serializable {
 		return highestNumber; 
 	}
 
-	public void reGenerateGoals() throws Exception {
+	public void reGenerateMatchesAndGoals() throws Exception {
 		// Remove existing matches with "attached" goals
 		matches.clear();
 		

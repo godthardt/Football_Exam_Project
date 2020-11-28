@@ -189,7 +189,8 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		//Sub menus
 		JMenuItem refreshMenu   = new JMenuItem();
 		JMenuItem newTurnamentMenu   = new JMenuItem();
-		JMenuItem newCupTurnamentMenu   = new JMenuItem();	    
+		JMenuItem newCupTurnamentMenu   = new JMenuItem();
+		JMenuItem newfinal4CupTurnamentMenu   = new JMenuItem();		
 		JMenuItem loadSerializedTurnamentMenu = new JMenuItem();
 		JMenuItem saveSerializedTurnamentMenu = new JMenuItem();
 		JMenuItem listAllTurnamentsMenu = new JMenuItem();		
@@ -203,6 +204,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		addMenuMneMonics(fileMenu, refreshMenu, "Resimuler matchafvikling i valgt turnering", KeyEvent.VK_F5, 0);		
 		addMenuMneMonics(fileMenu, newTurnamentMenu, "Ny superliga", KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK);		
 		addMenuMneMonics(fileMenu, newCupTurnamentMenu, "Ny pokalturnering", KeyEvent.VK_P, KeyEvent.CTRL_DOWN_MASK);
+		addMenuMneMonics(fileMenu, newfinal4CupTurnamentMenu, "Ny Final 4 pokalturnering", KeyEvent.VK_U, KeyEvent.CTRL_DOWN_MASK);		
 		addMenuMneMonics(fileMenu, loadSerializedTurnamentMenu, "Åbn serialiseret turnering fra fil", KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK);
 		addMenuMneMonics(fileMenu, saveSerializedTurnamentMenu, "Gem serialiseret turnering i fil", KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
 		addMenuMneMonics(fileMenu, listAllTurnamentsMenu, "Vis info om alle turneringer", KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK);		
@@ -248,7 +250,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		newTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
-					Turnament turnament = new Turnament(turnamentManager.getTeamsOfLevel(0), "Superliga " + childWindowNumber, LocalDate.of(2020, Month.AUGUST, 15), LocalDate.of(2021, Month.MAY, 14));
+					Turnament turnament = new Turnament(turnamentManager.getTeamsOfLevel(0), "Superliga (" + childWindowNumber + ")", LocalDate.of(2020, Month.AUGUST, 15), LocalDate.of(2021, Month.MAY, 14));
 					addNewTurnament(turnament);
 
 				} catch (Exception e1) {
@@ -263,7 +265,19 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 					ArrayList<Team> teamsAtBothLevels = (turnamentManager.getTeamsOfLevel(0));
 					teamsAtBothLevels.addAll(turnamentManager.getTeamsOfLevel(1));
 
-					Turnament cupTurnament = new CupTurnament(teamsAtBothLevels, "Pokalturnering " + childWindowNumber, LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
+					Turnament cupTurnament = new CupTurnament(teamsAtBothLevels, "Pokalturnering (" + childWindowNumber + ")", LocalDate.of(2020, Month.SEPTEMBER, 15), LocalDate.of(2021, Month.JUNE, 2));
+					addNewTurnament(cupTurnament);	        		
+
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});	    
+
+		newfinal4CupTurnamentMenu.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				try {
+					Turnament cupTurnament = new CupTurnament(turnamentManager.getTeamsOfLevel(-1), "Final 4 turnering (" + childWindowNumber + ")", LocalDate.of(2020, Month.OCTOBER, 17), LocalDate.of(2020, Month.OCTOBER, 24));
 					addNewTurnament(cupTurnament);	        		
 
 				} catch (Exception e1) {
@@ -275,8 +289,15 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		refreshMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
-					MDIChild mDIchild = (MDIChild) desktopPane.getSelectedFrame();
-					mDIchild.regenerateGoals();
+					// is the active window it a MDIChild object ?
+					if (desktopPane.getSelectedFrame() instanceof MDIChild) {
+						MDIChild mDIChild = (MDIChild) desktopPane.getSelectedFrame();
+						mDIChild.reGenerateMatchesAndGoals();
+					}
+					else {
+						JOptionPane.showMessageDialog(getWindow(), "Kan ikke resimulere matchafvikling for dette vindue, da det ikke indeholder en turnering",
+								"Kan ikke resimuleres", JOptionPane.INFORMATION_MESSAGE);
+					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

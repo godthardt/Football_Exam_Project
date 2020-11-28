@@ -47,11 +47,22 @@ public class CupTurnament extends Turnament implements Serializable {
 				int nextAdd = r.nextInt((int) DaysBetweenStartAndEnd);
 				LocalDate matchDate = this.startDate.plusDays(nextAdd); //NB Does not check that a team does not play more than one match a day :-(
 				// set team 1 up against 2; 3 against 4, etc
-				Match m = new Match(turnamentTeams.get(i), turnamentTeams.get(i+1), getNextMatchId(), round, matchDate);
+				Match m = new Match(getMatchType(numberOfRemaingTeams), turnamentTeams.get(i), turnamentTeams.get(i+1), getNextMatchId(), round, matchDate);
 				addMatch(m);
 				generateRandomGoals(m, true);
 				sortGoalsByTime();
 			}
+		}
+	}
+	
+	private String getMatchType(int numberOfRemaingTeams) {
+		switch (numberOfRemaingTeams) {
+		case 4: 
+			return "Semifinale";
+		case 2: 
+			return "Finale";
+		default:
+			return "Pokalkamp";
 		}
 	}
 	

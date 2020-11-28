@@ -15,6 +15,7 @@ public class TurnamentManager implements Serializable  {
 	private ArrayList<Turnament> turnaments;
 	private ArrayList<Player> playersMasterList;
 	private ArrayList<Team> teamsMasterList;
+	public ArrayList<Team> getTeamsMasterList() { return teamsMasterList; } // results must be deep copied to avoid side effects
 	public ArrayList<Turnament> getTurnaments() {return turnaments; }
 
 	// Constructor

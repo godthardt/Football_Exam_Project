@@ -7,12 +7,13 @@ public class Match implements Serializable {
 	enum VictoryType { Home, Away, Draw}
 	enum 	MustLoooeType { RandomLoose, DeterminedToLoose } 
 	
-	public Match (Team homeTeam, Team awayTeam, int matchId, int roundNo, LocalDate matchDate) {
+	public Match (String matchType, Team homeTeam, Team awayTeam, int matchId, int roundNo, LocalDate matchDate) {
 		this.matchId = matchId;
 		this.roundNo = roundNo;
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.date = matchDate;
+		this.matchType = matchType;
 		// Is the home team an "out sitter" and therefore must loose
 		if (homeTeam.getMustLoose()==Match.MustLoooeType.DeterminedToLoose) {
 			this.mustWin = Match.MustLoooeType.DeterminedToLoose;			
@@ -34,9 +35,14 @@ public class Match implements Serializable {
 	private Team awayTeam;
 	public Team getAwayTeam() {return awayTeam;}	
 	private int matchId;
-	public int getMatchId() { return this.matchId; }
+	public int getMatchId() { return matchId; }
 	private int roundNo;
-	public int getRoundNo() { return this.roundNo; }
+	public int getRoundNo() { return roundNo; }
+
+	private String matchType;
+	public String getMatchType() { return matchType; }
+	
+	
 	private LocalDate date;
 	public LocalDate getDate() { return this.date; }
 	private MustLoooeType mustWin;
