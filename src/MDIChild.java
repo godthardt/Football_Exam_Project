@@ -6,8 +6,6 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
-
-
 import java.time.format.DateTimeFormatter;
 
 // Inspired by https://docs.oracle.com/javase/tutorial/uiswing/components/internalframe.html
@@ -144,7 +142,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		loadImage("boring.jpg");
         boringLabel.setIcon(imageIcon);
 		boringLabel.setBounds(modus, modus, 19* modus, 6 * modus);
-        boringLabel.setLocation(8 * modus, 1);
+        boringLabel.setLocation(8 * modus, 35*modus);
 		
 		int numberOfMatchesPrTeam = (turnament.getNumberOfTeams() - 1) * 2;
 
@@ -166,11 +164,9 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		goalTable = goalTableMetaData.createJtable();
 		playerTable = playerTableMetaData.createJtable();
 
-		// Put prebuild "string"-sorter on playerTable 
+		// Put prebuild "string"-sorter on playerTable and goalTable 
 		playerTable.setAutoCreateRowSorter(true);
-		
-		goalTable.add(boringLabel); // add easter egg
-		goalTable.setAutoCreateRowSorter(true); // Put prebuild "string"-sorter on playerTable
+		goalTable.setAutoCreateRowSorter(true);
 
 		// Tried with layoutmanagers (Flow and Border), which is the "Java way" but it doesn't look good in this app in my opinion
 		//panel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -191,6 +187,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		panel.add(new TablePanel(matchTableMetaData));
 
 		panel.add(goalTableLabel);
+		panel.add(boringLabel);
+		
 		panel.add(new TablePanel(goalTableMetaData));		
 		
 		panel.add(playerTabelLabel);
@@ -202,7 +200,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		getContentPane().add(panel);
 
 		// Load some initial data into the teamTable
-		loadTeamsIntoTable(teamTable);		
+		loadTeamsIntoTable(teamTableMetaData);		
 
 		// attach a number of listeners to teamTable and matchTable
 		
@@ -269,7 +267,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 				}
 
 				if (columnSorted==true) {
-					loadTeamsIntoTable(teamTable);
+					loadTeamsIntoTable(teamTableMetaData);
 					teamTable.setRowSelectionInterval(0, 0);
 					teamTableLabel.setText("Stilling: (sorteret " + ascOrDesc(ascOrDescSorted) + " efter " + columnName + ")"  );					
 				}
@@ -335,23 +333,24 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		return currentmatchId;
 	}
 
-	private void loadTeamsIntoTable(JTable jTable) {
-		clearTable(teamTable);
+	private void loadTeamsIntoTable(JTableData tableData) {
+		clearTable(tableData.jTable);
 		int j = 0;
-		//System.out.println("Team size " + turnament.getTeams().size());
+		tableData.ajustNumberOfRows(turnament.getTeams().size());
+
 		for (Team t : turnament.getTeams()) {
 			int colNum = 0;
 			//System.out.println("J= " + j);
-			jTable.setValueAt(t.getRankInTurnament()+".", j, colNum++);
-			jTable.setValueAt(t.getId(), j, colNum++);
-			jTable.setValueAt(t.getName(), j, colNum++);
-			jTable.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
+			tableData.jTable.setValueAt(t.getRankInTurnament()+".", j, colNum++);
+			tableData.jTable.setValueAt(t.getId(), j, colNum++);
+			tableData.jTable.setValueAt(t.getName(), j, colNum++);
+			tableData.jTable.setValueAt(turnament.GetNumberOfMatchesForTeam(t), j, colNum++);
 			int goalDifference = t.getHomeGoals()-t.getAwayGoals();
 			String plusSign = "";
 			if (goalDifference > 0)
 				plusSign = "+";
-			jTable.setValueAt(t.getHomeGoals() + " - " + t.getAwayGoals() +" (" + plusSign + (t.getHomeGoals()-t.getAwayGoals())  + ")", j, colNum++);			
-			jTable.setValueAt(t.getPoints(), j, colNum++);    	
+			tableData.jTable.setValueAt(t.getHomeGoals() + " - " + t.getAwayGoals() +" (" + plusSign + (t.getHomeGoals()-t.getAwayGoals())  + ")", j, colNum++);			
+			tableData.jTable.setValueAt(t.getPoints(), j, colNum++);    	
 			j++;
 		}
 		teamTable.setRowSelectionInterval(0, 0);
@@ -360,8 +359,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	
 	private void teamTableSelectionChanged(int teamId)
 	{
-		listMatches(teamId);
-		listPlayers(teamId);
+		listMatches(matchTableMetaData, teamId);
+		listPlayers(playerTableMetaData, teamId);
 	}
 
 	private void matchTableSelectionChanged(int matchId)
@@ -369,32 +368,34 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		listGoals(matchId);
 	}
 	
-	private void listMatches(int teamId) {
-		clearTable(matchTable);
+	private void listMatches(JTableData tableData, int teamId) {
+		clearTable(tableData.jTable);
 		clearTable(goalTable);
 		int rowNumber = 0;
-		matchTableLabel.setText("Kampe for " + (turnament.GetTeam(teamId)).getName() + ":");
+		tableData.tableLabel.setText("Kampe for " + (turnament.GetTeam(teamId)).getName() + ":");
+		
+		tableData.ajustNumberOfRows(turnament.getMatches().size());
 		for (Match m : turnament.getMatches()) {
 			int colNum = 0;
 
 			if ((m.getHomeTeam().getId() == teamId) || (m.getAwayTeam().getId() == teamId)) {
 				//matchTable.setValueAt(rowNumber + 1, rowNumber, colNum++);//!!
 				if (m.getRoundNo() == 0) 
-					matchTable.setValueAt(rowNumber + 1, rowNumber, colNum++);
+					tableData.jTable.setValueAt(rowNumber + 1, rowNumber, colNum++);
 				else
-					matchTable.setValueAt(m.getRoundNo(), rowNumber, colNum++);
+					tableData.jTable.setValueAt(m.getRoundNo(), rowNumber, colNum++);
 				
-				matchTable.setValueAt(m.getMatchId(), rowNumber, colNum++);
-				matchTable.setValueAt(m.getMatchType(), rowNumber, colNum++);				
-				matchTable.setValueAt(m.getDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++); 			
-				matchTable.setValueAt(m.getHomeTeam().getName(), rowNumber, colNum++);
-				matchTable.setValueAt(m.getAwayTeam().getName(), rowNumber, colNum++);
-				matchTable.setValueAt(m.getHomeGoals() + " - " + m.getAwayGoals(), rowNumber, colNum++);
+				tableData.jTable.setValueAt(m.getMatchId(), rowNumber, colNum++);
+				tableData.jTable.setValueAt(m.getMatchType(), rowNumber, colNum++);				
+				tableData.jTable.setValueAt(m.getDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++); 			
+				tableData.jTable.setValueAt(m.getHomeTeam().getName(), rowNumber, colNum++);
+				tableData.jTable.setValueAt(m.getAwayTeam().getName(), rowNumber, colNum++);
+				tableData.jTable.setValueAt(m.getHomeGoals() + " - " + m.getAwayGoals(), rowNumber, colNum++);
 				rowNumber++;
 			}
 		}
 		// Make the first row the selected
-		matchTable.setRowSelectionInterval(0, 0);
+		tableData.jTable.setRowSelectionInterval(0, 0);
 		matchTableSelectionChanged(getSelectedMacthId());
 
 	}
@@ -426,6 +427,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 				int homeGoals = 0;
 				int awayGoals = 0;
 				
+				goalTableMetaData.ajustNumberOfRows(m.getGoals().size());
 				for (Goal goal : m.getGoals()) {
 					int colNum = 0;					
 					goalTable.setValueAt(rowNumber +1, rowNumber, colNum++);
@@ -448,24 +450,26 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		boringLabel.setVisible(noGoals);  // show a "stamp" in 0-0 matches
 	}
 	
-	private void listPlayers(int teamId)
+	private void listPlayers(JTableData tableData, int teamId)
 	{
 		clearTable(playerTable);
 		
 		int rowNumber = 0;
 		Team team = turnament.GetTeam(teamId);
-		playerTabelLabel.setText("Kontraktspillere i " + team.getName());
+		
+		tableData.ajustNumberOfRows(team.getTeamPlayers().size());
+		tableData.tableLabel.setText("Kontraktspillere i " + team.getName());
 		for (Player player : team.getTeamPlayers()) {
 				int colNum = 0;
-				playerTable.setValueAt(rowNumber+1, rowNumber, colNum++);
-				playerTable.setValueAt(player.getName(), rowNumber, colNum++);
+				tableData.jTable.setValueAt(rowNumber+1, rowNumber, colNum++);
+				tableData.jTable.setValueAt(player.getName(), rowNumber, colNum++);
 				int goalsForPlayer = turnament.GetGoalsForPlayer(player.getId());
 				if (goalsForPlayer > 0) 
-					playerTable.setValueAt(goalsForPlayer, rowNumber, colNum++);					
+					tableData.jTable.setValueAt(goalsForPlayer, rowNumber, colNum++);					
 				else
 					colNum++;
 				
-				playerTable.setValueAt(player.getContractEndDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);				
+				tableData.jTable.setValueAt(player.getContractEndDate().format(DateTimeFormatter.ofPattern(Constants.dkDateFormat)).toString(), rowNumber, colNum++);				
 				rowNumber++;
 		}
 	}
@@ -480,7 +484,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	public void reGenerateMatchesAndGoals() {
 		try {
 			turnament.reGenerateMatchesAndGoals();
-			loadTeamsIntoTable(teamTable);
+			loadTeamsIntoTable(teamTableMetaData);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -580,9 +584,6 @@ class JTableData {
 				e.printStackTrace();
 			}
 
-			
-			
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -590,8 +591,37 @@ class JTableData {
 		return jTable;
 	}
 	
+	public void ajustNumberOfRows(int requiredNumberOfRows)
+	{
+		// not enough rows ?
+		if (modelTable.getRowCount() < requiredNumberOfRows) {
+			// add a number of rows
+			for (int count = modelTable.getRowCount(); count < requiredNumberOfRows; count++) {
+				modelTable.addRow(getRowData(modelTable.getColumnCount()));
+			}
+		} else
+		
+		// to many rows ?
+		if (modelTable.getRowCount() > requiredNumberOfRows) {
+			// Remove unnecessary row
+			int lastRowToRemain = requiredNumberOfRows;
+			int numberOfRowsBeforeRemove = modelTable.getRowCount();
+			for (int i = requiredNumberOfRows; i < numberOfRowsBeforeRemove; i++) {
+				modelTable.removeRow(lastRowToRemain);
+			}
+		}
+
+	}
 	
-	
+	private Vector<Object> getRowData(int columnCount) {
+
+		// Construct an empty row - plagiat from https://stackoverflow.com/questions/30525235/dynamic-row-creation-in-jtable
+		Vector<Object> rowData = new Vector<Object>();
+		for (int i = 0; i < columnCount; i++) {
+			rowData.add("");
+		}
+		return rowData;
+	}
 }
 
 // In order for JScrollPane to work with JTable on JInternalFrames, the JTable (and JSCrollPane) must be

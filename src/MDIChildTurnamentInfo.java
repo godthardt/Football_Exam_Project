@@ -1,5 +1,6 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
+
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,7 +13,7 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 	private JPanel panel = new JPanel();
 	private JLabel infoTableLabel = new JLabel();
 	private JTable infoTable;
-	DefaultTableModel infoTableModel;
+	private DefaultTableModel infoTableModel;
 	private String[] infoTableColumnNames =  { "Name", "Antal hold", "Antal kampe", "Antal mål", "Vinder"};
 	private Integer[] infoTableColumnWidths = { Constants.getModus() * 10, Constants.getModus(), Constants.getModus(), Constants.getModus(), Constants.getModus() * 2};	
 	private JTableData infoTableMetaData;
@@ -61,19 +62,9 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 				infoTable.setValueAt("", i, j);
 			}
 		}
-		
-		int requiredRows = turnamentManager.getTurnaments().size() - infoTableModel.getRowCount() +1;
-		// Add rows to infoTable, if required
-		for (int count = 1; count < requiredRows; count++) {
-			infoTableModel.addRow(new Object[]{ "", "", "", "", ""});
-		}
 
-		// Remove unnecessary row
-		int lastRowToRemain = turnamentManager.getTurnaments().size();
-		for (int i = turnamentManager.getTurnaments().size(); i < infoTableModel.getRowCount(); i++) {
-			infoTableModel.removeRow(lastRowToRemain);
-		}
-		
+		// Add rows to infoTable, if required
+		infoTableMetaData.ajustNumberOfRows(turnamentManager.getTurnaments().size());
 		
 		infoTableLabel.setText(turnamentManager.getTurnaments().size() + " åbne turneringer");
 		int rowNumber = 0;		

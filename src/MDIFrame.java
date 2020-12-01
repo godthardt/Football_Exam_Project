@@ -22,7 +22,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 // MDI (Multiple Document interface) is built in to C++, C# and Delphi, and a lot of functionality are build into classes like TMDIxxx classes -
 // but in Java this is not the case, but Java offers JInternalFrame (as MDIchilds) (a "lightweight" JFrame is supplied to offer MDI functionality
-// I have sought inspiration at:
+// I have found inspiration at:
 // http://www.java2s.com/Tutorials/Java/Java_Swing/1600__Java_Swing_MDI.htm 
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/friends/mdi-swing/mdi-swing.html
 // https://www.comp.nus.edu.sg/~cs3283/ftp/Java/swingConnect/archive/tech_topics_arch/frames_panes/frames_panes.html
@@ -40,7 +40,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 	private StatusBar statusBar;
 	private MDIChildTurnamentInfo mDIChildTurnamentInfo;
 
-
+	// Constructor
 	public MDIFrame(String title) {
 		super(title);
 
@@ -66,13 +66,13 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		desktopPane.setDesktopManager(desktopManager);
 
 		
-		// The Pane has 5 build in layers, which lives on top of each other, eg. a dragging layer at top. It's also possible to implement user defined layers (I don't use this feature)
+		// The Pane has 5 build in standard layers, which lives on top of each other, eg. a dragging layer at top. It's also possible to implement user defined layers (I don't use this feature)
 		layeredPane = getLayeredPane();
 
 		// Add menu "handling / initialization in sub method, in order to better readability constructor
 		addMenus();
 		
-		// Status bar
+		// Create a Status bar
 		statusBar = new StatusBar(dim.width, Constants.getModus());
 		getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
 		
@@ -80,7 +80,6 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		centerJFrame();
 
 		mDIChildTurnamentInfo = new MDIChildTurnamentInfo(turnamentManager);
-
 		mDIChildTurnamentInfo.setLocation(Constants.getModus(), Constants.getModus()); 
 
 		mDIChildTurnamentInfo.setSize(Constants.getMDIChildWidth() + Constants.getMDIChildWidth() / 5, Constants.getMDIChildHigth() - Constants.getMDIChildHigth() / 5 );		
@@ -90,8 +89,8 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		
 		setVisible(true);
 		
-		// Deserialize a Turnament object, in order to have something to look at
-		addNewTurnament("serializedTurnamentExample.ser");
+		// In developmnt phase, I loaded a deserialize a Turnament object, in order to have something to look at
+		// addNewTurnament("serializedTurnamentExample.ser");
 
 	}
 	
@@ -117,8 +116,9 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 
 	private void centerJFrame() {
 		try {
+			// Plagiat from https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
 			dim = Toolkit.getDefaultToolkit().getScreenSize();
-			setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2); //source https://stackoverflow.com/questions/12072719/centering-the-entire-window-java/34869895#34869895
+			setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2);
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			setExtendedState(MDIFrame.NORMAL);
 
@@ -150,7 +150,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 	private void addNewTurnament(Turnament turnament) {
 		turnamentManager.addTurnament(turnament);
 		
-		// Create a new 
+		// Create a new MDIChild to display the turnament details 
 		MDIChild mDIChild = new MDIChild(childWindowNumber, turnament);
 		
 		mDIChild.addInternalFrameListener(this);
@@ -459,7 +459,10 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 				jMenuItem.addActionListener(new java.awt.event.ActionListener() {
 					public void actionPerformed(java.awt.event.ActionEvent e) {
 						try {
-							ActiveMDIChild(aChild.getWindowNumber());
+							if (aChild  instanceof MDIChild  ) {
+								ActiveMDIChild(aChild.getWindowNumber());								
+							}
+
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
@@ -483,7 +486,10 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		ArrayList<MDIChild> mDIChilds = new ArrayList<MDIChild>();
 		for (JInternalFrame jInternalFrame : frames) {
 			try {
-				mDIChilds.add((MDIChild) jInternalFrame);				
+				if (jInternalFrame instanceof MDIChild) {
+					mDIChilds.add((MDIChild) jInternalFrame);					
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

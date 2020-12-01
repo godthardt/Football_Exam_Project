@@ -1,20 +1,19 @@
 Neymar,1,2022-06-22
-Kylian MbappÃ©,1,2022-06-22
-Eden Hazard,2,2024-06-30
-Luka ModriÄ‡,2,2021-06-30
-Jelle Vossen,3,2022-12-31
-Ulrik le Fevre,3,1979-12-31
-Radamel Falcao,4,2022-06-30
-Arda Turan,4,2022-08-01
+Mbappe,1,2022-06-22
+Hazard,2,2024-06-30
+Modric,2,2021-06-30
+Vossen,3,2022-12-31
+Falcao,4,2022-06-30
+Turan,4,2022-08-01
 Stephan Andersen,52769,2021-06-30
-Mathias Zanka JÃ¸rgensen,52769,2021-06-30
+Mathias Zanka Jørgensen,52769,2021-06-30
 Ragnar Sigurdsson,52769,2021-06-30
 Nicolaj Thomsen,52769,2021-06-30
-Alexander HjÃ¦lmhof,52769,2021-06-30
+Alexander Hjælmhof,52769,2021-06-30
 Andreas Bjelland,52769,2022-06-30
 Pierre Bengtsson,52769,2022-06-30
 Bryan Oviedo,52769,2022-06-30
-Michael LÃ¼ftner,52769,2022-06-30
+Michael Lüftner,52769,2022-06-30
 Rasmus Falk,52769,2022-06-30
 Viktor Fischer,52769,2022-06-30
 Sten Grytebust,52769,2022-12-31
@@ -32,7 +31,7 @@ Peter Ankersen,52769,2024-06-30
 Victor Nelsson,52769,2024-06-30
 Jens Stage,52769,2024-06-30
 Pep Biel,52769,2024-06-30
-Robert MudraÅ¾ija,52769,2024-12-31
+Robert Mudraija,52769,2024-12-31
 Mikkel Kaufmann,52769,2024-12-31
 Jonas Wind,52769,2025-06-30
 Carl "Skomager" Hansen,52769,1925-06-30
@@ -46,7 +45,7 @@ Timothe Nkada,64,2021-06-30
 Jakob Ahlmann,64,2021-12-31
 Jacob Rinne,64,2022-06-30
 Rasmus Thelander,64,2022-06-30
-Frederik BÃ¸rsting,64,2022-06-30
+Frederik Børsting,64,2022-06-30
 Oliver Abildgaard,64,2022-06-30
 Magnus Christensen,64,2022-06-30
 Jeppe Pedersen,64,2022-06-30
@@ -54,7 +53,7 @@ Kasper Kusk,64,2022-12-31
 Mathias Ross Jensen,64,2023-06-30
 Robert Kakeeto,64,2023-06-30
 Iver Fossum,64,2023-06-30
-Malthe HÃ¸jholt,64,2023-06-30
+Malthe Højholt,64,2023-06-30
 Oscar Hiljemark,64,2023-06-30
 Oliver Klitten,64,2023-06-30
 Andreas Hansen,64,2023-12-31
@@ -87,7 +86,7 @@ Alexander Ludwig,10773,2023-06-30
 Jacob Buus,10773,2023-06-30
 Peter Therkildsen,10773,2023-06-30
 Magnus Riisgaard Jensen,10773,2023-12-31
-ÃgÃºst Hlynsson,10773,2024-06-30
+Ágúst Hlynsson,10773,2024-06-30
 Lirim Qamili,10773,2024-06-30
 Mustafa Amini,8838,2020-12-31
 Magnus Kaastrup,8838,2020-12-31
@@ -98,10 +97,10 @@ Magnus Anbo,8838,2021-06-30
 Kevin Diks,8838,2021-06-30
 Bror Blume,8838,2021-06-30
 Kasper T. Kristensen,8838,2021-12-31
-Casper HÃ¸jer Nielsen,8838,2021-12-31
+Casper Højer Nielsen,8838,2021-12-31
 Benjamin Hvidt,8838,2021-12-31
-Alexander AmmitzbÃ¸ll,8838,2021-12-31
-Jesper JuelsgÃ¥rd,8838,2022-06-30
+Alexander Ammitzbøll,8838,2021-12-31
+Jesper Juelsgård,8838,2022-06-30
 Alex Gersbach,8838,2022-06-30
 Jon Dagur Thorsteinsson,8838,2022-06-30
 Nicklas Helenius,8838,2022-06-30
@@ -114,38 +113,38 @@ William Eskelinen,8838,2024-06-30
 Mikkel Lassen,8838,2024-06-30
 Nicolai Poulsen,8838,2024-06-30
 Gift Links,8838,2024-06-30
-Albert GrÃ¸nbÃ¦k,8838,2024-06-30
-SÃ¸ren Tengstedt,8838,2024-06-30
+Albert Grønbæk,8838,2024-06-30
+Søren Tengstedt,8838,2024-06-30
 Milan Jevtovic,8838,2024-06-30
 Patrick Olsen,8838,2025-06-30
-Michael TÃ¸rnes,16162,2021-06-30
-Marvin SchwÃ¤be,16162,2021-06-30
-HjÃ¶rtur Hermannsson,16162,2021-06-30
+Michael Tørnes,16162,2021-06-30
+Marvin Schwäbe,16162,2021-06-30
+Hjörtur Hermannsson,16162,2021-06-30
 Anthony Jung,16162,2021-06-30
 Blas Riveros,16162,2021-06-30
 Lasse Vigen Christensen,16162,2021-06-30
 Joel Kabongo,16162,2021-12-31
-Josip RadoÅ¡evic,16162,2022-06-30
+Josip Radoševic,16162,2022-06-30
 Ante Erceg,16162,2022-06-30
 Mikael Uhre,16162,2022-12-31
 Kevin Mensah,16162,2023-06-30
-Andreas MaxsÃ¸,16162,2023-06-30
+Andreas Maxsø,16162,2023-06-30
 Anton Skipper,16162,2023-06-30
 Sigurd Rosted,16162,2023-06-30
 Rezan Corlu,16162,2023-06-30
 Morten Frendrup,16162,2023-06-30
 Simon Hedlund,16162,2023-06-30
-Jesper LindstrÃ¸m,16162,2023-06-30
+Jesper Lindstrøm,16162,2023-06-30
 Peter Bjur,16162,2023-06-30
 Andreas Bruus,16162,2023-06-30
 Mathias Kvistgaarden,16162,2023-06-30
 Mads Hermansen,16162,2024-06-30
-Tobias BÃ¸rkeeiet,16162,2024-06-30
+Tobias Børkeeiet,16162,2024-06-30
 Anis Slimane,16162,2024-06-30
 Andrija Pavlovic,16162,2024-06-30
 Mikkel Andersen,6206,2021-06-30
 Oliver Ottesen,6206,2021-06-30
-Daniel HÃ¸egh,6206,2021-06-30
+Daniel Høegh,6206,2021-06-30
 Gloire Rutikanga,6206,2021-06-30
 Lasse Vibe,6206,2021-06-30
 Babajide David,6206,2021-12-31
@@ -158,8 +157,8 @@ Michael Baidoo,6206,2022-06-30
 Bozhidar Kraev,6206,2022-06-30
 Ronnie Schwartz,6206,2022-06-30
 Mayron George,6206,2022-06-30
-JÃ¡kup Ludvig Thomsen,6206,2022-06-30
-SÃ¸ren Reese,6206,2023-06-30
+Jákup Ludvig Thomsen,6206,2022-06-30
+Søren Reese,6206,2023-06-30
 Rasmus Nicolaisen,6206,2023-06-30
 Joel Andersson,6206,2023-06-30
 Alexander Scholz,6206,2023-06-30
@@ -181,26 +180,26 @@ Luca Pfeiffer,6206,2024-06-30
 Nikolas Dyhr,6206,2024-12-31
 Oliver Olsen,6206,2025-06-30
 Raphael Onyedika,6206,2025-06-30
-Oliver SÃ¸rensen,6206,2025-06-30
+Oliver Sørensen,6206,2025-06-30
 Aral Simsir,6206,2025-06-30
 Martin Vantruba,16409,2021-06-30
-Ulrik YttergÃ¥rd Jenssen,16409,2021-06-30
+Ulrik Yttergård Jenssen,16409,2021-06-30
 Clinton Antwi,16409,2021-06-30
 Mikkel Rygaard,16409,2021-06-30
 Kian Hansen,16409,2021-12-31
 Peter Vindahl Jensen,16409,2022-06-30
-Andreas GÃ¼lstorff,16409,2022-06-30
+Andreas Gülstorff,16409,2022-06-30
 Johan Djourou,16409,2022-06-30
 Martin Frese,16409,2022-06-30
 Magnus Kofod Andersen,16409,2022-06-30
 Tochi Chukwuani,16409,2022-06-30
 Jonathan Amon,16409,2022-06-30
-Mads DÃ¸hr Thycosen,16409,2023-06-30
+Mads Døhr Thycosen,16409,2023-06-30
 Isaac Atanga,16409,2023-06-30
 Maxwell Woledzi,16409,2023-06-30
 Jacob Steen Christensen,16409,2023-06-30
 Abu Francis,16409,2023-06-30
-Oliver TÃ¸lbÃ¸ll Rimmen,16409,2023-06-30
+Oliver Tølbøll Rimmen,16409,2023-06-30
 Oliver Viladsen,16409,2024-06-30
 Oliver Antman,16409,2024-06-30
 Ivan Mesik,16409,2024-12-31
@@ -216,31 +215,31 @@ Emilio Simonsen,18052,2021-06-30
 Andre Riel,18052,2021-06-30
 Frederik Schram,18052,2022-06-30
 Brian Hamalainen,18052,2022-06-30
-Adam SÃ¸rensen,18052,2022-06-30
-Kasper JÃ¸rgensen,18052,2022-06-30
+Adam Sørensen,18052,2022-06-30
+Kasper Jørgensen,18052,2022-06-30
 Filip Panjeskovic,18052,2022-06-30
 Christian Jakobsen,18052,2022-06-30
 Magnus Westergaard,18052,2022-06-30
 Lasse Emil Nielsen,18052,2022-06-30
 Pascal Gregor,18052,2022-12-31
 Jens Martin Gammelby,18052,2023-06-30
-Marcel RÃ¸mer,18052,2023-06-30
-Frederik GytkjÃ¦r,18052,2023-06-30
+Marcel Rømer,18052,2023-06-30
+Frederik Gytkjær,18052,2023-06-30
 Mathias Hebo,18052,2023-06-30
 Rasmus Thellufsen,18052,2023-06-30
 Magnus Warming,18052,2023-06-30
 Frederik Winther,18052,2023-12-31
 Victor Torp,18052,2025-06-30
-JÃ¸rgen Skjelvik,1399,2020-12-31
+Jørgen Skjelvik,1399,2020-12-31
 Oliver Lund,1399,2021-06-30
 Marco Lund,1399,2021-06-30
 Mathias Brems,1399,2021-06-30
 Sveinn Aron Gudjohnsen,1399,2021-06-30
-Daniel ObbekjÃ¦r,1399,2021-12-31
+Daniel Obbekjær,1399,2021-12-31
 Christian Vestergaard,1399,2021-12-31
 Alexander Juel Andersen,1399,2022-06-30
 Ryan Laursen,1399,2022-06-30
-Robin Dahl Ã–strÃ¶m,1399,2022-06-30
+Robin Dahl Öström,1399,2022-06-30
 Janus Drachmann,1399,2022-06-30
 Jens Jakob Thomasen,1399,2022-06-30
 Tarik Ibrahimagic,1399,2022-06-30
@@ -250,17 +249,17 @@ Mikkel Hyllegaard,1399,2022-06-30
 Max Fenger,1399,2022-06-30
 Jakob Breum Martinsen,1399,2022-06-30
 Rasmus Nissen,1399,2022-06-30
-Sayouba MandÃ©,1399,2023-06-30
+Sayouba Mandé,1399,2023-06-30
 Oliver Christensen,1399,2023-06-30
 Jeppe Tverskov,1399,2023-06-30
 Moses Opondo,1399,2023-06-30
-Aron ElÃ­s ThrÃ¡ndarson,1399,2023-06-30
+Aron Elís Thrándarson,1399,2023-06-30
 Sander Svendsen,1399,2023-06-30
 Hans Christian Bernat,1399,2024-06-30
 Kasper Larsen,1399,2024-06-30
-Troels KlÃ¸ve,1399,2024-06-30
+Troels Kløve,1399,2024-06-30
 Simon Okosun,1399,2024-06-30
-Mads FrÃ¸kjÃ¦r-Jensen,1399,2024-06-30
+Mads Frøkjær-Jensen,1399,2024-06-30
 Emmanuel Sabbi,1399,2024-06-30
 Patrik Carlgren,11906,2021-06-30
 Simon Piesinger,11906,2021-06-30
@@ -276,18 +275,18 @@ Oliver Bjerrum Jensen,11906,2022-06-30
 Mathias Greve,11906,2022-12-31
 Jesper Lauridsen,11906,2023-06-30
 Oliver Bundgaard,11906,2023-06-30
-Vito HammershÃ¸j Mistrati,11906,2023-06-30
+Vito Hammershøj Mistrati,11906,2023-06-30
 Tobias Klysner,11906,2023-06-30
 Tosin Kehinde,11906,2023-06-30
-Mikkel KallesÃ¸e,11906,2023-06-30
+Mikkel Kallesøe,11906,2023-06-30
 Erik Marxen,11906,2024-06-30
-AndrÃ© RÃ¸mer,11906,2024-06-30
+André Rømer,11906,2024-06-30
 Simon Graves,11906,2024-06-30
-BjÃ¶rn Kopplin,11906,2024-06-30
+Björn Kopplin,11906,2024-06-30
 Filip Bundgaard,11906,2024-06-30
-Mads EnggÃ¥rd,11906,2024-06-30
-Kasper Waarts HÃ¸gh,11906,2024-06-30
-Kasper HÃ¸gh,11906,2024-06-30
+Mads Enggård,11906,2024-06-30
+Kasper Waarts Høgh,11906,2024-06-30
+Kasper Høgh,11906,2024-06-30
 Johan Absalonsen,14351,2020-12-31
 Roni Arabaci,14351,2020-12-31
 Mads Steenberg,14351,2021-06-30
@@ -295,7 +294,7 @@ Jannick Liburd,14351,2021-06-30
 Ogenyi Onazi,14351,2021-06-30
 Jeppe Simonsen,14351,2021-06-30
 Marc Pedersen,14351,2021-12-31
-Nicolai FlÃ¸,14351,2022-06-30
+Nicolai Flø,14351,2022-06-30
 Lawrence Thomas,14351,2022-06-30
 Stefan Gartenmann,14351,2022-06-30
 Mads Winther,14351,2022-06-30
@@ -308,7 +307,7 @@ Pierre Kanstrup,14351,2022-12-31
 Marc Dal Hende,14351,2023-06-30
 Patrick Banggaard,14351,2023-06-30
 Isak Olafsson,14351,2023-06-30
-Mads AlbÃ¦k,14351,2023-06-30
+Mads Albæk,14351,2023-06-30
 Victor Ekani,14351,2023-06-30
 Alexander Bah,14351,2023-06-30
 Rasmus Vinderslev,14351,2023-06-30
@@ -317,7 +316,7 @@ Philipp Schmiedl,14351,2024-06-30
 Julius Eskesen,14351,2024-06-30
 Mads Hansen,14351,2024-06-30
 Lucas Jensen,13039,2020-12-31
-Thomas HagelskjÃ¦r,13039,2021-06-30
+Thomas Hagelskjær,13039,2021-06-30
 Mads Lauritsen,13039,2021-06-30
 Jacob Schoop,13039,2021-06-30
 Ylber Ramadani,13039,2021-06-30
@@ -328,11 +327,11 @@ Indy Groothuizen,13039,2022-06-30
 Alexander Brunst,13039,2022-06-30
 Viljormur Davidsen,13039,2022-06-30
 Malte Amundsen,13039,2022-06-30
-Tobias MÃ¸lgaard,13039,2022-06-30
+Tobias Mølgaard,13039,2022-06-30
 Alexander Milosevic,13039,2022-06-30
 Tobias Sommer,13039,2022-06-30
 Kevin Yamga,13039,2022-06-30
-Hans HÃ¸llsberg,13039,2022-06-30
+Hans Høllsberg,13039,2022-06-30
 Foday Manneh,13039,2022-06-30
 Wahid Faghir,13039,2022-12-31
 Luis Henrique,13039,2022-12-31
