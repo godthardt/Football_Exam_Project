@@ -12,10 +12,10 @@ public class Team implements Comparable<Team>, Serializable {
 	private String name;
 	private int id;
 	private int points = 0;
-	private int rankInTurnament = 0;
+	private int rankInTurnament = 0; //Winner of turnament has rankInTurnament=1 number 2 
 	private ArrayList<Player> teamPlayers;
 	public ArrayList<Player> getTeamPlayers() { return teamPlayers; } 
-	private int level;  //eg. Superliga=0, 1.division=1, etc.
+	private int level;  //eg. Champion League=-1, Superliga=0, 1.division=1, etc.
 	public int getLevel() { return level; }
 	private boolean kickedkOut = false; // out of Cup turnament
 	public boolean getkickedOut() { return kickedkOut; }
@@ -53,7 +53,7 @@ public class Team implements Comparable<Team>, Serializable {
 		this.name = team.name;
 		this.id = team.id;
 		this.level = team.level;
-		// no need for deep copy of contracts, since they are never changed
+		// no need for deep copy of teamPlayers, since they are never changed
 		this.teamPlayers = team.teamPlayers;
     }
 
@@ -88,7 +88,7 @@ public class Team implements Comparable<Team>, Serializable {
 	}
 
 	public int compareTo(Team t) {
-		//Default sorter. Is beeing called, when somebody tries to .sort(null) a list containing Team objects 
+		//Default sorter. Is being called, when somebody tries to .sort(null) a list containing Team objects 
 		return this.name.compareTo(t.name);
 	}
 
@@ -104,7 +104,6 @@ public class Team implements Comparable<Team>, Serializable {
 			return teamPlayers.get(randomNumber);
 		}
 		// Return an object, in order not to get an exception
-		// TODO Ensure that all team has attached players
 		return new Player("Ukendt spiller", getId(), LocalDate.now());
 	}
 
@@ -172,7 +171,6 @@ class SortbyPoints implements Comparator<Team>
 			return result * -1;
 		else
 			return result;
-		
 	}
 }	
 

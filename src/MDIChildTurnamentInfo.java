@@ -14,8 +14,8 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 	private JLabel infoTableLabel = new JLabel();
 	private JTable infoTable;
 	private DefaultTableModel infoTableModel;
-	private String[] infoTableColumnNames =  { "Name", "Antal hold", "Antal kampe", "Antal mål", "Vinder"};
-	private Integer[] infoTableColumnWidths = { Constants.getModus() * 10, Constants.getModus(), Constants.getModus(), Constants.getModus(), Constants.getModus() * 2};	
+	private String[] infoTableColumnNames =  { "Name", "Antal hold", "Antal kampe", "Antal mål", "Vinder", "Flest spillere på et hold"};
+	private Integer[] infoTableColumnWidths = { Constants.getModus() * 10, Constants.getModus(), Constants.getModus(), Constants.getModus(), Constants.getModus() * 2, Constants.getModus()};	
 	private JTableData infoTableMetaData;
 	private TurnamentManager turnamentManager;
 
@@ -76,7 +76,9 @@ public class MDIChildTurnamentInfo extends JInternalFrame  {
 			infoTable.setValueAt(turnament.getNumberOfTeams(), rowNumber, colNum++);					
 			infoTable.setValueAt(turnament.getNumberOfMatches(), rowNumber, colNum++);					
 			infoTable.setValueAt(turnament.getNumberOfGoals(), rowNumber, colNum++);
-			infoTable.setValueAt(turnament.getWinner().getName(), rowNumber, colNum++);			
+			infoTable.setValueAt(turnament.getWinner().getName(), rowNumber, colNum++);
+			infoTable.setValueAt(turnament.getHighestNumberOfPlayersInOneTeam(), rowNumber, colNum++);			
+			
 			//System.out.println("Row " + rowNumber + " " + turnament.getName() + " " + turnament.getNumberOfTeams() );
 			rowNumber++;
 		}

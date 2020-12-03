@@ -13,41 +13,35 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private static final long serialVersionUID = 1;
 
 	private boolean teamRankColumnSortOrderAscending = false; // Should not be called directly
-	// Used to switch between ascending and descending sort order
+	// this, and the next 4 methods is used to switch between ascending and descending sort order
 	public boolean getTeamRankColumnSortOrderAscending() {  
 		teamRankColumnSortOrderAscending = !teamRankColumnSortOrderAscending;
 		return teamRankColumnSortOrderAscending;
 	}
-	
 	private boolean teamNameColumnSortOrderAscending = false; // Should not be called directly
-	// Used to switch between ascending and descending sort order
 	public boolean getTeamNamekColumnSortOrderAscending() {  
 		teamNameColumnSortOrderAscending = !teamNameColumnSortOrderAscending;
 		return teamNameColumnSortOrderAscending;
 	}
-
 	private boolean teamPointColumnSortOrderAscending = false; // Should not be called directly
-	// Used to switch between ascending and descending sort order
 	public boolean getTeamPointColumnSortOrderAscending() {  
 		teamPointColumnSortOrderAscending = !teamPointColumnSortOrderAscending;
 		return teamPointColumnSortOrderAscending;
 	}
 	
 	private boolean teamGoalScoreColumnSortOrderAscending = false; // Should not be called directly
-	// Used to switch between ascending and descending sort order
 	public boolean getTeamGoalScoreColumnSortOrderAscending() {  
 		teamGoalScoreColumnSortOrderAscending = !teamGoalScoreColumnSortOrderAscending;
 		return teamGoalScoreColumnSortOrderAscending;
 	}
 	
 	private boolean teamNumberOfMatchesColumnSortOrderAscending = false; // Should not be called directly
-	// Used to switch between ascending and descending sort order
 	public boolean getTeamNumberOfMatchesColumnSortOrderAscending() {  
 		teamNumberOfMatchesColumnSortOrderAscending = !teamNumberOfMatchesColumnSortOrderAscending;
 		return teamNumberOfMatchesColumnSortOrderAscending;
 	}
 
-	private int windowNumber = 1;
+	private int windowNumber; // keep tract of sequence of windows
 	public int getWindowNumber() { return windowNumber; }
 	private String windowName;
 	public String getWindowName() { return windowName; }
@@ -74,8 +68,8 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private int modus = Constants.getModus(); // Predefined modus for margin space etc. Use local variable to shorten code line lengths
 	int stdTableWidth = Constants.getStdTableWidth();	
 	private int slimColumnWidth = modus;
-	private int mediumColumnWidth = 60;
-	private int largeColimnWidth = 80;
+	private int mediumColumnWidth = 4 * modus;
+	private int largeColimnWidth = 5 * modus;
 	private int dontShow = 0;
 
 	// Column Names (some "tagged" by "constants" (final strings) so I can search for column names later)
@@ -96,8 +90,6 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private String[] matchTableColumnNames = {matchRoundNo, matchIdColumn, "Art", "Dato", "Hjemmehold", "Udehold", "Resultat"};
 	private Integer[] matchTableColumnWidths = { slimColumnWidth, dontShow, largeColimnWidth, mediumColumnWidth, largeColimnWidth, largeColimnWidth, slimColumnWidth};
 
-
-
 	private final String tidGoalColumn = "Tidspunkt";	 //"tagged" so I can search for column later
 	private final String goalScorerColumn = "Målscorer"; //"tagged" so I can search for column later
 	private String[] goalTableColumnNames =  { "Nr.", "Stilling", tidGoalColumn, goalScorerColumn};
@@ -106,7 +98,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	private String[] playerTableColumnNames =  { "Nr.", "Navn", "Mål", "Kontraktudløb"};
 	private Integer[] playerTableColumnWidths = { slimColumnWidth, largeColimnWidth, slimColumnWidth, mediumColumnWidth};
 	
-	ImageIcon imageIcon;
+	ImageIcon imageIcon; //used for boringLabel
 		
 	// Constructor
 	public MDIChild(int windowNumber, Turnament turnament) {
@@ -123,13 +115,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		}
 	}
 
-	public void paintComponent(Graphics g)
-	{
-		if (iconable==false) {
-			super.paintComponent(g); // call super to ensure basic drawing			
-		}
-	}
-
+	// "Main"-method for loading components
 	private void initGraphics() throws Exception {
 
 
@@ -168,7 +154,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		playerTable.setAutoCreateRowSorter(true);
 		goalTable.setAutoCreateRowSorter(true);
 
-		// Tried with layoutmanagers (Flow and Border), which is the "Java way" but it doesn't look good in this app in my opinion
+		// Tried with different layoutmanagers (Flow and Border), which is the "Java way" but it doesn't look good in this app in my opinion
 		//panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		//panel.setLayout(new BorderLayout()); // remembered to add components to BorderLayout.CENTER and BorderLayout.EAST
 		panel.setLayout(null);
@@ -301,7 +287,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			}
 		});
 
-		// Respond to change in selected row in the  (eg. use arrow up / down)
+		// Respond to change in selected row in the matchTable (eg. arrow up / down)
 		matchTable.getSelectionModel().addListSelectionListener((ListSelectionListener) new ListSelectionListener(){ //https://stackoverflow.com/questions/10128064/jtable-selected-row-click-event
 		    @Override			
 			public void valueChanged(ListSelectionEvent event) {
@@ -379,11 +365,12 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 			int colNum = 0;
 
 			if ((m.getHomeTeam().getId() == teamId) || (m.getAwayTeam().getId() == teamId)) {
-				//matchTable.setValueAt(rowNumber + 1, rowNumber, colNum++);//!!
+				//Add one row at a time
 				tableData.ajustNumberOfRows(rowNumber + 1);
 				
-				if (m.getRoundNo() == 0) 
-					tableData.jTable.setValueAt(rowNumber + 1, rowNumber, colNum++);
+				if (m.getRoundNo()==0)
+					// superliga rounds is not assigned explicitly, just counted via for loop
+					tableData.jTable.setValueAt(rowNumber + 1, rowNumber, colNum++);					
 				else
 					tableData.jTable.setValueAt(m.getRoundNo(), rowNumber, colNum++);
 				
@@ -398,6 +385,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		}
 		// Make the first row the selected
 		tableData.jTable.setRowSelectionInterval(0, 0);
+		// Make sure the matchTable is updated to reflect the selected team
 		matchTableSelectionChanged(getSelectedMacthId());
 
 	}
@@ -483,6 +471,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		clearTable(playerTable);					
 	}
 	
+	// "re-simulate matches and goals 
 	public void reGenerateMatchesAndGoals() {
 		try {
 			turnament.reGenerateMatchesAndGoals();
@@ -492,6 +481,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		}
 	}
 
+	// Serialize turnament into filestream
 	public boolean serializeTurnament(String filename) {
 		try {
 			turnament.serializeTurnament(filename);
@@ -502,6 +492,7 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		return false;
 	}
 	
+	// Try to load an image from a file
 	private boolean loadImage(String filename) {
 		try {
 			imageIcon = new ImageIcon(filename);
@@ -593,6 +584,7 @@ class JTableData {
 		return jTable;
 	}
 	
+	// Makes sure, that the dataModel contains the required number of rows
 	public void ajustNumberOfRows(int requiredNumberOfRows)
 	{
 		// not enough rows ?
@@ -617,7 +609,7 @@ class JTableData {
 	
 	private Vector<Object> getRowData(int columnCount) {
 
-		// Construct an empty row - plagiat from https://stackoverflow.com/questions/30525235/dynamic-row-creation-in-jtable
+		// Construct an empty row - inspired from https://stackoverflow.com/questions/30525235/dynamic-row-creation-in-jtable
 		Vector<Object> rowData = new Vector<Object>();
 		for (int i = 0; i < columnCount; i++) {
 			rowData.add("");
@@ -634,7 +626,7 @@ class TablePanel extends JPanel{
 
 	public TablePanel(JTableData jTableColumnMetaData){
 
-		setBackground(Color.LIGHT_GRAY); // Very useful when I debugged, found that it looked nice afterwards
+		//setBackground(Color.LIGHT_GRAY); // Very useful when I debugged, found that it looked nice afterwards
 		
 		// Define the size of the panel on which the JTable (JScrollPane) is placed
 		setSize(new Dimension(jTableColumnMetaData.rectangle.width , jTableColumnMetaData.rectangle.height));

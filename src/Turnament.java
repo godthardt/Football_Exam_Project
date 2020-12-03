@@ -265,7 +265,7 @@ public class Turnament implements Serializable {
 	}
 	
 	public int getHighestNumberOfPlayersInOneTeam() {
-		// Purpose: Find the team with the highest number of players. Used for securing sufficient number of rows in GUI
+		// Purpose: Find the team with the highest number of players.
 		int highestNumber = 0;
 		
 		for (Team team : turnamentTeams) {

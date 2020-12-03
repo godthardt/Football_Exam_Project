@@ -197,6 +197,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		JMenuItem closeMenu  = new JMenuItem();
 		JMenuItem closeAllWindowsMenu  = new JMenuItem();
 		JMenuItem minimizeAllWindowsMenu  = new JMenuItem();
+		JMenuItem deIconizeAllWindowsMenu  = new JMenuItem();		
 		
 		
 		// Set text and shortcuts on sub menu items, and attach submenu to top menu, 
@@ -210,8 +211,8 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		addMenuMneMonics(fileMenu, listAllTurnamentsMenu, "Vis info om alle turneringer", KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK);		
 		fileMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm		
 		addMenuMneMonics(fileMenu, closeMenu, "Afslut", KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK);
-		
-		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK);		
+		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK);
+		addMenuMneMonics(windowMenu, deIconizeAllWindowsMenu, "De-iconser alle Vinduer", KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK);		
 		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle turneringsvinduer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
 		windowMenu.add(new JSeparator());		
 		addMenuMneMonics(windowMenu, listAllTurnamentsMenu, "Vis info om alle åbne turneringer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);		
@@ -375,6 +376,19 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 				for (JInternalFrame mDIChild : frames) {
 					try {
 						mDIChild.setIcon(true);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		deIconizeAllWindowsMenu.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				JInternalFrame[] frames   = desktopPane.getAllFrames();
+				for (JInternalFrame mDIChild : frames) {
+					try {
+						mDIChild.setIcon(false);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
