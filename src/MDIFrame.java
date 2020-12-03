@@ -89,7 +89,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		
 		setVisible(true);
 		
-		// In developmnt phase, I loaded a deserialize a Turnament object, in order to have something to look at
+		// In the developmnt phase, I loaded a deserialize a Turnament object, in order to have something to look at
 		// addNewTurnament("serializedTurnamentExample.ser");
 
 	}
@@ -212,7 +212,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		fileMenu.add(new JSeparator()); // plagiat from http://www.java2s.com/Tutorial/Java/0240__Swing/AddSeparatortoJMenu.htm		
 		addMenuMneMonics(fileMenu, closeMenu, "Afslut", KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK);
 		addMenuMneMonics(windowMenu, minimizeAllWindowsMenu, "Minimer alle Vinduer", KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK);
-		addMenuMneMonics(windowMenu, deIconizeAllWindowsMenu, "De-iconser alle Vinduer", KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK);		
+		addMenuMneMonics(windowMenu, deIconizeAllWindowsMenu, "De-ikonser alle Vinduer", KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK);		
 		addMenuMneMonics(windowMenu, closeAllWindowsMenu, "Luk alle turneringsvinduer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);
 		windowMenu.add(new JSeparator());		
 		addMenuMneMonics(windowMenu, listAllTurnamentsMenu, "Vis info om alle åbne turneringer", KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK);		
@@ -424,7 +424,6 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 	}
 	
 	protected Component getWindow() {
-		// TODO Auto-generated method stub
 		return this.getContentPane();
 	}
 
@@ -436,9 +435,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 	}
 	
 	private void listChildMenusInWindowTopMenu() {
-
-		// Easy household with MDI child windows. Strategy: Remove all, add known
-		// Remove all menu items corresponding to actual windows (the 2 first menu items is Close All, and Minimize All + separator)
+		// Easy household with MDI child windows. Strategy: Remove all, then add known, not efficient but works Ok here
 
 		// Remove all menuitems on "top" menu windowMenu
 		int numberOfMenuItemsToRemove = windowMenu.getItemCount() - numberOfWindowBaseMenuItems;  
@@ -453,12 +450,12 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		ArrayList<MDIChild> mDIChilds = new ArrayList<MDIChild>();
 		for (JInternalFrame jInternalFrame : frames) {
 			try {
-				mDIChilds.add((MDIChild) jInternalFrame);				
+				if (jInternalFrame instanceof MDIChild) {
+					mDIChilds.add((MDIChild) jInternalFrame);
+				}
 			} catch (ClassCastException e) {
-				//e.printStackTrace();
-				// Don't want to see stacktrace in console that MDIChildTurnamentInfo can't be casted as MDIChild
+				e.printStackTrace();
 			}
-
 		}
 		
 		// Sort in order to get Window number 1 at top

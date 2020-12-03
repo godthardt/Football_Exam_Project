@@ -22,14 +22,12 @@ public class CupTurnament extends Turnament implements Serializable {
 
 		int numberOfTeamsNextPowerOf2 = nextPowerOf2(turnamentTeams.size());
 		
-		
 		// Add a number of "Sitter Outs" (in danish: "oversiddere") to match a power of two 
 		for (int i = turnamentTeams.size(); i < numberOfTeamsNextPowerOf2; i++) {
 			turnamentTeams.add(new Team(i, "Oversidder " + (i + 1), 1, new ArrayList<Player>(), Match.MustLoooeType.DeterminedToLoose));			
 		}
 		
 		int round = 0;
-		
 		int numberOfRemaingTeams = 0;
 		numberOfRemaingTeams = getNumberOfRemainingTeams();		
 		
