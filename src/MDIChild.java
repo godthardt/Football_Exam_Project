@@ -374,12 +374,14 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 		int rowNumber = 0;
 		tableData.tableLabel.setText("Kampe for " + (turnament.GetTeam(teamId)).getName() + ":");
 		
-		tableData.ajustNumberOfRows(turnament.getMatches().size());
+		
 		for (Match m : turnament.getMatches()) {
 			int colNum = 0;
 
 			if ((m.getHomeTeam().getId() == teamId) || (m.getAwayTeam().getId() == teamId)) {
 				//matchTable.setValueAt(rowNumber + 1, rowNumber, colNum++);//!!
+				tableData.ajustNumberOfRows(rowNumber + 1);
+				
 				if (m.getRoundNo() == 0) 
 					tableData.jTable.setValueAt(rowNumber + 1, rowNumber, colNum++);
 				else
