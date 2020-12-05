@@ -118,14 +118,15 @@ public class MDIChild extends JInternalFrame implements Comparable<MDIChild> {
 	// "Main"-method for loading components
 	private void initGraphics() throws Exception {
 
-
 		teamTableLabel.setText("Stillingen:");
 		matchTableLabel.setText("Kampe:");
 		goalTableLabel.setText("Mål:");
 		playerTabelLabel.setText("Kontraktspillere:");
 
-        // Special label i goalTable
-		loadImage("boring.jpg");
+        // Special label on goalTable
+		if (loadImage("boring.jpg")==false) {
+			System.out.println("Could not load boring.jpg which was expected to be sited in the project root directory");
+		}
         boringLabel.setIcon(imageIcon);
 		boringLabel.setBounds(modus, modus, 19* modus, 6 * modus);
         boringLabel.setLocation(8 * modus, 35*modus);

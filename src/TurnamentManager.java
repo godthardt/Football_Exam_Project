@@ -25,13 +25,27 @@ public class TurnamentManager implements Serializable  {
 		teamsMasterList = new ArrayList<Team>();
 		playersMasterList = new ArrayList<Player>();
 		try {
-			loadPlayersFromTxtFile("players.txt");			
+			if (loadPlayersFromTxtFile("players.txt")==false) {
+				JOptionPane.showMessageDialog(null, "Der blev ikke indlæst spillerdata - programmet kører, men med begrænset funktionalitet",
+						"Fejl ved indlæsning af spillerdata", JOptionPane.WARNING_MESSAGE);			
+			}			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		try {
-			loadTeamsFromTxtFile("teams.txt");			
+			if (loadTeamsFromTxtFile("teams.txt")==false) {
+				JOptionPane.showMessageDialog(null, "Der blev ikke indlæst holddata - programmet kører, men med begrænset funktionalitet. Tilføjer 12 tilfældigshold, så programmet kan fortsætte",
+						"Fejl ved indlæsning af holddata", JOptionPane.WARNING_MESSAGE);
+				
+				// add 12 random teams, in order to get the program running
+				for (int i = 0; i < 4; i++) {
+					for (int j = -1; j < 2; j++) {
+						teamsMasterList.add(new Team(i*j, "Test hold " + (i+1)*(j+2), j, playersMasterList, Match.MustLoooeType.RandomLoose));
+					}
+				}
+			}
+						
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
