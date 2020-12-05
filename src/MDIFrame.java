@@ -187,7 +187,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		windowMenu.setMnemonic(KeyEvent.VK_V);		
 		
 		//Sub menus
-		JMenuItem refreshMenu   = new JMenuItem();
+		JMenuItem reSimulateMenu   = new JMenuItem();
 		JMenuItem newTurnamentMenu   = new JMenuItem();
 		JMenuItem newCupTurnamentMenu   = new JMenuItem();
 		JMenuItem newfinal4CupTurnamentMenu   = new JMenuItem();		
@@ -202,7 +202,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		
 		// Set text and shortcuts on sub menu items, and attach submenu to top menu, 
 		// found inspiration on https://www.codejava.net/java-se/swing/setting-shortcut-key-and-hotkey-for-menu-item-and-button-in-swing
-		addMenuMneMonics(fileMenu, refreshMenu, "Resimuler matchafvikling i valgt turnering", KeyEvent.VK_F5, 0);		
+		addMenuMneMonics(fileMenu, reSimulateMenu, "Resimuler matchafvikling i valgt turnering", KeyEvent.VK_F5, 0);		
 		addMenuMneMonics(fileMenu, newTurnamentMenu, "Ny superliga", KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK);		
 		addMenuMneMonics(fileMenu, newCupTurnamentMenu, "Ny pokalturnering", KeyEvent.VK_P, KeyEvent.CTRL_DOWN_MASK);
 		addMenuMneMonics(fileMenu, newfinal4CupTurnamentMenu, "Ny Final 4 pokalturnering", KeyEvent.VK_U, KeyEvent.CTRL_DOWN_MASK);		
@@ -229,6 +229,24 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 		// Add menu listeners
 
 		// JMenus require MenuListener
+		fileMenu.addMenuListener(new MenuListener() {
+	        // Make sure the Window menu contains the relevant windows 
+			public void menuSelected(MenuEvent e) { 
+				boolean isMDIChild = desktopPane.getSelectedFrame() instanceof MDIChild;
+//				if (desktopPane.getSelectedFrame() instanceof MDIChild) 
+//					isMDIChild = true;
+//				else
+//					isMDIChild = false;					
+				
+				saveSerializedTurnamentMenu.setEnabled(isMDIChild);
+				reSimulateMenu.setEnabled(isMDIChild);
+				
+			}
+	        public void menuCanceled(MenuEvent e) { } // Must implement this abstract method to use addMenuListener  
+	        public void menuDeselected(MenuEvent e) { }  // Must implement this abstract method to use addMenuListener
+	      });		
+
+
 		windowMenu.addMenuListener(new MenuListener() {
 	        // Make sure the Window menu contains the relevant windows 
 			public void menuSelected(MenuEvent e) { listChildMenusInWindowTopMenu(); }
@@ -287,7 +305,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 			}
 		});	    
 
-		refreshMenu.addActionListener(new java.awt.event.ActionListener() {
+		reSimulateMenu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				try {
 					// is the active window it a MDIChild object ?
@@ -317,7 +335,7 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 				int result = fileChooser.showOpenDialog(getWindow());
 				if (result == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
-					System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+					//System.out.println("Selected file: " + selectedFile.getAbsolutePath());
 					try {
 						// de-serialize a Turnament object
 						addNewTurnament(selectedFile.getAbsolutePath());
@@ -344,9 +362,14 @@ public class MDIFrame extends JFrame implements InternalFrameListener {
 				int result = fileChooser.showSaveDialog(getWindow());
 				if (result == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
-					// Try to enforce *.ser extension
-					// TODO File selectedFileWithExtension = selectedFile.getPath().replace(".", ".ser");
-					System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+
+					// Ensure *.ser extension of the file: plagiat from https://www.javaprogrammingforums.com/whats-wrong-my-code/6628-how-add-file-extension-jfilechooser-showsavedialog.html				
+					String filePath = selectedFile.getPath();
+					if(!filePath.toLowerCase().endsWith(".ser"))
+					{
+						selectedFile = new File(filePath + ".ser");
+					}					
+					
 					try {
 						MDIChild child = (MDIChild) desktopPane.getSelectedFrame();
 						if (child != null) {
